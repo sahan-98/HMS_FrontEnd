@@ -23,7 +23,7 @@ import {
   MdOutlinePersonRemoveAlt1,
   MdOutlinePersonSearch,
 } from "react-icons/md";
-import { TbBed } from "react-icons/tb";
+import { TbBed, TbTestPipe } from "react-icons/tb";
 import { FcApproval, FcHome } from "react-icons/fc";
 import { Outlet } from "react-router-dom";
 import { Container } from "@mui/material";
@@ -253,7 +253,7 @@ export default function NewHeader() {
                     />
                   </ListItemIcon>
                   <ListItemText
-                    primary="Appointment"
+                    primary="Doctor List"
                     style={{ marginLeft: "-1rem" }}
                   />
                 </ListItemButton>
@@ -411,6 +411,90 @@ export default function NewHeader() {
                   </ListItemIcon>
                   <ListItemText
                     primary="Add Patient"
+                    style={{ marginLeft: "-1rem" }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </NavLink>
+          </TreeView>
+
+          {/* Lab management for Admin view  */}
+          <ListItem
+            disablePadding
+            onClick={() => {
+              if (expandedNodeId === 3) {
+                setExpandedNodeId(-1);
+              } else {
+                setExpandedNodeId(3);
+              }
+            }}
+          >
+            <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
+              <ListItemIcon>
+                <TbTestPipe style={{ color: "#000", fontSize: "1.5rem" }} />
+              </ListItemIcon>
+              <ListItemText primary="Labs" />
+            </ListItemButton>
+          </ListItem>
+
+          <TreeView
+            style={{
+              color: "#000",
+              background: "#fff",
+              textAlign: "justify",
+              paddingLeft: "2.5rem",
+            }}
+            aria-label="file system navigator"
+            defaultExpanded={["1"]}
+            defaultCollapseIcon={
+              <div style={{ padding: ".3rem 0", visibility: "hidden" }}>
+                <FaUserNurse style={{ color: "#000", fontSize: "1.5rem" }} />
+              </div>
+            }
+            defaultExpandIcon={
+              <div style={{ padding: ".3rem 0", visibility: "hidden" }}>
+                <FaUserNurse style={{ color: "#000", fontSize: "1.5rem" }} />
+              </div>
+            }
+            sx={{
+              height: expandedNodeId === 3 ? 100 : 0,
+              flexGrow: 1,
+              maxWidth: 400,
+              overflowY: "hidden",
+              transition: "height 0.5s",
+            }}
+          >
+            <NavLink
+              to="/labs"
+              style={{ textDecoration: "none", width: "100%", color: "#000" }}
+            >
+              <ListItem disablePadding>
+                <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
+                  <ListItemIcon>
+                    <BsCardChecklist
+                      style={{ color: "#000", fontSize: "1.3rem" }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Lab List"
+                    style={{ marginLeft: "-1rem" }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </NavLink>
+            <NavLink
+              to="/addLab"
+              style={{ textDecoration: "none", width: "100%", color: "#000" }}
+            >
+              <ListItem disablePadding>
+                <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
+                  <ListItemIcon>
+                    <MdOutlinePersonAddAlt
+                      style={{ color: "#000", fontSize: "1.4rem" }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Add Lab"
                     style={{ marginLeft: "-1rem" }}
                   />
                 </ListItemButton>
