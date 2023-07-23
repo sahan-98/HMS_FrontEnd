@@ -86,6 +86,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 export default function NewHeader() {
   const [open, setOpen] = React.useState(true);
+  const [expandedNodeId, setExpandedNodeId] = React.useState("1");
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -192,27 +193,33 @@ export default function NewHeader() {
               </ListItemButton>
             </ListItem>
           </NavLink>
-          {/* Doctor view for admin */}
-          <ListItem disablePadding>
+
+          <ListItem
+            disablePadding
+            onClick={() => {
+              if (expandedNodeId === 1) {
+                setExpandedNodeId(-1);
+              } else {
+                setExpandedNodeId(1);
+              }
+            }}
+          >
             <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
               <ListItemIcon>
-                <FaUserNurse
-                  style={{
-                    color: "#000",
-                    fontSize: "1.5rem",
-                    marginRight: "1rem",
-                  }}
-                />
+                <FaUserNurse style={{ color: "#000", fontSize: "1.5rem" }} />
               </ListItemIcon>
+              <ListItemText primary="Doctors" />
             </ListItemButton>
           </ListItem>
+
+          {/* Doctor view for admin */}
+
           <TreeView
             style={{
               color: "#000",
               background: "#fff",
               textAlign: "justify",
               paddingLeft: "2.5rem",
-              marginTop: "-2.4rem",
             }}
             aria-label="file system navigator"
             defaultExpanded={["1"]}
@@ -226,133 +233,132 @@ export default function NewHeader() {
                 <FaUserNurse style={{ color: "#000", fontSize: "1.5rem" }} />
               </div>
             }
-            sx={{ height: 300, flexGrow: 1, maxWidth: 420, overflowY: "auto" }}
+            sx={{
+              height: expandedNodeId === 1 ? 250 : 0,
+              flexGrow: 1,
+              maxWidth: 420,
+              overflowY: "hidden",
+              transition: "height 0.5s",
+            }}
           >
-            <TreeItem
-              nodeId="1"
-              label="Doctors"
-              style={{ color: "#000", background: "#FFFFFF" }}
+            <NavLink
+              to="/doctors"
+              style={{ textDecoration: "none", width: "100%", color: "#000" }}
             >
-              <NavLink
-                to="/doctors"
-                style={{ textDecoration: "none", width: "100%", color: "#000" }}
-              >
-                <ListItem disablePadding>
-                  <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
-                    <ListItemIcon>
-                      <BsCardChecklist
-                        style={{ color: "#000", fontSize: "1.3rem" }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Appointment"
-                      style={{ marginLeft: "-1rem" }}
+              <ListItem disablePadding>
+                <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
+                  <ListItemIcon>
+                    <BsCardChecklist
+                      style={{ color: "#000", fontSize: "1.3rem" }}
                     />
-                  </ListItemButton>
-                </ListItem>
-              </NavLink>
-              <NavLink
-                to="/approveDoctor"
-                style={{ textDecoration: "none", width: "100%", color: "#000" }}
-              >
-                <ListItem disablePadding>
-                  <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
-                    <ListItemIcon>
-                      {/* <BsCardChecklist style={{ color: '#000', fontSize: '1.3rem' }} /> */}
-                      <BsPersonLinesFill
-                        style={{ color: "#000", fontSize: "1.4rem" }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Approval"
-                      style={{ marginLeft: "-1rem" }}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Appointment"
+                    style={{ marginLeft: "-1rem" }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </NavLink>
+            <NavLink
+              to="/approveDoctor"
+              style={{ textDecoration: "none", width: "100%", color: "#000" }}
+            >
+              <ListItem disablePadding>
+                <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
+                  <ListItemIcon>
+                    {/* <BsCardChecklist style={{ color: '#000', fontSize: '1.3rem' }} /> */}
+                    <BsPersonLinesFill
+                      style={{ color: "#000", fontSize: "1.4rem" }}
                     />
-                  </ListItemButton>
-                </ListItem>
-              </NavLink>
-              <NavLink
-                to="/addDoctor"
-                style={{ textDecoration: "none", width: "100%", color: "#000" }}
-              >
-                <ListItem disablePadding>
-                  <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
-                    <ListItemIcon>
-                      <MdOutlinePersonAddAlt
-                        style={{ color: "#000", fontSize: "1.4rem" }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Add Doctor"
-                      style={{ marginLeft: "-1rem" }}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Approval"
+                    style={{ marginLeft: "-1rem" }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </NavLink>
+            <NavLink
+              to="/addDoctor"
+              style={{ textDecoration: "none", width: "100%", color: "#000" }}
+            >
+              <ListItem disablePadding>
+                <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
+                  <ListItemIcon>
+                    <MdOutlinePersonAddAlt
+                      style={{ color: "#000", fontSize: "1.4rem" }}
                     />
-                  </ListItemButton>
-                </ListItem>
-              </NavLink>
-              <NavLink
-                to="/deleteDoctor"
-                style={{ textDecoration: "none", width: "100%", color: "#000" }}
-              >
-                <ListItem disablePadding>
-                  <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
-                    <ListItemIcon>
-                      <MdOutlinePersonRemoveAlt1
-                        style={{ color: "#000", fontSize: "1.4rem" }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Delete Doctor"
-                      style={{ marginLeft: "-1rem" }}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Add Doctor"
+                    style={{ marginLeft: "-1rem" }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </NavLink>
+            <NavLink
+              to="/deleteDoctor"
+              style={{ textDecoration: "none", width: "100%", color: "#000" }}
+            >
+              <ListItem disablePadding>
+                <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
+                  <ListItemIcon>
+                    <MdOutlinePersonRemoveAlt1
+                      style={{ color: "#000", fontSize: "1.4rem" }}
                     />
-                  </ListItemButton>
-                </ListItem>
-              </NavLink>
-              <NavLink
-                to="/updateDoctor"
-                style={{ textDecoration: "none", width: "100%", color: "#000" }}
-              >
-                <ListItem disablePadding>
-                  <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
-                    <ListItemIcon>
-                      <MdOutlinePersonSearch
-                        style={{ color: "#000", fontSize: "1.4rem" }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Find Doctor"
-                      style={{ marginLeft: "-1rem" }}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Delete Doctor"
+                    style={{ marginLeft: "-1rem" }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </NavLink>
+            <NavLink
+              to="/updateDoctor"
+              style={{ textDecoration: "none", width: "100%", color: "#000" }}
+            >
+              <ListItem disablePadding>
+                <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
+                  <ListItemIcon>
+                    <MdOutlinePersonSearch
+                      style={{ color: "#000", fontSize: "1.4rem" }}
                     />
-                  </ListItemButton>
-                </ListItem>
-              </NavLink>
-            </TreeItem>
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Find Doctor"
+                    style={{ marginLeft: "-1rem" }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </NavLink>
           </TreeView>
-          {/* Only for patients */}
-          {/* <NavLink to="/doctors" style={{ textDecoration: 'none', width: '100%', color: '#000' }}>
-                        <ListItem disablePadding>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    <FaUserNurse style={{ color: '#000', fontSize: '1.5rem' }} />
-                                </ListItemIcon>
-                                <ListItemText primary="Doctors" />
-                            </ListItemButton>
-                        </ListItem>
-                    </NavLink> */}
 
-          {/* Patient for Admin view  */}
-          <ListItem disablePadding>
+          <ListItem
+            disablePadding
+            onClick={() => {
+              if (expandedNodeId === 2) {
+                setExpandedNodeId(-1);
+              } else {
+                setExpandedNodeId(2);
+              }
+            }}
+          >
             <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
               <ListItemIcon>
                 <TbBed style={{ color: "#000", fontSize: "1.5rem" }} />
               </ListItemIcon>
+              <ListItemText primary="Patients" />
             </ListItemButton>
           </ListItem>
+
+          {/* Patient for Admin view  */}
           <TreeView
             style={{
               color: "#000",
               background: "#fff",
               textAlign: "justify",
               paddingLeft: "2.5rem",
-              marginTop: "-2.4rem",
             }}
             aria-label="file system navigator"
             defaultExpanded={["1"]}
@@ -366,62 +372,51 @@ export default function NewHeader() {
                 <FaUserNurse style={{ color: "#000", fontSize: "1.5rem" }} />
               </div>
             }
-            sx={{ height: 140, flexGrow: 1, maxWidth: 400, overflowY: "auto" }}
+            sx={{
+              height: expandedNodeId === 2 ? 100 : 0,
+              flexGrow: 1,
+              maxWidth: 400,
+              overflowY: "hidden",
+              transition: "height 0.5s",
+            }}
           >
-            <TreeItem
-              nodeId="1"
-              label="Patient"
-              style={{ color: "#000", background: "#FFFFFF" }}
+            <NavLink
+              to="/patients"
+              style={{ textDecoration: "none", width: "100%", color: "#000" }}
             >
-              <NavLink
-                to="/patients"
-                style={{ textDecoration: "none", width: "100%", color: "#000" }}
-              >
-                <ListItem disablePadding>
-                  <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
-                    <ListItemIcon>
-                      <BsCardChecklist
-                        style={{ color: "#000", fontSize: "1.3rem" }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Patient List"
-                      style={{ marginLeft: "-1rem" }}
+              <ListItem disablePadding>
+                <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
+                  <ListItemIcon>
+                    <BsCardChecklist
+                      style={{ color: "#000", fontSize: "1.3rem" }}
                     />
-                  </ListItemButton>
-                </ListItem>
-              </NavLink>
-              <NavLink
-                to="/addPatient"
-                style={{ textDecoration: "none", width: "100%", color: "#000" }}
-              >
-                <ListItem disablePadding>
-                  <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
-                    <ListItemIcon>
-                      <MdOutlinePersonAddAlt
-                        style={{ color: "#000", fontSize: "1.4rem" }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Add Patient"
-                      style={{ marginLeft: "-1rem" }}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Patient List"
+                    style={{ marginLeft: "-1rem" }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </NavLink>
+            <NavLink
+              to="/addPatient"
+              style={{ textDecoration: "none", width: "100%", color: "#000" }}
+            >
+              <ListItem disablePadding>
+                <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
+                  <ListItemIcon>
+                    <MdOutlinePersonAddAlt
+                      style={{ color: "#000", fontSize: "1.4rem" }}
                     />
-                  </ListItemButton>
-                </ListItem>
-              </NavLink>
-            </TreeItem>
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Add Patient"
+                    style={{ marginLeft: "-1rem" }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </NavLink>
           </TreeView>
-          {/* Time and date selection */}
-          {/* <NavLink to="/appointment" style={{ textDecoration: 'none', width: '100%', color: '#000' }}>
-                        <ListItem disablePadding>
-                            <ListItemButton style={{borderRadius:'0 40px 40px 0'}}>
-                                <ListItemIcon>
-                                    <AiOutlineFieldTime style={{ color: '#000', fontSize: '1.5rem' }} />
-                                </ListItemIcon>
-                                <ListItemText primary="Appointment" />
-                            </ListItemButton>
-                        </ListItem>
-                    </NavLink> */}
 
           <NavLink
             to="/Staffs"

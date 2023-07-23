@@ -8,7 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { NavLink } from "react-router-dom";
 import { Typography } from "@mui/material";
-import { AiOutlineDelete } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import img from "../../../utils/no-patient.png";
 
 export default function Patients() {
@@ -132,6 +132,16 @@ export default function Patients() {
                         {patientsData.gender.toUpperCase()}
                       </TableCell>
                       <TableCell align="center">
+                        <AiOutlineEdit
+                          onClick={() => {
+                            // deletePatient(patientsData._id);
+                          }}
+                          style={{
+                            cursor: "pointer",
+                            fontSize: "1.5rem",
+                            marginRight: "20px",
+                          }}
+                        />
                         <AiOutlineDelete
                           onClick={() => {
                             // deletePatient(patientsData._id);
