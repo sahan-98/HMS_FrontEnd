@@ -44,9 +44,9 @@ const Login = () => {
           >
             <Grid
               item
-              xs={5}
+              xs={12}
+              sm={12}
               md={5}
-              sm={5}
               sx={{
                 backgroundColor: "#F6FAFD",
                 borderRadius: "5px",
