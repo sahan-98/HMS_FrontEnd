@@ -14,7 +14,7 @@ let ErrorLog = require("../Models/errorlog.model");
 // add User
 
 UserRoutes.post("/add", async (req, res) => {
-  const { mobile, password, email, firstname, lastname, conpass } = req.body;
+  const { mobile, password, email, address, dateOfBirth, age, firstname, lastname, conpass } = req.body;
 
   const salt = await bcrypt.genSalt();
   const passwordHash = await bcrypt.hash(password, salt);
@@ -23,6 +23,9 @@ UserRoutes.post("/add", async (req, res) => {
     mobile == "" ||
     password == "" ||
     email == "" ||
+    address == "" ||
+    dateOfBirth == "" ||
+    age == "" ||
     firstname == "" ||
     lastname == ""
   )
@@ -51,6 +54,9 @@ UserRoutes.post("/add", async (req, res) => {
     mobile,
     password: passwordHash,
     email,
+    address, 
+    dateOfBirth, 
+    age,
     firstname,
     lastname,
     status: "New",

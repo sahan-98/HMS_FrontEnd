@@ -62,8 +62,8 @@ let labsReports = new Schema(
   },
   {
     timestamps: true,
-    collection: "labsReports",
+    collection: "LabsReports",
   }
 );
 
-module.exports = mongoose.model("labsReports", labsReports);
+module.exports = mongoose.model("LabsReports", labsReports);

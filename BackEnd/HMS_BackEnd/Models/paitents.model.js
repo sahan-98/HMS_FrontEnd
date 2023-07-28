@@ -31,6 +31,12 @@ let paitents = new Schema(
       type: String,
     },
 
+    email: {
+      required: true,
+      unique: true,
+      type: String,
+    },
+
     address: {
       required: true,
       unique: true,
@@ -51,7 +57,7 @@ let paitents = new Schema(
 
     labReport: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "labsReports",
+      ref: "LabsReports",
       required: true,
       index: true,
     },

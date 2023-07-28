@@ -2,7 +2,7 @@ const express = require("express");
 const { validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 // const jwt = require('jsonwebtoken');
-// const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt')
 const { v4: uuid_v4  } = require('uuid');
 const DoctorRoutes = express.Router();
 
@@ -51,7 +51,7 @@ DoctorRoutes.post("/addDoctor", async (req, res, next) => {
         return next(new HttpError('Invalid inputs! Please check again.', 422));
     }
 
-    const { name, email, phone, fee, age, speciality, address, degree, salary,availbleTime, dateOfJoin ,gender } = req.body;
+    const { name, email, password,  phone, fee, age, speciality, address, degree, salary,availbleTime, dateOfJoin ,gender } = req.body;
 
     let existingDoctor;
     try{
@@ -72,12 +72,13 @@ DoctorRoutes.post("/addDoctor", async (req, res, next) => {
         return next(error);
       }
 
-    // const hashedPassword = await bcrypt.hash(password, 10);
-    // console.log(hashedPassword);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log(hashedPassword);
     const newDoctor = new Doctor({
         doctorid: uuid_v4(),
         name,
         email,
+        password: hashedPassword,
         phone,
         fee, 
         age, 
