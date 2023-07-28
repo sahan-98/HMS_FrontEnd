@@ -2,7 +2,7 @@
 const express = require("express");
 const companyRoutes = express.Router();
 
-let Company = require("../Models/company.model");
+let Company = require("../Models/labReport.model");
 
 //add event
 companyRoutes.post("/add", async (req, res) => {
