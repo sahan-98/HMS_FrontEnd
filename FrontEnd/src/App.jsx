@@ -1,9 +1,5 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./App.css";
 import Home from "./Pages/Home/Home/Home";
 import Footer from "./Pages/Shared/Footer/Footer";
 import Staffs from "./Pages/Staffs/Staffs";
@@ -22,7 +18,6 @@ import Patients from "./Pages/Patients/Patients/Patients";
 import PatientDetails from "./Pages/Patients/PatientsDetails/PatientDetails";
 import ApproveDoctor from "./Pages/Doctors/ApproveDoctor/ApproveDoctor";
 
-
 function App() {
   return (
     <div className="App">
@@ -31,8 +26,9 @@ function App() {
       </AuthProvider> */}
       <Router>
         <Routes>
+          <Route path="/login" element={<Login />} />
           {/* NESTED ROUTING APPLIED */}
-          <Route path="/" element={<Dashboard />} >
+          <Route path="/" element={<Dashboard />}>
             <Route index element={<Home></Home>} />
             <Route path="doctors" element={<PatientViewDoctor />} />
             <Route path="addDoctor" element={<AddDoctor />} />
@@ -49,7 +45,6 @@ function App() {
             <Route path="appointment" element={<Appointment />}>
               <Route path=":email" element={<Appointment />} />
             </Route>
-            <Route path="login" element={<Login />} />
             <Route path="registration" element={<Registration />} />
             <Route path="*" element={<PageNotFound />} />
           </Route>

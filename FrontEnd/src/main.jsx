@@ -1,16 +1,21 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import "./index.css";
+import App from "./App";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import SystemAlerts from "./components/SystemAlerts/SystemAlerts";
+import store from "./app/store";
 const client = new QueryClient();
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <QueryClientProvider client={client}>
+  // <React.StrictMode>
+  <QueryClientProvider client={client}>
+    <Provider store={store}>
+      <SystemAlerts />
       <App />
-    </QueryClientProvider>
-  </React.StrictMode>
+    </Provider>
+  </QueryClientProvider>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

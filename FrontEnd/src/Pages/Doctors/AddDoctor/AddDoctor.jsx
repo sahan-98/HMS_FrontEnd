@@ -11,14 +11,14 @@ import {
   Select,
   MenuItem,
   OutlinedInput,
-  Fab,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-import { CalendarMonth } from "@mui/icons-material";
 import Calender from "../../Shared/Calender/Calender";
+import { Controller, useForm } from "react-hook-form";
+import DoctorService from "../../../app/services/doctor-service";
+import { showSystemAlert } from "../../../app/services/alertServices";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -43,8 +43,8 @@ function getStyles(name, personName, theme) {
 
 const AddDoctor = () => {
   const theme = useTheme();
-  const [personName, setPersonName] = React.useState([]);
-  const [date, setDate] = React.useState(new Date().toDateString());
+  const [personName, setPersonName] = useState([]);
+  const [date, setDate] = useState(new Date().toDateString());
   // const [image, setImage] = useState(null);
   const handleChange = (event) => {
     const {
@@ -56,23 +56,35 @@ const AddDoctor = () => {
     );
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    // const name = formData.get("name");
-    // formData.append("image", image); // <-- append the image to the formData
-    // formData.append("created_at", date);
-    // formData.append("approved", true);
-    fetch("http://localhost:4000/api/v1/doctors/addDoctor", {
-      method: "POST",
-      body: formData, // <-- send the formData in the body of the request
-    })
-      .then((res) => res.json())
-      .then((success) => {
-        if (success) {
-          alert("Doctor added successfully");
-        }
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    setValue,
+    control,
+  } = useForm({
+    defaultValues: {
+      gender: "",
+    },
+  });
+
+  const onSubmit = async (data) => {
+    const formData = {
+      ...data,
+      dateOfJoin: new Date(date).toLocaleDateString(),
+      degree: personName[0],
+    };
+
+    try {
+      const response = await DoctorService.newDoctor({
+        doctor: formData,
       });
+      console.log(response);
+      showSystemAlert("Doctor profile created", "success");
+    } catch (error) {
+      showSystemAlert("An error occured while creating doctor", "error");
+    }
   };
 
   return (
@@ -94,212 +106,269 @@ const AddDoctor = () => {
         </Button>
       </Box>
       <hr></hr>
-      <form onSubmit={handleSubmit}>
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            display: "flex",
-            justifyContent: "flex-start",
-            alignItems: "center",
-            padding: ".5rem 2rem",
-            textAlign: "start",
-          }}
-        >
-          {/* Add Name */}
-          <Grid item xs={12} md={4}>
-            <Typography variant="OVERLINE TEXT">Name</Typography>
-          </Grid>
-          <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
-            <TextField
-              id="standard-basic"
-              label="Enter name"
-              name="name"
-              required
-              fullWidth
-            />
-          </Grid>
-          {/* Email */}
-          <Grid item xs={12} md={4}>
-            <Typography variant="OVERLINE TEXT">Email</Typography>
-          </Grid>
-          <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
-            <TextField
-              id="standard-basic"
-              label="Enter email"
-              name="email"
-              required
-              fullWidth
-            />
-          </Grid>
-          {/* Phone */}
-          <Grid item xs={12} md={4}>
-            <Typography variant="OVERLINE TEXT">Phone</Typography>
-          </Grid>
-          <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
-            <TextField
-              id="standard-basic"
-              label="Enter number"
-              name="phone"
-              required
-              fullWidth
-            />
-          </Grid>
-          {/* Fees */}
-          <Grid item xs={12} md={4}>
-            <Typography variant="OVERLINE TEXT">Fees</Typography>
-          </Grid>
-          <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
-            <TextField
-              id="standard-basic"
-              label="Set Fees"
-              name="fee"
-              required
-              fullWidth
-            />
-          </Grid>
-          {/* Age */}
-          <Grid item xs={12} md={4}>
-            <Typography variant="OVERLINE TEXT">Age</Typography>
-          </Grid>
-          <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
-            <TextField
-              id="standard-basic"
-              label="Set Age"
-              name="age"
-              required
-              fullWidth
-            />
-          </Grid>
-          {/* Specialist */}
-          <Grid item xs={12} md={4}>
-            <Typography variant="OVERLINE TEXT">Specialist</Typography>
-          </Grid>
-          <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
-            <TextField
-              id="standard-basic"
-              label="Speciality"
-              name="specialist"
-              required
-              fullWidth
-            />
-          </Grid>
-          {/* Address */}
-          <Grid item xs={12} md={4}>
-            <Typography variant="OVERLINE TEXT">Address</Typography>
-          </Grid>
-          <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
-            <TextField
-              id="standard-basic"
-              label="Enter Address"
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          padding: ".5rem 2rem",
+          textAlign: "start",
+        }}
+      >
+        {/* Add Name */}
+        <Grid item xs={12} md={4}>
+          <Typography variant="OVERLINE TEXT">Name</Typography>
+        </Grid>
+        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
+          <TextField
+            id="standard-basic"
+            label="Enter name"
+            name="name"
+            required
+            fullWidth
+            {...register("name", {
+              // required: {
+              //   value: true,
+              //   message: "*Name is required",
+              // },
+            })}
+          />
+        </Grid>
+        {/* Email */}
+        <Grid item xs={12} md={4}>
+          <Typography variant="OVERLINE TEXT">Email</Typography>
+        </Grid>
+        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
+          <TextField
+            id="standard-basic"
+            label="Enter email"
+            name="email"
+            required
+            fullWidth
+            {...register("email", {
+              // required: {
+              //   value: true,
+              //   message: "*Email is required",
+              // },
+            })}
+          />
+        </Grid>
+        {/* Phone */}
+        <Grid item xs={12} md={4}>
+          <Typography variant="OVERLINE TEXT">Phone</Typography>
+        </Grid>
+        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
+          <TextField
+            id="standard-basic"
+            label="Enter number"
+            name="phone"
+            required
+            fullWidth
+            {...register("phone", {
+              // required: {
+              //   value: true,
+              //   message: "*Email is required",
+              // },
+            })}
+          />
+        </Grid>
+        {/* Fees */}
+        <Grid item xs={12} md={4}>
+          <Typography variant="OVERLINE TEXT">Fees</Typography>
+        </Grid>
+        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
+          <TextField
+            id="standard-basic"
+            label="Set Fees"
+            name="fee"
+            required
+            fullWidth
+            {...register("fee", {
+              // required: {
+              //   value: true,
+              //   message: "*Email is required",
+              // },
+            })}
+          />
+        </Grid>
+        {/* Age */}
+        <Grid item xs={12} md={4}>
+          <Typography variant="OVERLINE TEXT">Age</Typography>
+        </Grid>
+        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
+          <TextField
+            id="standard-basic"
+            label="Set Age"
+            name="age"
+            required
+            fullWidth
+            {...register("age", {
+              // required: {
+              //   value: true,
+              //   message: "*Email is required",
+              // },
+            })}
+          />
+        </Grid>
+        {/* Specialist */}
+        <Grid item xs={12} md={4}>
+          <Typography variant="OVERLINE TEXT">Specialist</Typography>
+        </Grid>
+        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
+          <TextField
+            id="standard-basic"
+            label="Speciality"
+            name="speciality"
+            required
+            fullWidth
+            {...register("speciality", {
+              // required: {
+              //   value: true,
+              //   message: "*Speciality is required",
+              // },
+            })}
+          />
+        </Grid>
+        {/* Address */}
+        <Grid item xs={12} md={4}>
+          <Typography variant="OVERLINE TEXT">Address</Typography>
+        </Grid>
+        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
+          <TextField
+            id="standard-basic"
+            label="Enter Address"
+            variant="standard"
+            name="address"
+            multiline
+            rows={5}
+            fullWidth
+            {...register("address", {
+              // required: {
+              //   value: true,
+              //   message: "*Address is required",
+              // },
+            })}
+          />
+        </Grid>
+        {/* Degrees */}
+        <Grid item xs={12} md={4}>
+          <Typography variant="OVERLINE TEXT">Choose Degrees</Typography>
+        </Grid>
+        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
+          <Box>
+            <Select
+              labelId="demo-multiple-chip-label"
+              id="demo-multiple-chip"
+              name="degrees"
+              value={personName}
+              onChange={handleChange}
               variant="standard"
-              name="address"
-              multiline
-              rows={5}
               fullWidth
-            />
-          </Grid>
-          {/* Degrees */}
-          <Grid item xs={12} md={4}>
-            <Typography variant="OVERLINE TEXT">Choose Degrees</Typography>
-          </Grid>
-          <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
-            <Box>
-              <Select
-                labelId="demo-multiple-chip-label"
-                id="demo-multiple-chip"
-                name="degrees"
-                multiple
-                value={personName}
-                onChange={handleChange}
-                variant="standard"
-                fullWidth
-                input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-                renderValue={(selected) => (
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
-                    ))}
-                  </Box>
-                )}
-                MenuProps={MenuProps}
-              >
-                <MenuItem disabled value="">
-                  <em>You Can Choose Multiple Degrees </em>
+              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+              renderValue={(selected) => (
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                  {selected.map((value) => (
+                    <Chip key={value} label={value} />
+                  ))}
+                </Box>
+              )}
+              MenuProps={MenuProps}
+            >
+              <MenuItem disabled value="">
+                <em>You Can Choose Multiple Degrees </em>
+              </MenuItem>
+              {degreeList.map((name) => (
+                <MenuItem
+                  key={name}
+                  value={name}
+                  style={getStyles(name, personName, theme)}
+                >
+                  {name}
                 </MenuItem>
-                {degreeList.map((name) => (
-                  <MenuItem
-                    key={name}
-                    value={name}
-                    style={getStyles(name, personName, theme)}
-                  >
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Box>
-          </Grid>
-          {/* Salary */}
-          <Grid item xs={12} md={4}>
-            <Typography variant="OVERLINE TEXT">Salary</Typography>
-          </Grid>
-          <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
-            <TextField
-              id="standard-basic"
-              label="Enter salary"
-              name="salary"
-              // required
-              fullWidth
-            />
-          </Grid>
-          {/* available date */}
-          <Grid item xs={12} md={4}>
-            <Typography variant="OVERLINE TEXT">Available Time</Typography>
-          </Grid>
-          <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
-            <TextField
-              id="standard-basic"
-              label="Eg: 8pm-10pm"
-              name="time"
-              required
-              fullWidth
-            />
-          </Grid>
-          {/* Joining date */}
-          <Grid item xs={12} md={4}>
-            <Typography variant="OVERLINE TEXT">Date Of Joining</Typography>
-          </Grid>
-          <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-6.5rem" } }}>
-            {/* <TextField
+              ))}
+            </Select>
+          </Box>
+        </Grid>
+        {/* Salary */}
+        <Grid item xs={12} md={4}>
+          <Typography variant="OVERLINE TEXT">Salary</Typography>
+        </Grid>
+        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
+          <TextField
+            id="standard-basic"
+            label="Enter salary"
+            name="salary"
+            // required
+            fullWidth
+            {...register("salary", {
+              // required: {
+              //   value: true,
+              //   message: "*Salary is required",
+              // },
+            })}
+          />
+        </Grid>
+        {/* available date */}
+        <Grid item xs={12} md={4}>
+          <Typography variant="OVERLINE TEXT">Available Time</Typography>
+        </Grid>
+        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
+          <TextField
+            id="standard-basic"
+            label="Eg: 8pm-10pm"
+            name="availbleTime"
+            required
+            fullWidth
+            {...register("availbleTime", {
+              // required: {
+              //   value: true,
+              //   message: "*Availble time is required",
+              // },
+            })}
+          />
+        </Grid>
+        {/* Joining date */}
+        <Grid item xs={12} md={4}>
+          <Typography variant="OVERLINE TEXT">Date Of Joining</Typography>
+        </Grid>
+        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-6.5rem" } }}>
+          {/* <TextField
               id="standard-basic"
               label="Eg: 28-12-20"
               name="salary"
               required
               fullWidth
             /> */}
-            <Calender value={date} setValue={setDate} />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Typography variant="OVERLINE TEXT">Gender</Typography>
-          </Grid>
-          <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
-            <RadioGroup
-              row
-              aria-labelledby="demo-row-radio-buttons-group-label"
-              name="gender"
-              required
-            >
-              <FormControlLabel value="male" control={<Radio />} label="Male" />
-
-              <FormControlLabel
-                value="female"
-                control={<Radio />}
-                label="Female"
-              />
-            </RadioGroup>
-          </Grid>
-          {/* add image */}
-          {/* <Grid item xs={12} md={4}>
+          <Calender value={date} setValue={setDate} />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Typography variant="OVERLINE TEXT">Gender</Typography>
+        </Grid>
+        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
+          <Controller
+            rules={{ required: true }}
+            control={control}
+            name="gender"
+            render={({ field }) => (
+              <RadioGroup {...field}>
+                <FormControlLabel
+                  value="MALE"
+                  control={<Radio />}
+                  label="Male"
+                />
+                <FormControlLabel
+                  value="FEMALE"
+                  control={<Radio />}
+                  label="Female"
+                />
+              </RadioGroup>
+            )}
+          />
+        </Grid>
+        {/* add image */}
+        {/* <Grid item xs={12} md={4}>
             <Typography variant="OVERLINE TEXT">Add Image</Typography>
           </Grid>
           <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
@@ -328,30 +397,33 @@ const AddDoctor = () => {
               />
             </Fab>
           </Grid> */}
-          <Grid item xs={12} md={4}>
-            <Typography variant="OVERLINE TEXT">Decision</Typography>
-          </Grid>
-          <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
-            <Box sx={{ display: "flex", margin: "1rem 0" }}>
-              <Button variant="outlined" color="error" type="reset">
-                RESET
-              </Button>
-              <Chip
-                label="OR"
-                color="secondary"
-                style={{
-                  marginLeft: "-.8rem",
-                  marginRight: "-.8rem",
-                  marginTop: ".1rem",
-                }}
-              />
-              <Button variant="outlined" color="success" type="submit">
-                SAVE
-              </Button>
-            </Box>
-          </Grid>
+        <Grid item xs={12} md={4}>
+          <Typography variant="OVERLINE TEXT">Decision</Typography>
         </Grid>
-      </form>
+        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
+          <Box sx={{ display: "flex", margin: "1rem 0" }}>
+            <Button variant="outlined" color="error" type="reset">
+              RESET
+            </Button>
+            <Chip
+              label="OR"
+              color="secondary"
+              style={{
+                marginLeft: "-.8rem",
+                marginRight: "-.8rem",
+                marginTop: ".1rem",
+              }}
+            />
+            <Button
+              variant="outlined"
+              color="success"
+              onClick={handleSubmit(onSubmit)}
+            >
+              SAVE
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
     </Box>
   );
 };
