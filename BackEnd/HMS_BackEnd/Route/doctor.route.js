@@ -51,7 +51,7 @@ DoctorRoutes.post("/addDoctor", async (req, res, next) => {
         return next(new HttpError('Invalid inputs! Please check again.', 422));
     }
 
-    const { name, email, password,  phone, fee, age, speciality, address, degree, salary,availbleTime, dateOfJoin ,gender } = req.body;
+    const { name, userName, email, password,  phone, fee, age, speciality, address, degree, salary,availbleTime, dateOfJoin ,gender } = req.body;
 
     let existingDoctor;
     try{
@@ -76,6 +76,7 @@ DoctorRoutes.post("/addDoctor", async (req, res, next) => {
     console.log(hashedPassword);
     const newDoctor = new Doctor({
         doctorid: uuid_v4(),
+        userName,
         name,
         email,
         password: hashedPassword,

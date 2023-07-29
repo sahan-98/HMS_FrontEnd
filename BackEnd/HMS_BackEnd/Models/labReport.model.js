@@ -15,6 +15,21 @@ let labsReports = new Schema(
       required: true,
     },
 
+    doctorid: {
+      type: String,
+      required: true,
+    },
+
+    labAssistantid: {
+      type: String,
+      required: true,
+    },
+
+    paitentid: {
+      type: String,
+      required: true,
+    },
+
     LDL: {
       type: String,
     },

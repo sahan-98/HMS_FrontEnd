@@ -1,5 +1,5 @@
 const express = require("express");
-const PaitentRoutes = express.Router();
+const LabAssistantRoutes = express.Router();
 const bcrypt = require("bcrypt");
 // const session = require("express-session");
 // const auth = require("./Auth");
@@ -8,13 +8,13 @@ const bcrypt = require("bcrypt");
 // const jwt = require("jsonwebtoken");
 // var Mailgen = require("mailgen");
 
-let Paitent = require("../Models/paitents.model");
+let LabAssistant = require("../Models/labAssistant.model");
 let ErrorLog = require("../Models/errorlog.model");
 
-// add User
+// add LabAssistant
 
-PaitentRoutes.post("/add", async (req, res) => {
-  const { mobile,userName, password, email, address, dateOfBirth, age, gender, firstname, lastname, conpass } = req.body;
+LabAssistantRoutes.post("/add", async (req, res) => {
+  const { mobile, userName, password, email, address, dateOfBirth, age, firstname, lastname, conpass } = req.body;
 
   const salt = await bcrypt.genSalt();
   const passwordHash = await bcrypt.hash(password, salt);
@@ -27,7 +27,6 @@ PaitentRoutes.post("/add", async (req, res) => {
     address == "" ||
     dateOfBirth == "" ||
     age == "" ||
-    gender == "" ||
     firstname == "" ||
     lastname == ""
   )
@@ -36,14 +35,14 @@ PaitentRoutes.post("/add", async (req, res) => {
   if (password !== conpass)
     return res.status(202).json({ warn: "Passwords Do not Match!" });
 
-  const exist = await Paitent.findOne({ email: email });
+  const exist = await LabAssistant.findOne({ email: email });
   if (exist) {
     return res
       .status(202)
       .json({ warn: "An account is Exist with this email" });
   }
 
-  const exist2 = await Paitent.findOne({ mobile: mobile });
+  const exist2 = await LabAssistant.findOne({ mobile: mobile });
   if (exist2) {
     return res
       .status(202)
@@ -52,7 +51,7 @@ PaitentRoutes.post("/add", async (req, res) => {
 
   // upload
 
-  const newPaitent = new Paitent({
+  const newLabAssistant = new LabAssistant({
     mobile,
     userName,
     password: passwordHash,
@@ -60,13 +59,12 @@ PaitentRoutes.post("/add", async (req, res) => {
     address, 
     dateOfBirth, 
     age,
-    gender,
     firstname,
     lastname,
     status: "New",
   });
 
-  await newPaitent
+  await newLabAssistant
     .save()
     .then(async (respond) => {
       res.status(200).json({ message: "Successfull" });
@@ -85,7 +83,7 @@ PaitentRoutes.post("/add", async (req, res) => {
 //   const { mobile, password } = req.body;
 
 //   try {
-//     const Login = await Paitent.findOne({ mobile: mobile });
+//     const Login = await User.findOne({ mobile: mobile });
 
 //     if (mobile == "" || password == "")
 //       return res
@@ -129,7 +127,7 @@ PaitentRoutes.post("/add", async (req, res) => {
 //         type: "invalidLoginAttempt",
 //         description: "An suspisious Login Attemp detected!",
 //         status: 0,
-//         endpoint: "Paitent/validate",
+//         endpoint: "User/validate",
 //         ip: req.connection.remoteAddress,
 //       });
 
@@ -144,7 +142,7 @@ PaitentRoutes.post("/add", async (req, res) => {
 //     });
 //     res.status(200).json({
 //       token,
-//       Paitent: {
+//       User: {
 //         id: Login._id,
 //         mobile: Login.mobile,
 //         email: Login.email,
@@ -159,7 +157,7 @@ PaitentRoutes.post("/add", async (req, res) => {
 //   }
 // });
 
-// // Paitent Session Validation by token
+// // User Session Validation by token
 // PaitentRoutes.get("/session-validate", async (req, res) => {
 //   try {
 //     const token = req.header("token");
@@ -170,7 +168,7 @@ PaitentRoutes.post("/add", async (req, res) => {
 //     const validate = jwt.verify(token, config.JWT_SECRET);
 //     if (!validate) return res.json(false);
 
-//     const Login = await Paitent.findById(validate.id);
+//     const Login = await User.findById(validate.id);
 //     if (!Login) return res.json(false);
 
 //     return res.json(true);
@@ -180,18 +178,18 @@ PaitentRoutes.post("/add", async (req, res) => {
 //   }
 // });
 
-// update Paitent
-PaitentRoutes.post("/update/:id", async (req, res) => {
+// update LabAssistant
+LabAssistantRoutes.post("/update/:id", async (req, res) => {
   console.log(req.body);
 
   try {
-    Paitent.findById(req.params.id)
-      .then((paitentObj) => {
-        paitentObj.firstname = req.body.firstname;
-        paitentObj.lastname = req.body.lastname;
-        paitentObj.email = req.body.email;
+    LabAssistant.findById(req.params.id)
+      .then((labAssistantObj) => {
+        labAssistantObj.firstname = req.body.firstname;
+        labAssistantObj.lastname = req.body.lastname;
+        labAssistantObj.email = req.body.email;
 
-        paitentObj
+        labAssistantObj
           .save()
           .then(() => {
             return res.status(200).json("Updated");
@@ -206,17 +204,17 @@ PaitentRoutes.post("/update/:id", async (req, res) => {
   }
 });
 
-PaitentRoutes.route("/:id").get(async function (req, res) {
+LabAssistantRoutes.route("/:id").get(async function (req, res) {
   try {
     let id = req.params.id;
 
-    let paitent = await Paitent.findById(id);
-    if (!paitent) {
+    let labAssistant = await LabAssistant.findById(id);
+    if (!labAssistant) {
       console.log("err");
       return res.status(400).json({ message: err });
     } else {
       // Return the organizer and associated events
-      return res.status(200).json({ success: true, data: paitent });
+      return res.status(200).json({ success: true, data: labAssistant });
     }
   } catch (error) {
     console.error(error);
@@ -225,14 +223,14 @@ PaitentRoutes.route("/:id").get(async function (req, res) {
   }
 });
 
-PaitentRoutes.get("/", async (req, res) => {
+LabAssistantRoutes.get("/", async (req, res) => {
   try {
-    let paitents = await Paitent.find().sort({ createdAt: -1 });
-    if (!paitents) {
+    let uselabAssistants = await LabAssistant.find().sort({ createdAt: -1 });
+    if (!uselabAssistants) {
       console.log("err");
       return res.status(400).json({ message: "Details not available" });
     } else {
-      res.status(200).json({ success: true, data: paitents });
+      res.status(200).json({ success: true, data: uselabAssistants });
     }
   } catch (error) {
     console.error(error);
@@ -243,4 +241,4 @@ PaitentRoutes.get("/", async (req, res) => {
 
 //update product by id
 
-module.exports = PaitentRoutes;
+module.exports = LabAssistantRoutes;

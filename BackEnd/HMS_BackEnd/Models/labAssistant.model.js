@@ -2,34 +2,63 @@ const mongoose = require('mongoose'); // Erase if already required
 
 // Declare the Schema of the Mongo model
 var labAssistSchema = new mongoose.Schema({
-    name:{
-        type:String,
-        required:true,
-        unique:true,
-        index:true,
-    },
-    email:{
-        type:String,
-        required:true,
-        unique:true,
-    },
-    mobile:{
-        type:String,
-        required:true,
-        unique:true,
-    },
-    password:{
-        type:String,
-        required:true,
-    },
-    labReport: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "LabsReports",
+    userName: {
         required: true,
-        index: true,
+        type: String,
+      },
+
+    password: {
+        required: true,
+        type: String,
+      },
+  
+      email: {
+        required: true,
+        unique: true,
+        type: String,
+      },
+
+      firstname: {
+        required: true,
+        type: String,
+      },
+
+      lastname: {
+        required: true,
+        type: String,
+      },
+  
+      mobile: {
+        required: true,
+        unique: true,
+        type: String,
+      },
+  
+      email: {
+        required: true,
+        unique: true,
+        type: String,
+      },
+  
+      address: {
+        required: true,
+        unique: true,
+        type: String,
+      },
+  
+      dateOfBirth: {
+        required: true,
+        unique: true,
+        type: String,
+      },
+  
+      age: {
+        required: true,
+        unique: true,
+        type: String,
       },
     
 });
 
 //Export the model
-module.exports = mongoose.model('LabAssistants', labAssistSchema);
+module.exports = mongoose.model('LabAssistant', labAssistSchema);

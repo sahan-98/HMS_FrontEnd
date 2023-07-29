@@ -6,6 +6,11 @@ const Schema = mongoose.Schema;
 // Define collection and schema for Users
 let paitents = new Schema(
   {
+    userName: {
+      required: true,
+      type: String,
+    },
+
     password: {
       required: true,
       type: String,
@@ -55,11 +60,10 @@ let paitents = new Schema(
       type: String,
     },
 
-    labReport: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "LabsReports",
+    gender: {
       required: true,
-      index: true,
+      unique: true,
+      type: String,
     },
 
     // imgURL: {
@@ -72,8 +76,8 @@ let paitents = new Schema(
     // },
   },
   {
-    collection: "paitents",
+    collection: "Paitent",
   }
 );
 
-module.exports = mongoose.model("paitents", paitents);
+module.exports = mongoose.model("Paitent", paitents);
