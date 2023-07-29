@@ -234,7 +234,7 @@ export default function NewHeader() {
               </div>
             }
             sx={{
-              height: expandedNodeId === 1 ? 250 : 0,
+              height: expandedNodeId === 1 ? 100 : 0,
               flexGrow: 1,
               maxWidth: 420,
               overflowY: "hidden",
@@ -259,14 +259,13 @@ export default function NewHeader() {
                 </ListItemButton>
               </ListItem>
             </NavLink>
-            <NavLink
+            {/* <NavLink
               to="/approveDoctor"
               style={{ textDecoration: "none", width: "100%", color: "#000" }}
             >
               <ListItem disablePadding>
                 <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
                   <ListItemIcon>
-                    {/* <BsCardChecklist style={{ color: '#000', fontSize: '1.3rem' }} /> */}
                     <BsPersonLinesFill
                       style={{ color: "#000", fontSize: "1.4rem" }}
                     />
@@ -277,7 +276,7 @@ export default function NewHeader() {
                   />
                 </ListItemButton>
               </ListItem>
-            </NavLink>
+            </NavLink> */}
             <NavLink
               to="/addDoctor"
               style={{ textDecoration: "none", width: "100%", color: "#000" }}
@@ -296,7 +295,7 @@ export default function NewHeader() {
                 </ListItemButton>
               </ListItem>
             </NavLink>
-            <NavLink
+            {/* <NavLink
               to="/deleteDoctor"
               style={{ textDecoration: "none", width: "100%", color: "#000" }}
             >
@@ -313,8 +312,8 @@ export default function NewHeader() {
                   />
                 </ListItemButton>
               </ListItem>
-            </NavLink>
-            <NavLink
+            </NavLink> */}
+            {/* <NavLink
               to="/updateDoctor"
               style={{ textDecoration: "none", width: "100%", color: "#000" }}
             >
@@ -331,7 +330,7 @@ export default function NewHeader() {
                   />
                 </ListItemButton>
               </ListItem>
-            </NavLink>
+            </NavLink> */}
           </TreeView>
 
           <ListItem

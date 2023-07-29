@@ -1,14 +1,19 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
 import "./index.css";
 import App from "./App";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import SystemAlerts from "./components/SystemAlerts/SystemAlerts";
+import store from "./app/store";
 const client = new QueryClient();
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
   <QueryClientProvider client={client}>
-    <App />
+    <Provider store={store}>
+      <SystemAlerts />
+      <App />
+    </Provider>
   </QueryClientProvider>
   // </React.StrictMode>
 );

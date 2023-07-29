@@ -16,6 +16,11 @@ export const post = async ({ path, data }) => {
     },
     body: JSON.stringify(data),
   });
+  if (response.status !== 200) {
+    const error = await response.json();
+    console.log(error);
+    throw new Error(error.error);
+  }
   return await response.json();
 };
 
