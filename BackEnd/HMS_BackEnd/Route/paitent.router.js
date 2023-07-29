@@ -8,7 +8,7 @@ const config = require("../configure.js");
 const jwt = require("jsonwebtoken");
 // var Mailgen = require("mailgen");
 
-let User = require("../Models/user.model");
+let User = require("../Models/paitents.model");
 let ErrorLog = require("../Models/errorlog.model");
 
 // add User

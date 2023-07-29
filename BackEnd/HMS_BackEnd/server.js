@@ -12,8 +12,8 @@ const mongoose = require("mongoose");
 
 const config = require("./configure.js");
 
-const userRoute = require("./Route/user.router");
-const companyRoute = require("./Route/company.router");
+const paitentRoute = require("./Route/paitent.router.js");
+const labReportRoute = require("./Route/labReports.router.js");
 const doctorRoute = require("./Route/doctor.route.js");
 
 mongoose.Promise = global.Promise;
@@ -40,8 +40,8 @@ app.use(
   })
 );
 
-app.use("/company", companyRoute);
-app.use("/user", userRoute);
+app.use("/report", labReportRoute);
+app.use("/paitent", paitentRoute);
 app.use("/doctor", doctorRoute);
 
 app.listen(PORT, function () {
