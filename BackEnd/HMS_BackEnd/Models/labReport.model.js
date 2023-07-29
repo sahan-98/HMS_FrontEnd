@@ -15,6 +15,21 @@ let labsReports = new Schema(
       required: true,
     },
 
+    doctorid: {
+      type: String,
+      required: true,
+    },
+
+    labAssistantid: {
+      type: String,
+      required: true,
+    },
+
+    paitentid: {
+      type: String,
+      required: true,
+    },
+
     LDL: {
       type: String,
     },
@@ -62,8 +77,8 @@ let labsReports = new Schema(
   },
   {
     timestamps: true,
-    collection: "labsReports",
+    collection: "LabsReports",
   }
 );
 
-module.exports = mongoose.model("labsReports", labsReports);
+module.exports = mongoose.model("LabsReports", labsReports);

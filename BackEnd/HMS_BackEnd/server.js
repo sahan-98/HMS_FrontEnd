@@ -15,6 +15,7 @@ const config = require("./configure.js");
 const paitentRoute = require("./Route/paitent.router.js");
 const labReportRoute = require("./Route/labReports.router.js");
 const doctorRoute = require("./Route/doctor.route.js");
+const labAssistantRoute = require("./Route/labAssistants.router.js");
 
 mongoose.Promise = global.Promise;
 mongoose
@@ -43,6 +44,7 @@ app.use(
 app.use("/report", labReportRoute);
 app.use("/paitent", paitentRoute);
 app.use("/doctor", doctorRoute);
+app.use("/labAssistant", labAssistantRoute);
 
 app.listen(PORT, function () {
   console.log("Server is running on Port:", PORT);
