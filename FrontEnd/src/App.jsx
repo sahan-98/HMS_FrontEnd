@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Home from "./Pages/Home/Home/Home";
-import Footer from "./Pages/Shared/Footer/Footer";
 import Staffs from "./Pages/Staffs/Staffs";
 import Appointment from "./Pages/Appointments/Appointment";
 import Dashboard from "./Pages/Dashboard/Dashboard";
@@ -17,6 +16,12 @@ import AddPatient from "./Pages/Patients/AddPatients/AddPatient";
 import Patients from "./Pages/Patients/Patients/Patients";
 import PatientDetails from "./Pages/Patients/PatientsDetails/PatientDetails";
 import ApproveDoctor from "./Pages/Doctors/ApproveDoctor/ApproveDoctor";
+import Landing from "./Pages/PatientPortal/Landing";
+import HDPStep01 from "./Pages/PatientPortal/HeartDiseasePrediction/Step01";
+import HDPStep02 from "./Pages/PatientPortal/HeartDiseasePrediction/Step02";
+import HDPStep03 from "./Pages/PatientPortal/HeartDiseasePrediction/Step03";
+import HDPStep04 from "./Pages/PatientPortal/HeartDiseasePrediction/Step04";
+import HDPResult from "./Pages/PatientPortal/HeartDiseasePrediction/Result";
 
 function App() {
   return (
@@ -27,6 +32,23 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/patient-portal">
+            <Route path="landing" index element={<Landing />} />
+            <Route path="heart-disease-prediction">
+              <Route path="step-01" element={<HDPStep01 />} />
+              <Route path="step-02" element={<HDPStep02 />} />
+              <Route path="step-03" element={<HDPStep03 />} />
+              <Route path="step-04" element={<HDPStep04 />} />
+              <Route path="result" element={<HDPResult />} />
+            </Route>
+            <Route path="channel-doctor">
+              <Route path="step-01" element={<HDPStep01 />} />
+              <Route path="step-02" element={<HDPStep02 />} />
+              <Route path="step-03" element={<HDPStep03 />} />
+              <Route path="step-04" element={<HDPStep04 />} />
+              <Route path="result" element={<HDPResult />} />
+            </Route>
+          </Route>
           {/* NESTED ROUTING APPLIED */}
           <Route path="/" element={<Dashboard />}>
             <Route index element={<Home></Home>} />
@@ -49,7 +71,7 @@ function App() {
             <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>
-        <Footer></Footer>
+        {/* <Footer></Footer> */}
       </Router>
     </div>
   );
