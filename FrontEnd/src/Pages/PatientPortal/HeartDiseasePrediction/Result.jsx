@@ -55,7 +55,7 @@ const Result = () => {
       </div>
       <Box my={1}>
         <StyledText fontSize="16px">
-          Channel a doctor and make sure everything going well.
+          Channel a doctor to make sure everything is going well.
         </StyledText>
       </Box>
       <Button

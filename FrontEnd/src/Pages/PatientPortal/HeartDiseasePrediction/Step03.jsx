@@ -1,18 +1,10 @@
 import Header from "../Header";
 import Layout from "../Layout";
-import {
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  styled,
-} from "@mui/material";
+import { Box, Button, TextField, styled } from "@mui/material";
 import BlueAcentCard from "../../../components/BlueAcentCard/BlueAcentCard";
 import HeadingText from "../../../components/HeadingText/HeadingText";
 import Progress from "./Progress";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 const StyledButton = styled(Button)(`
@@ -27,14 +19,12 @@ color: #fff;
 
 const Step03 = () => {
   const navigate = useNavigate();
-  const [gender, setGender] = useState("NO_SELECTION");
   const handleNextClick = useCallback(() => {
     navigate("/patient-portal/heart-disease-prediction/step-04");
   }, [navigate]);
-
-  const handleGenderChange = useCallback((event) => {
-    setGender(event.target.value);
-  }, []);
+  const handleBackClick = useCallback(() => {
+    navigate("/patient-portal/heart-disease-prediction/step-02");
+  }, [navigate]);
 
   return (
     <Layout>
@@ -50,38 +40,42 @@ const Step03 = () => {
       >
         <BlueAcentCard>
           <HeadingText text="Heart disease prediction" />
-          <FormControl fullWidth sx={{ textAlign: "start" }}>
-            <InputLabel id="demo-simple-select-label">
-              Chest Pain Type
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              value={gender}
-              label="Chest Pain Type"
-              onChange={handleGenderChange}
-            >
-              <MenuItem value={"NO_SELECTION"}>Please select</MenuItem>
-              <MenuItem value={"MALE"}>Male</MenuItem>
-              <MenuItem value={"FEMALE"}>Female</MenuItem>
-            </Select>
-          </FormControl>
+          <TextField label="Resting bp" variant="outlined" fullWidth />
           <TextField
-            label="Cholesterol"
+            label="Resting ECG"
             variant="outlined"
             fullWidth
             sx={{ mt: 2 }}
           />
           <TextField
-            label="Fasting Bs"
+            label="Max HR"
             variant="outlined"
             fullWidth
             sx={{ mt: 2 }}
           />
 
-          <Progress currentStep={3} />
-          <StyledButton fullWidth sx={{ my: 4 }} onClick={handleNextClick}>
-            Next
-          </StyledButton>
+          <Progress currentStep={2} />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: "3rem",
+            }}
+          >
+            <Button
+              fullWidth
+              sx={{ my: 4 }}
+              onClick={handleBackClick}
+              variant="outlined"
+              color="warning"
+            >
+              Back
+            </Button>
+            <StyledButton fullWidth sx={{ my: 4 }} onClick={handleNextClick}>
+              Next
+            </StyledButton>
+          </Box>
         </BlueAcentCard>
       </div>
     </Layout>

@@ -66,7 +66,7 @@ const Step01 = () => {
               <MenuItem value={"FEMALE"}>Female</MenuItem>
             </Select>
           </FormControl>
-          <Progress currentStep={1} />
+          <Progress currentStep={0} />
           <StyledButton fullWidth sx={{ my: 4 }} onClick={handleNextClick}>
             Next
           </StyledButton>

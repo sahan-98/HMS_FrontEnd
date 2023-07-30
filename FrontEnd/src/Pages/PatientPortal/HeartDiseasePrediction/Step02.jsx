@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   FormControl,
   InputLabel,
@@ -27,14 +28,17 @@ color: #fff;
 
 const Step02 = () => {
   const navigate = useNavigate();
-  const [gender, setGender] = useState("NO_SELECTION");
+  const [chestPainType, setChestPainType] = useState("NO_SELECTION");
   const handleNextClick = useCallback(() => {
     navigate("/patient-portal/heart-disease-prediction/step-03");
   }, [navigate]);
 
-  const handleGenderChange = useCallback((event) => {
-    setGender(event.target.value);
+  const handleChestPainTypeChange = useCallback((event) => {
+    setChestPainType(event.target.value);
   }, []);
+  const handleBackClick = useCallback(() => {
+    navigate("/patient-portal/heart-disease-prediction/step-01");
+  }, [navigate]);
 
   return (
     <Layout>
@@ -56,13 +60,14 @@ const Step02 = () => {
             </InputLabel>
             <Select
               labelId="demo-simple-select-label"
-              value={gender}
+              value={chestPainType}
               label="Chest Pain Type"
-              onChange={handleGenderChange}
+              onChange={handleChestPainTypeChange}
             >
               <MenuItem value={"NO_SELECTION"}>Please select</MenuItem>
-              <MenuItem value={"MALE"}>Male</MenuItem>
-              <MenuItem value={"FEMALE"}>Female</MenuItem>
+              <MenuItem value={"Angina"}>Angina</MenuItem>
+              <MenuItem value={"Heart attack"}>Heart attack</MenuItem>
+              <MenuItem value={"Aortic dissection"}>Aortic dissection</MenuItem>
             </Select>
           </FormControl>
           <TextField
@@ -78,10 +83,28 @@ const Step02 = () => {
             sx={{ mt: 2 }}
           />
 
-          <Progress currentStep={2} />
-          <StyledButton fullWidth sx={{ my: 4 }} onClick={handleNextClick}>
-            Next
-          </StyledButton>
+          <Progress currentStep={1} />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: "3rem",
+            }}
+          >
+            <Button
+              fullWidth
+              sx={{ my: 4 }}
+              onClick={handleBackClick}
+              variant="outlined"
+              color="warning"
+            >
+              Back
+            </Button>
+            <StyledButton fullWidth sx={{ my: 4 }} onClick={handleNextClick}>
+              Next
+            </StyledButton>
+          </Box>
         </BlueAcentCard>
       </div>
     </Layout>
