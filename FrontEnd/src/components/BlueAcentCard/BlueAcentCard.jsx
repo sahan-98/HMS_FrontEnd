@@ -1,7 +1,7 @@
-import styled from "styled-components";
+import { styled } from "@mui/material";
 import proptypes from "prop-types";
 
-const StyledDiv = styled.div`
+const StyledDiv = styled("div")(`
   width: 400px;
   border-radius: 5px;
   border: 1px solid #67aff1;
@@ -9,10 +9,9 @@ const StyledDiv = styled.div`
   background-color: #fff;
   padding: 0 2rem;
   :hover {
-    cursor: pointer;
     box-shadow: 0px 0px 60px 4px rgba(119, 148, 224, 0.7);
   }
-`;
+`);
 
 const BlueAcentCard = ({ children }) => {
   return <StyledDiv>{children}</StyledDiv>;

@@ -4,7 +4,7 @@ import proptype from "prop-types";
 
 const Progress = ({ currentStep }) => {
   return (
-    <Grid container gap={2} my={2}>
+    <Grid container gap={2} mt={3}>
       {[1, 2, 3, 4].map((oneStep) => (
         <ProgressLine key={oneStep} isCompleted={oneStep <= currentStep} />
       ))}

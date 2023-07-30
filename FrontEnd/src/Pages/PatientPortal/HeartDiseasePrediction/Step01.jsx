@@ -1,20 +1,42 @@
-import styled from "styled-components";
 import BlueAcentCard from "../../../components/BlueAcentCard/BlueAcentCard";
 import Header from "../Header";
 import Layout from "../Layout";
-import { Button, TextField } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  styled,
+} from "@mui/material";
 import Progress from "./Progress";
+import { useCallback, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import HeadingText from "../../../components/HeadingText/HeadingText";
 
-const StyledParagraph = styled.p`
-  font-size: 1.5rem;
-  font-family: Hina Mincho;
-  color: #636363;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-`;
+const StyledButton = styled(Button)(`
+border-radius: 7px;
+border: 1px solid #DEDEDE;
+background: #59C169; 
+color: #fff;
+:hover {
+  background: #68E87D;
+}
+`);
 
 const Step01 = () => {
+  const navigate = useNavigate();
+  const [gender, setGender] = useState("NO_SELECTION");
+
+  const handleNextClick = useCallback(() => {
+    navigate("/patient-portal/heart-disease-prediction/step-02");
+  }, [navigate]);
+
+  const handleGenderChange = useCallback((event) => {
+    setGender(event.target.value);
+  }, []);
+
   return (
     <Layout>
       <Header />
@@ -28,28 +50,26 @@ const Step01 = () => {
         }}
       >
         <BlueAcentCard>
-          <StyledParagraph>Heart disease prediction</StyledParagraph>
-
+          <HeadingText text="Heart disease prediction" />
           <TextField label="Name" variant="outlined" fullWidth />
           <TextField label="Age" variant="outlined" fullWidth sx={{ mt: 2 }} />
-          <TextField
-            label="Gender"
-            variant="outlined"
-            fullWidth
-            sx={{ mt: 2 }}
-          />
+          <FormControl fullWidth sx={{ mt: 2, textAlign: "start" }}>
+            <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              value={gender}
+              label="Gender"
+              onChange={handleGenderChange}
+            >
+              <MenuItem value={"NO_SELECTION"}>Please select</MenuItem>
+              <MenuItem value={"MALE"}>Male</MenuItem>
+              <MenuItem value={"FEMALE"}>Female</MenuItem>
+            </Select>
+          </FormControl>
           <Progress currentStep={1} />
-
-          <Button
-            fullWidth
-            variant="contained"
-            sx={{
-              mt: 2,
-              mb: 4,
-            }}
-          >
+          <StyledButton fullWidth sx={{ my: 4 }} onClick={handleNextClick}>
             Next
-          </Button>
+          </StyledButton>
         </BlueAcentCard>
       </div>
     </Layout>

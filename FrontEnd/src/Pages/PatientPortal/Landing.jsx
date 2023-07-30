@@ -26,7 +26,7 @@ const Landing = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          gap: "8rem",
+          gap: "6rem",
         }}
       >
         <PatientChoiseCard onClick={handleCDClick}>
@@ -35,7 +35,7 @@ const Landing = () => {
         </PatientChoiseCard>
         <PatientChoiseCard onClick={handleHDPCardClick}>
           <img src={heart} alt="doctor" />
-          <h4>Channel doctor</h4>
+          <h4>Check Heart Disease</h4>
         </PatientChoiseCard>
       </div>
     </Layout>
