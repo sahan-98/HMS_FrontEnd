@@ -44,6 +44,7 @@ const PatientLogin = () => {
             label="Password"
             variant="outlined"
             fullWidth
+            type="password"
             sx={{ mt: 2 }}
           />
 

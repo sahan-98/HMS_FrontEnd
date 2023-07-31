@@ -33,7 +33,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/patientlogin" element={<PLogin />} />
+          <Route path="/patient-login" element={<PLogin />} />
           <Route path="/patient-portal">
             <Route path="landing" index element={<Landing />} />
             <Route path="heart-disease-prediction">
