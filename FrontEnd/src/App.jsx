@@ -13,7 +13,7 @@ import ViewDoctors from "./Pages/Patients/ViewDoctors/ViewDoctors";
 import DeleteDoctor from "./Pages/Doctors/DeleteDoctor/DeleteDoctor";
 import FindDoctor from "./Pages/Doctors/UpdateDoctor/FindDoctor";
 import AddPatient from "./Pages/Patients/AddPatients/AddPatient";
-import Patients from "./Pages/Patients/Patients/Patients";
+import Patients from "./Pages/Patients/Patients/PatientList";
 import PatientDetails from "./Pages/Patients/PatientsDetails/PatientDetails";
 import ApproveDoctor from "./Pages/Doctors/ApproveDoctor/ApproveDoctor";
 import Landing from "./Pages/PatientPortal/Landing";
