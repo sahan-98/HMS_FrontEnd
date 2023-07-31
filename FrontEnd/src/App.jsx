@@ -22,6 +22,7 @@ import HDPStep02 from "./Pages/PatientPortal/HeartDiseasePrediction/Step02";
 import HDPStep03 from "./Pages/PatientPortal/HeartDiseasePrediction/Step03";
 import HDPStep04 from "./Pages/PatientPortal/HeartDiseasePrediction/Step04";
 import HDPResult from "./Pages/PatientPortal/HeartDiseasePrediction/Result";
+import PLogin from "./Pages/Login/PatientLogin";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/patientlogin" element={<PLogin />} />
           <Route path="/patient-portal">
             <Route path="landing" index element={<Landing />} />
             <Route path="heart-disease-prediction">
