@@ -6,7 +6,7 @@ export const heartDiseasePredictionSlice = createSlice({
     name: "",
     age: 0,
     gender: "",
-    chesPainType: "",
+    chestPainType: "",
     cholestrol: 0,
     fastingBloodSugar: "",
     restingBloodPressure: 0,
@@ -21,7 +21,7 @@ export const heartDiseasePredictionSlice = createSlice({
       state.name = action.payload.name;
       state.age = action.payload.age;
       state.gender = action.payload.gender;
-      state.chesPainType = action.payload.chesPainType;
+      state.chestPainType = action.payload.chestPainType;
       state.cholestrol = action.payload.cholestrol;
       state.fastingBloodSugar = action.payload.fastingBloodSugar;
       state.restingBloodPressure = action.payload.restingBloodPressure;
@@ -36,7 +36,7 @@ export const heartDiseasePredictionSlice = createSlice({
       state.name = "";
       state.age = 0;
       state.gender = "";
-      state.chesPainType = "";
+      state.chestPainType = "";
       state.cholestrol = 0;
       state.fastingBloodSugar = "";
       state.restingBloodPressure = 0;

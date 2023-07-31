@@ -15,6 +15,8 @@ import Layout from "../Layout";
 import Progress from "./Progress";
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setHeartDiseasePrediction } from "../../../reducers/heartDiseasePredictionSlice";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
@@ -28,10 +30,33 @@ color: #fff;
 
 const Step02 = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const heartDiseasePredictionState = useSelector(
+    (state) => state.heartDiseasePrediction
+  );
+
   const [chestPainType, setChestPainType] = useState("NO_SELECTION");
+  const [cholestrol, setCholestrol] = useState("");
+  const [fastingBloodSugar, setFastingBloodSugar] = useState("");
+
   const handleNextClick = useCallback(() => {
+    dispatch(
+      setHeartDiseasePrediction({
+        ...heartDiseasePredictionState,
+        chestPainType: chestPainType,
+        cholestrol: cholestrol,
+        fastingBloodSugar: fastingBloodSugar,
+      })
+    );
     navigate("/patient-portal/heart-disease-prediction/step-03");
-  }, [navigate]);
+  }, [
+    navigate,
+    chestPainType,
+    cholestrol,
+    fastingBloodSugar,
+    dispatch,
+    heartDiseasePredictionState,
+  ]);
 
   const handleChestPainTypeChange = useCallback((event) => {
     setChestPainType(event.target.value);
@@ -40,6 +65,19 @@ const Step02 = () => {
     navigate("/patient-portal/heart-disease-prediction/step-01");
   }, [navigate]);
 
+  const onChangeCholestrol = useCallback(
+    (event) => {
+      setCholestrol(event.target.value);
+    },
+    [setCholestrol]
+  );
+
+  const onChangeFastingBloodSugar = useCallback(
+    (event) => {
+      setFastingBloodSugar(event.target.value);
+    },
+    [setFastingBloodSugar]
+  );
   return (
     <Layout>
       <Header />
@@ -75,12 +113,14 @@ const Step02 = () => {
             variant="outlined"
             fullWidth
             sx={{ mt: 2 }}
+            onChange={onChangeCholestrol}
           />
           <TextField
-            label="Fasting Bs"
+            label="Fasting Blood Sugar"
             variant="outlined"
             fullWidth
             sx={{ mt: 2 }}
+            onChange={onChangeFastingBloodSugar}
           />
 
           <Progress currentStep={1} />
