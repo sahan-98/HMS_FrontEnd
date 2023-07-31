@@ -14,6 +14,8 @@ import Progress from "./Progress";
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HeadingText from "../../../components/HeadingText/HeadingText";
+import { useDispatch, useSelector } from "react-redux";
+import { setHeartDiseasePrediction } from "../../../reducers/heartDiseasePredictionSlice";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
@@ -26,16 +28,44 @@ color: #fff;
 `);
 
 const Step01 = () => {
+  const dispatch = useDispatch();
+  const heartDiseasePredictionState = useSelector(
+    (state) => state.heartDiseasePrediction
+  );
   const navigate = useNavigate();
   const [gender, setGender] = useState("NO_SELECTION");
+  const [name, setName] = useState("");
+  const [age, setAge] = useState(0);
 
   const handleNextClick = useCallback(() => {
+    dispatch(
+      setHeartDiseasePrediction({
+        ...heartDiseasePredictionState,
+        name: name,
+        age: age,
+        gender: gender,
+      })
+    );
     navigate("/patient-portal/heart-disease-prediction/step-02");
-  }, [navigate]);
+  }, [navigate, dispatch, heartDiseasePredictionState, name, age, gender]);
 
   const handleGenderChange = useCallback((event) => {
     setGender(event.target.value);
   }, []);
+
+  const onChangeName = useCallback(
+    (event) => {
+      setName(event.target.value);
+    },
+    [setName]
+  );
+
+  const onChangeAge = useCallback(
+    (event) => {
+      setAge(event.target.value);
+    },
+    [setAge]
+  );
 
   return (
     <Layout>
@@ -51,8 +81,19 @@ const Step01 = () => {
       >
         <BlueAcentCard>
           <HeadingText text="Heart disease prediction" />
-          <TextField label="Name" variant="outlined" fullWidth />
-          <TextField label="Age" variant="outlined" fullWidth sx={{ mt: 2 }} />
+          <TextField
+            label="Name"
+            variant="outlined"
+            fullWidth
+            onChange={onChangeName}
+          />
+          <TextField
+            label="Age"
+            variant="outlined"
+            fullWidth
+            sx={{ mt: 2 }}
+            onChange={onChangeAge}
+          />
           <FormControl fullWidth sx={{ mt: 2, textAlign: "start" }}>
             <InputLabel id="demo-simple-select-label">Gender</InputLabel>
             <Select
