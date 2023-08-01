@@ -95,15 +95,10 @@ const AddDoctor = () => {
         background: "#fff",
       }}
     >
-      <Box style={{ display: "flex" }}>
-        <Button variant="contained">
-          <NavLink
-            to="/doctors"
-            style={{ textDecoration: "none", width: "100%", color: "#fff" }}
-          >
-            Doctors List
-          </NavLink>
-        </Button>
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+          Add Doctor
+        </Typography>
       </Box>
       <hr></hr>
       <Grid
