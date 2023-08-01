@@ -7,7 +7,7 @@ class LabAssistantService{
         });
     }
 
-    static  async newLabAssistant(labAssistant){
+    static  async newLabAssistant({labAssistant}){
         return await post({
             path: "/labAssistant/add",
             body: labAssistant

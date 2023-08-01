@@ -1,67 +1,26 @@
 import {
     Box,
     Button,
-    Chip, FormControlLabel,
+    Chip,
     Grid,
-    MenuItem,
-    OutlinedInput, Radio,
-    RadioGroup,
-    Select,
     TextField,
     Typography
 } from "@mui/material";
-import {NavLink} from "react-router-dom";
 import Calender from "../Shared/Calender/Calender.jsx";
-import {Controller, useForm} from "react-hook-form";
-import {useTheme} from "@mui/material/styles";
+import { useForm} from "react-hook-form";
 import {useState} from "react";
-import DoctorService from "../../app/services/doctor-service.js";
 import {showSystemAlert} from "../../app/services/alertServices.js";
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
-
-const degreeList = ["MBBS", "BCS", "FCPS", "PHD", "BMBS", "MBChC", "MBBCh"];
-function getStyles(name, personName, theme) {
-    return {
-        fontWeight:
-            personName.indexOf(name) === -1
-                ? theme.typography.fontWeightRegular
-                : theme.typography.fontWeightMedium,
-    };
-}
-
+import LabAssistantService from "../../app/services/lab-assistant-service.js";
+import calculateAge from "../../utils/calculate-age.js";
 
 export const AddLabAssistant = () => {
-
-    const theme = useTheme();
-    const [personName, setPersonName] = useState([]);
     const [date, setDate] = useState(new Date().toDateString());
-    // const [image, setImage] = useState(null);
-    const handleChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setPersonName(
-            // On autofill we get a stringified value.
-            typeof value === "string" ? value.split(",") : value
-        );
-    };
 
     const {
         register,
         handleSubmit,
         formState: { errors },
         setValue,
-        control,
     } = useForm({
         defaultValues: {
             gender: "",
@@ -71,18 +30,18 @@ export const AddLabAssistant = () => {
     const onSubmit = async (data) => {
         const formData = {
             ...data,
-            dateOfJoin: new Date(date).toLocaleDateString(),
-            degree: personName[0],
+            dateOfBirth: new Date(date).toLocaleDateString(),
+            age: calculateAge(new Date(date))
         };
 
         try {
-            const response = await DoctorService.newDoctor({
-                doctor: formData,
+            const response = await LabAssistantService.newLabAssistant({
+                labAssistant: formData,
             });
             console.log(response);
-            showSystemAlert("Doctor profile created", "success");
+            showSystemAlert("Lab assistant profile created", "success");
         } catch (error) {
-            showSystemAlert("An error occured while creating doctor", "error");
+            showSystemAlert("An error occurred while creating lab assistant profile", "error");
         }
     };
 
@@ -117,7 +76,7 @@ export const AddLabAssistant = () => {
                 <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
                     <TextField
                         id="standard-basic"
-                        label="Enter first name"
+                        placeholder="Enter first name"
                         name="firstname"
                         required
                         fullWidth
@@ -136,7 +95,7 @@ export const AddLabAssistant = () => {
                 <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
                     <TextField
                         id="standard-basic"
-                        label="Enter last name"
+                        placeholder="Enter last name"
                         name="lastname"
                         required
                         fullWidth
@@ -155,7 +114,7 @@ export const AddLabAssistant = () => {
                 <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
                     <TextField
                         id="standard-basic"
-                        label="Enter mobile number"
+                        placeholder="Enter mobile number"
                         name="mobile"
                         required
                         fullWidth
@@ -176,7 +135,7 @@ export const AddLabAssistant = () => {
                 <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
                     <TextField
                         id="standard-basic"
-                        label="Enter email"
+                        placeholder="Enter email"
                         name="email"
                         required
                         fullWidth
@@ -195,7 +154,7 @@ export const AddLabAssistant = () => {
                 <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
                     <TextField
                         id="standard-basic"
-                        label="Enter Address"
+                        placeholder="Enter Address"
                         variant="outlined"
                         name="address"
                         multiline
@@ -223,7 +182,7 @@ export const AddLabAssistant = () => {
                 <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
                     <TextField
                         id="standard-basic"
-                        label="Enter userName"
+                        placeholder="Enter userName"
                         name="userName"
                         required
                         fullWidth
@@ -242,7 +201,7 @@ export const AddLabAssistant = () => {
                 <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
                     <TextField
                         id="standard-basic"
-                        label="Enter password"
+                        placeholder="Enter password"
                         name="password"
                         required
                         fullWidth
