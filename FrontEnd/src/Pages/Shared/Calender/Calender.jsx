@@ -5,15 +5,14 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers';
 import { Container } from '@mui/system';
 import '../../Appointments/Appointment.css'
-const Calender = () => {
-  const [value, setValue] = React.useState(new Date());
-
+const Calender = ({value, setValue}) => {
   return (
     <Container >
       <LocalizationProvider dateAdapter={AdapterDateFns} >
         <DatePicker
           value={value}
           onChange={(newValue) => {
+              console.log(newValue);
             setValue(newValue);
           }}
           renderInput={(params) =>

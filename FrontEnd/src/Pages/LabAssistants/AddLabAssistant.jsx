@@ -33,6 +33,7 @@ export const AddLabAssistant = () => {
             dateOfBirth: new Date(date).toLocaleDateString(),
             age: calculateAge(new Date(date))
         };
+        console.log(formData);
 
         try {
             const response = await LabAssistantService.newLabAssistant({
