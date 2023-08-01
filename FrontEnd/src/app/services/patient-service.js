@@ -10,7 +10,7 @@ class PatientService {
   }
 
   static async newPatient({ patient }) {
-    return await post({ path: `/patient/addpatient`, data: patient });
+    return await post({ path: `/paitent/add`, data: patient });
   }
 
   static async updatePatient({ patientId, patient }) {

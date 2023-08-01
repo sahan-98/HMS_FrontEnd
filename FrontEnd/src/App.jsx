@@ -24,7 +24,7 @@ import HDPStep04 from "./Pages/PatientPortal/HeartDiseasePrediction/Step04";
 import HDPResult from "./Pages/PatientPortal/HeartDiseasePrediction/Result";
 import PLogin from "./Pages/Login/PatientLogin";
 import AllLabAssistants from "./Pages/LabAssistants/AllAssistants.jsx";
-import {AddLabAssistant} from "./Pages/LabAssistants/AddLabAssistant.jsx";
+import { AddLabAssistant } from "./Pages/LabAssistants/AddLabAssistant.jsx";
 
 function App() {
   return (
@@ -73,9 +73,9 @@ function App() {
             <Route path="registration" element={<Registration />} />
 
             <Route path={"all-lab-assistants"} element={<AllLabAssistants />} />
-            <Route path={'add-lab-assistant'} element={<AddLabAssistant />} />
+            <Route path={"add-lab-assistant"} element={<AddLabAssistant />} />
 
-             <Route path="*" element={<PageNotFound />} />
+            <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>
         {/* <Footer></Footer> */}
