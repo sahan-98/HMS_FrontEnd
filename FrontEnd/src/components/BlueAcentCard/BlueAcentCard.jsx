@@ -1,8 +1,8 @@
 import { styled } from "@mui/material";
 import proptypes from "prop-types";
 
-const StyledDiv = styled("div")(`
-  width: 400px;
+const StyledDiv = styled("div")(
+  `
   border-radius: 5px;
   border: 1px solid #67aff1;
   box-shadow: 0px 0px 60px 4px rgba(119, 148, 224, 0.5);
@@ -11,14 +11,17 @@ const StyledDiv = styled("div")(`
   :hover {
     box-shadow: 0px 0px 60px 4px rgba(119, 148, 224, 0.7);
   }
-`);
+`,
+  (props) => (props.width ? { width: props.width } : "")
+);
 
-const BlueAcentCard = ({ children }) => {
-  return <StyledDiv>{children}</StyledDiv>;
+const BlueAcentCard = ({ children, width = "400px" }) => {
+  return <StyledDiv width={width}>{children}</StyledDiv>;
 };
 
 export default BlueAcentCard;
 
 BlueAcentCard.propTypes = {
   children: proptypes.node.isRequired,
+  width: proptypes.string,
 };

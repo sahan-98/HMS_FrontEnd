@@ -1,30 +1,30 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
-import Home from "./Pages/Home/Home/Home";
-import Staffs from "./Pages/Staffs/Staffs";
 import Appointment from "./Pages/Appointments/Appointment";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import AddDoctor from "./Pages/Doctors/AddDoctor/AddDoctor";
-import Registration from "./Pages/Login/Registration/Registration";
-import PatientViewDoctor from "./Pages/Doctors/Doctors/PatientViewDoctor";
-import Login from "./Pages/Login/Login";
-import PageNotFound from "./Pages/PageNotFound/PageNotFound";
-import ViewDoctors from "./Pages/Patients/ViewDoctors/ViewDoctors";
-import DeleteDoctor from "./Pages/Doctors/DeleteDoctor/DeleteDoctor";
-import FindDoctor from "./Pages/Doctors/UpdateDoctor/FindDoctor";
-import AddPatient from "./Pages/Patients/AddPatients/AddPatient";
-import Patients from "./Pages/Patients/Patients/PatientList";
-import PatientDetails from "./Pages/Patients/PatientsDetails/PatientDetails";
 import ApproveDoctor from "./Pages/Doctors/ApproveDoctor/ApproveDoctor";
-import Landing from "./Pages/PatientPortal/Landing";
+import DeleteDoctor from "./Pages/Doctors/DeleteDoctor/DeleteDoctor";
+import PatientViewDoctor from "./Pages/Doctors/Doctors/PatientViewDoctor";
+import FindDoctor from "./Pages/Doctors/UpdateDoctor/FindDoctor";
+import Home from "./Pages/Home/Home/Home";
+import { AddLabAssistant } from "./Pages/LabAssistants/AddLabAssistant.jsx";
+import AllLabAssistants from "./Pages/LabAssistants/AllAssistants.jsx";
+import Login from "./Pages/Login/Login";
+import PLogin from "./Pages/Login/PatientLogin";
+import Registration from "./Pages/Login/Registration/Registration";
+import PageNotFound from "./Pages/PageNotFound/PageNotFound";
+import HDPResult from "./Pages/PatientPortal/HeartDiseasePrediction/Result";
 import HDPStep01 from "./Pages/PatientPortal/HeartDiseasePrediction/Step01";
 import HDPStep02 from "./Pages/PatientPortal/HeartDiseasePrediction/Step02";
 import HDPStep03 from "./Pages/PatientPortal/HeartDiseasePrediction/Step03";
 import HDPStep04 from "./Pages/PatientPortal/HeartDiseasePrediction/Step04";
-import HDPResult from "./Pages/PatientPortal/HeartDiseasePrediction/Result";
-import PLogin from "./Pages/Login/PatientLogin";
-import AllLabAssistants from "./Pages/LabAssistants/AllAssistants.jsx";
-import { AddLabAssistant } from "./Pages/LabAssistants/AddLabAssistant.jsx";
+import Landing from "./Pages/PatientPortal/Landing";
+import ViewAppointments from "./Pages/PatientPortal/ViewAppointments";
+import AddPatient from "./Pages/Patients/AddPatients/AddPatient";
+import Patients from "./Pages/Patients/Patients/PatientList";
+import PatientDetails from "./Pages/Patients/PatientsDetails/PatientDetails";
+import ViewDoctors from "./Pages/Patients/ViewDoctors/ViewDoctors";
 
 function App() {
   return (
@@ -38,6 +38,11 @@ function App() {
           <Route path="/patient-login" element={<PLogin />} />
           <Route path="/patient-portal">
             <Route path="landing" index element={<Landing />} />
+            <Route
+              path="view-appointments"
+              index
+              element={<ViewAppointments />}
+            />
             <Route path="heart-disease-prediction">
               <Route path="step-01" element={<HDPStep01 />} />
               <Route path="step-02" element={<HDPStep02 />} />
