@@ -23,6 +23,7 @@ import HDPStep03 from "./Pages/PatientPortal/HeartDiseasePrediction/Step03";
 import HDPStep04 from "./Pages/PatientPortal/HeartDiseasePrediction/Step04";
 import HDPResult from "./Pages/PatientPortal/HeartDiseasePrediction/Result";
 import PLogin from "./Pages/Login/PatientLogin";
+import AllLabAssistants from "./Pages/LabAssistants/AllAssistants.jsx";
 
 function App() {
   return (
@@ -70,6 +71,8 @@ function App() {
               <Route path=":email" element={<Appointment />} />
             </Route>
             <Route path="registration" element={<Registration />} />
+
+            <Route path={"all-lab-assistants"} element={<AllLabAssistants />} />
             <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>

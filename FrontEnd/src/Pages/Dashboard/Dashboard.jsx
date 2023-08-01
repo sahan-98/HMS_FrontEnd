@@ -432,7 +432,7 @@ export default function NewHeader() {
               <ListItemIcon>
                 <TbTestPipe style={{ color: "#000", fontSize: "1.5rem" }} />
               </ListItemIcon>
-              <ListItemText primary="Labs" />
+              <ListItemText primary="Lab Assistants" />
             </ListItemButton>
           </ListItem>
 
@@ -464,7 +464,7 @@ export default function NewHeader() {
             }}
           >
             <NavLink
-              to="/labs"
+              to="/all-lab-assistants"
               style={{ textDecoration: "none", width: "100%", color: "#000" }}
             >
               <ListItem disablePadding>
@@ -475,7 +475,7 @@ export default function NewHeader() {
                     />
                   </ListItemIcon>
                   <ListItemText
-                    primary="Lab List"
+                    primary="All Assistants"
                     style={{ marginLeft: "-1rem" }}
                   />
                 </ListItemButton>
@@ -493,7 +493,7 @@ export default function NewHeader() {
                     />
                   </ListItemIcon>
                   <ListItemText
-                    primary="Add Lab"
+                    primary="Add Assistant"
                     style={{ marginLeft: "-1rem" }}
                   />
                 </ListItemButton>

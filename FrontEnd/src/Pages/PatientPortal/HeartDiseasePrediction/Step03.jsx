@@ -4,8 +4,10 @@ import { Box, Button, TextField, styled } from "@mui/material";
 import BlueAcentCard from "../../../components/BlueAcentCard/BlueAcentCard";
 import HeadingText from "../../../components/HeadingText/HeadingText";
 import Progress from "./Progress";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setHeartDiseasePrediction } from "../../../reducers/heartDiseasePredictionSlice";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
@@ -19,12 +21,47 @@ color: #fff;
 
 const Step03 = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const heartDiseasePredictionState = useSelector(
+    (state) => state.heartDiseasePrediction
+  );
+  const [restingBloodPressure, setRestingBloodPressure] = useState("");
+  const [restingEcg, setRestingEcg] = useState("");
+  const [maxHeartRate, setMaxHeartRate] = useState("");
+
   const handleNextClick = useCallback(() => {
+    dispatch(
+      setHeartDiseasePrediction({
+        ...heartDiseasePredictionState,
+        restingBloodPressure: restingBloodPressure,
+        restingEcg: restingEcg,
+        maxHeartRate: maxHeartRate,
+      })
+    );
     navigate("/patient-portal/heart-disease-prediction/step-04");
-  }, [navigate]);
+  }, [
+    navigate,
+    dispatch,
+    heartDiseasePredictionState,
+    restingBloodPressure,
+    restingEcg,
+    maxHeartRate,
+  ]);
   const handleBackClick = useCallback(() => {
     navigate("/patient-portal/heart-disease-prediction/step-02");
   }, [navigate]);
+
+  const onChangeRestingEcg = useCallback((event) => {
+    setRestingEcg(event.target.value);
+  }, []);
+
+  const onChangeMaxHeartRate = useCallback((event) => {
+    setMaxHeartRate(event.target.value);
+  }, []);
+
+  const onChangeRestingBloodPressure = useCallback((event) => {
+    setRestingBloodPressure(event.target.value);
+  }, []);
 
   return (
     <Layout>
@@ -40,18 +77,28 @@ const Step03 = () => {
       >
         <BlueAcentCard>
           <HeadingText text="Heart disease prediction" />
-          <TextField label="Resting bp" variant="outlined" fullWidth />
+          <TextField
+            label="Resting bp"
+            variant="outlined"
+            fullWidth
+            value={restingBloodPressure}
+            onChange={onChangeRestingBloodPressure}
+          />
           <TextField
             label="Resting ECG"
             variant="outlined"
             fullWidth
             sx={{ mt: 2 }}
+            onChange={onChangeRestingEcg}
+            value={restingEcg}
           />
           <TextField
             label="Max HR"
             variant="outlined"
             fullWidth
             sx={{ mt: 2 }}
+            value={maxHeartRate}
+            onChange={onChangeMaxHeartRate}
           />
 
           <Progress currentStep={2} />
