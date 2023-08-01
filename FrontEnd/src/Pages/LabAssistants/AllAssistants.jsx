@@ -17,7 +17,7 @@ export default function AllLabAssistants() {
     return response.data;
   }, []);
 
-  const { loading, error, data } = useRequest({
+  const { loading, error, data , setRefresh} = useRequest({
     requestFn: getAllLabAssistants,
   });
 
@@ -29,11 +29,11 @@ export default function AllLabAssistants() {
     return <span>Failed to load data. Internal server error</span>;
   }
 
-  // const deleteLabAssistant = async (doctorId) => {
+  // const deleteLabAssistant = async (labAssistantId) => {
   //   try {
-  //     const response = await LabAssistantService.deleteDoctor({ doctorId });
+  //     const response = await LabAssistantService.deleteLabAssistant({ labAssistantId });
   //     console.log(response);
-  //     showSystemAlert("Doctor deleted", "success");
+  //     showSystemAlert("Lab assistant deleted", "success");
   //     setRefresh((prev) => !prev);
   //   } catch (error) {
   //     console.log(error);
@@ -80,9 +80,9 @@ export default function AllLabAssistants() {
                   <AiOutlineEdit />
                 </IconButton>
                 <IconButton
-                  title="Delete doctor"
+                  title="Delete lab assistant"
                   onClick={() => {
-                    // deleteLabAssistant(doctorData?._id);
+                    // deleteLabAssistant(labAssistant?._id);
                   }}
                 >
                   <AiOutlineDelete />
