@@ -36,6 +36,7 @@ import TreeView from "@mui/lab/TreeView";
 import TreeItem from "@mui/lab/TreeItem";
 
 import LoginIcon from "@mui/icons-material/Login";
+import {useState} from "react";
 
 const drawerWidth = 240;
 
@@ -125,6 +126,9 @@ export default function NewHeader() {
   //         });
   // }
   // getTv();
+
+  const [userType, setUserType] = useState("admin");
+
 
   return (
     <Box sx={{ display: "flex", background: "#F6F6F6" }}>
@@ -500,20 +504,6 @@ export default function NewHeader() {
               </ListItem>
             </NavLink>
           </TreeView>
-
-          <NavLink
-            to="/Staffs"
-            style={{ textDecoration: "none", width: "100%", color: "#000" }}
-          >
-            <ListItem disablePadding>
-              <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
-                <ListItemIcon>
-                  <FaRunning style={{ color: "#000", fontSize: "1.5rem" }} />
-                </ListItemIcon>
-                <ListItemText primary="Staffs" />
-              </ListItemButton>
-            </ListItem>
-          </NavLink>
           <NavLink
             to="/login"
             style={{ textDecoration: "none", width: "100%", color: "#000" }}

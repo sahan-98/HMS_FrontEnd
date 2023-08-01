@@ -67,7 +67,6 @@ function App() {
             </Route>
             <Route path="viewDoctors" element={<ViewDoctors />} />
             <Route path="patientDetails/:id" element={<PatientDetails />} />
-            <Route path="staffs" element={<Staffs />} />
             <Route path="appointment" element={<Appointment />}>
               <Route path=":email" element={<Appointment />} />
             </Route>
