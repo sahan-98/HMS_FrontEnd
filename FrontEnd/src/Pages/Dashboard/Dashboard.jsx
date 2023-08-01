@@ -482,7 +482,7 @@ export default function NewHeader() {
               </ListItem>
             </NavLink>
             <NavLink
-              to="/addLab"
+              to="/add-lab-assistant"
               style={{ textDecoration: "none", width: "100%", color: "#000" }}
             >
               <ListItem disablePadding>
