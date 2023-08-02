@@ -8,8 +8,8 @@ import {
   styled,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import Header from "./Header";
-import Layout from "./Layout";
+import Header from "../../components/Header/Header";
+import Layout from "../../components/PortalLayout/Layout";
 import { Search } from "@mui/icons-material";
 import { useState } from "react";
 
@@ -72,7 +72,7 @@ const StyledTextField = styled(TextField)({
   },
 });
 
-const ViewAppointments = () => {
+const ViewAssignments = () => {
   const columns = [
     { field: "id", headerName: "Id", width: 150 },
     { field: "firstName", headerName: "First name", width: 150 },
@@ -101,7 +101,6 @@ const ViewAppointments = () => {
     { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
   ];
   const [selectedType, setSelectedType] = useState("pending");
-
   return (
     <Layout>
       <Header />
@@ -122,7 +121,7 @@ const ViewAppointments = () => {
               mt: "0.5rem",
             }}
           >
-            <StyledText>Appointments</StyledText>
+            <StyledText>Lab Assignments</StyledText>
             <Box
               sx={{
                 display: "flex",
@@ -131,7 +130,7 @@ const ViewAppointments = () => {
               }}
             >
               <StyledTextField
-                placeholder="Search Appointments"
+                placeholder="Search Assignments"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -188,4 +187,4 @@ const ViewAppointments = () => {
   );
 };
 
-export default ViewAppointments;
+export default ViewAssignments;

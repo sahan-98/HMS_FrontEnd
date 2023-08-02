@@ -8,10 +8,10 @@ import {
   styled,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import Header from "./Header";
-import Layout from "./Layout";
-import { Search } from "@mui/icons-material";
+import Header from "../../components/Header/Header";
+import Layout from "../../components/PortalLayout/Layout";
 import { useState } from "react";
+import { Search } from "@mui/icons-material";
 
 const StyledDiv = styled("div")(
   `
@@ -71,7 +71,6 @@ const StyledTextField = styled(TextField)({
     fontSize: "14px",
   },
 });
-
 const ViewAppointments = () => {
   const columns = [
     { field: "id", headerName: "Id", width: 150 },

@@ -25,6 +25,8 @@ import AddPatient from "./Pages/Patients/AddPatients/AddPatient";
 import Patients from "./Pages/Patients/Patients/PatientList";
 import PatientDetails from "./Pages/Patients/PatientsDetails/PatientDetails";
 import ViewDoctors from "./Pages/Patients/ViewDoctors/ViewDoctors";
+import DoctorViewAppointments from "./Pages/DoctorPortal/ViewAppointments";
+import ViewAssignments from "./Pages/LabAssistantPortal/ViewAssignments";
 
 function App() {
   return (
@@ -34,8 +36,8 @@ function App() {
       </AuthProvider> */}
       <Router>
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/patient-login" element={<PLogin />} />
+          {/* <Route path="/login" element={<Login />} /> */}
+          <Route path="/login" element={<PLogin />} />
           <Route path="/patient-portal">
             <Route path="landing" index element={<Landing />} />
             <Route
@@ -57,6 +59,21 @@ function App() {
               <Route path="step-04" element={<HDPStep04 />} />
               <Route path="result" element={<HDPResult />} />
             </Route>
+          </Route>
+          <Route path="/doctor-portal">
+            <Route
+              path="view-appointments"
+              index
+              element={<DoctorViewAppointments />}
+            />
+          </Route>
+
+          <Route path="/lab-assistant-portal">
+            <Route
+              path="view-assignments"
+              index
+              element={<ViewAssignments />}
+            />
           </Route>
           {/* NESTED ROUTING APPLIED */}
           <Route path="/" element={<Dashboard />}>
