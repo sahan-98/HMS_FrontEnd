@@ -1,4 +1,5 @@
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import LoginIcon from "@mui/icons-material/Login";
 import MenuIcon from "@mui/icons-material/Menu";
 import TreeView from "@mui/lab/TreeView";
 import { Container } from "@mui/material";
@@ -17,16 +18,13 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
-import { BsCardChecklist, BsHeartPulse } from "react-icons/bs";
-import { FaMandalorian, FaUserNurse } from "react-icons/fa";
+import { BsCardChecklist } from "react-icons/bs";
+import { FaUserNurse } from "react-icons/fa";
 import { FcHome } from "react-icons/fc";
-import { AiOutlineProfile, AiOutlineSchedule } from "react-icons/ai";
 import { MdOutlinePersonAddAlt } from "react-icons/md";
 import { TbBed, TbTestPipe } from "react-icons/tb";
 import { NavLink, Outlet } from "react-router-dom";
 import logo from "../../assets/images/hms-logo.png";
-import LoginIcon from "@mui/icons-material/Login";
-import { useState } from "react";
 
 const drawerWidth = 240;
 
@@ -74,22 +72,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
   justifyContent: "flex-end",
 }));
-
-const NavItem = ({ path, title, icon }) => {
-  return (
-    <NavLink
-      to={path}
-      style={{ textDecoration: "none", width: "100%", color: "#000" }}
-    >
-      <ListItem disablePadding>
-        <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
-          <ListItemIcon>{icon}</ListItemIcon>
-          <ListItemText primary={title} />
-        </ListItemButton>
-      </ListItem>
-    </NavLink>
-  );
-};
 
 export default function NewHeader() {
   const [open, setOpen] = React.useState(true);
