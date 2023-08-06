@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   InputAdornment,
   TextField,
   ToggleButton,
@@ -74,31 +75,72 @@ const StyledTextField = styled(TextField)({
 
 const ViewAppointments = () => {
   const columns = [
-    { field: "id", headerName: "Id", width: 150 },
-    { field: "firstName", headerName: "First name", width: 150 },
-    { field: "lastName", headerName: "Last name", width: 150 },
+    { field: "id", headerName: "#", width: 50 },
+    { field: "doctorName", headerName: "Doctor name", width: 180 },
+    { field: "date", headerName: "Date", width: 120 },
+    { field: "time", headerName: "Time", width: 120 },
     {
-      field: "age",
-      headerName: "Age",
+      field: "status",
+      headerName: "Appointment status",
       width: 150,
     },
     {
-      field: "fullName",
-      headerName: "Full name",
+      field: "actions",
+      headerName: "Actions",
       width: 150,
     },
   ];
 
   const rows = [
-    { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-    { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-    { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-    { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
+    {
+      id: 1,
+      doctorName: "Snow",
+      date: "2021-02-05",
+      time: "10:00AM",
+      status: "Success",
+      actions: "Lab report",
+    },
+    {
+      id: 2,
+      doctorName: "Lannister",
+      date: "2021-02-05",
+      time: "10:00AM",
+      status: "Success",
+      actions: "Lab report",
+    },
+    {
+      id: 3,
+      doctorName: "Stark",
+      date: "2021-02-05",
+      time: "10:00AM",
+      status: "Success",
+      actions: "Lab report",
+    },
+
+    {
+      id: 4,
+      doctorName: "Stark",
+      date: "2021-02-05",
+      time: "10:00AM",
+      status: "Success",
+      actions: "Lab report",
+    },
+    {
+      id: 5,
+      doctorName: "Stark",
+      date: "2021-02-05",
+      time: "10:00AM",
+      status: "Success",
+      actions: "Lab report",
+    },
+    {
+      id: 6,
+      doctorName: "Stark",
+      date: "2021-02-05",
+      time: "10:00AM",
+      status: "Success",
+      actions: "Lab report",
+    },
   ];
   const [selectedType, setSelectedType] = useState("pending");
 

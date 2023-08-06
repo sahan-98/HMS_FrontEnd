@@ -13,7 +13,7 @@ const Header = () => {
           fontSize: "3rem",
         }}
       >
-        i Care Smart
+        Cardiac Wing HMS
       </p>
     </div>
   );
