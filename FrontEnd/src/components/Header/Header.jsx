@@ -1,3 +1,5 @@
+import logo from "../../assets/images/hms-logo.png";
+
 const Header = () => {
   return (
     <div
@@ -8,6 +10,11 @@ const Header = () => {
         alignItems: "center",
       }}
     >
+      <img
+        src={logo}
+        alt="logo"
+        style={{ width: "40px", marginLeft: "10px" }}
+      />
       <p
         style={{
           fontSize: "3rem",

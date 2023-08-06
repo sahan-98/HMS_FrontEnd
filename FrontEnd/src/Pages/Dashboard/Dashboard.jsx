@@ -24,7 +24,7 @@ import { AiOutlineProfile, AiOutlineSchedule } from "react-icons/ai";
 import { MdOutlinePersonAddAlt } from "react-icons/md";
 import { TbBed, TbTestPipe } from "react-icons/tb";
 import { NavLink, Outlet } from "react-router-dom";
-
+import logo from "../../assets/images/hms-logo.png";
 import LoginIcon from "@mui/icons-material/Login";
 import { useState } from "react";
 
@@ -174,11 +174,12 @@ export default function NewHeader() {
       >
         <DrawerHeader sx={{ display: "flex", justifyContent: "flex-start" }}>
           <Toolbar style={{ color: "#000" }}>
-            <Typography variant="h6" noWrap>
-              {" "}
-              SmartCare{" "}
-            </Typography>
-            <FaMandalorian style={{ fontSize: "1.5rem", marginLeft: "20px" }} />
+            <Typography noWrap>Cardiac Wing HMS</Typography>
+            <img
+              src={logo}
+              alt="logo"
+              style={{ width: "40px", marginLeft: "10px" }}
+            />
           </Toolbar>
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
