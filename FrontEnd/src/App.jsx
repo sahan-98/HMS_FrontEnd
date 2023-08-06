@@ -22,6 +22,7 @@ import HDPStep02 from "./Pages/PatientPortal/HeartDiseasePrediction/Step02";
 import HDPStep03 from "./Pages/PatientPortal/HeartDiseasePrediction/Step03";
 import HDPStep04 from "./Pages/PatientPortal/HeartDiseasePrediction/Step04";
 import HDPResult from "./Pages/PatientPortal/HeartDiseasePrediction/Result";
+import ChannelDoctorStep01 from "./Pages/PatientPortal/ChannelDoctor/ChannelDoc";
 import PLogin from "./Pages/Login/PatientLogin";
 import AllLabAssistants from "./Pages/LabAssistants/AllAssistants.jsx";
 import { AddLabAssistant } from "./Pages/LabAssistants/AddLabAssistant.jsx";
@@ -46,11 +47,14 @@ function App() {
               <Route path="result" element={<HDPResult />} />
             </Route>
             <Route path="channel-doctor">
-              <Route path="step-01" element={<HDPStep01 />} />
-              <Route path="step-02" element={<HDPStep02 />} />
+              <Route
+                path="channel-doctor-step01"
+                element={<ChannelDoctorStep01 />}
+              />
+              {/* <Route path="step-02" element={<HDPStep02 />} />
               <Route path="step-03" element={<HDPStep03 />} />
               <Route path="step-04" element={<HDPStep04 />} />
-              <Route path="result" element={<HDPResult />} />
+              <Route path="result" element={<HDPResult />} /> */}
             </Route>
           </Route>
           {/* NESTED ROUTING APPLIED */}
