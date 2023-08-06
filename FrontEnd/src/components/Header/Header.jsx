@@ -13,7 +13,7 @@ const Header = () => {
       <img
         src={logo}
         alt="logo"
-        style={{ width: "40px", marginLeft: "10px" }}
+        style={{ width: "60px", marginRight: "10px" }}
       />
       <p
         style={{
