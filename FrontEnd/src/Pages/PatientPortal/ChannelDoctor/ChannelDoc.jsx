@@ -1,108 +1,59 @@
-import BlueAcentCard from "../../../components/BlueAcentCard/BlueAcentCardAppointments";
-import Header from "../Header";
-import Layout from "../Layout";
 import {
+  Button,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   styled,
 } from "@mui/material";
-
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import { useCallback, useState } from "react";
-//import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import BlueAcentCard from "../../../components/BlueAcentCard/BlueAcentCard";
 import HeadingText from "../../../components/HeadingText/HeadingText";
-//import { useDispatch, useSelector } from "react-redux";
-//import { setHeartDiseasePrediction } from "../../../reducers/heartDiseasePredictionSlice";
+import Header from "../Header";
+import Layout from "../Layout";
+import "./table.css";
 
-// const StyledButton = styled(Button)(`
-// border-radius: 7px;
-// border: 1px solid #DEDEDE;
-// background: #59C169;
-// color: #fff;
-// :hover {
-//   background: #68E87D;
-// }
-// `);
+const StyledButton = styled(Button)(`
+border-radius: 7px;
+border: 1px solid #DEDEDE;
+background: #59C169; 
+color: #fff;
+min-width: 30px;
+font-size: 10px;
+font-weight: 600;
+padding: 3px 10px;
+:hover {
+  background: #68E87D;
+}
+`);
 
 const ChannelDoc = () => {
-  // const dispatch = useDispatch();
-  // const doctorChannelState = useSelector((state) => state.doctorChannel);
-  // const navigate = useNavigate();
-  const [specialization, setSpecialization] = useState("NO_SELECTION");
-  const [doctor, setDoctor] = useState("NO_SELECTION");
-
-  // const handleNextClick = useCallback(() => {
-  //   dispatch(
-  //     setHeartDiseasePrediction({
-  //       ...doctorChannelState,
-  //       specialization: specialization,
-  //       doctor: doctor,
-  //     })
-  //   );
-  //   navigate("/patient-portal/heart-disease-prediction/step-02");
-  // }, [navigate, dispatch, heartDiseasePredictionState, specialization, doctor]);
+  const dispatch = useDispatch();
+  const [specialization, setSpecialization] = useState("");
+  const [doctor, setDoctor] = useState("");
 
   const handleSpecializationChange = useCallback((event) => {
     setSpecialization(event.target.value);
   }, []);
-
   const handleDoctorChange = useCallback((event) => {
     setDoctor(event.target.value);
   }, []);
-
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.common.black,
-      color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-    },
-  }));
-
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
-    },
-    // hide last border
-    "&:last-child td, &:last-child th": {
-      border: 0,
-    },
-  }));
-  function createData(date, time, totApp) {
-    return { date, time, totApp };
-  }
-
-  const rows = [
-    createData("23.08.2023", "06.00pm", 23),
-    createData("23.08.2023", "06.00pm", 23),
-    createData("23.08.2023", "06.00pm", 23),
-    createData("23.08.2023", "06.00pm", 23),
-  ];
 
   return (
     <Layout>
       <Header />
       <div
         style={{
-          height: "100vh",
+          height: "70vh",
           display: "flex",
           justifyContent: "center",
           alignItems: "start",
           gap: "8rem",
         }}
       >
-        <BlueAcentCard>
+        <BlueAcentCard width="450px">
           <HeadingText text="Channel Doctor" />
-
           <FormControl fullWidth sx={{ mt: 2, textAlign: "start" }}>
             <InputLabel id="demo-simple-select-label">
               Doctor Specialization
@@ -113,7 +64,6 @@ const ChannelDoc = () => {
               label="Doctor Specialization"
               onChange={handleSpecializationChange}
             >
-              <MenuItem value={"NO_SELECTION"}>Please select</MenuItem>
               <MenuItem value={"MALE"}>Male</MenuItem>
               <MenuItem value={"FEMALE"}>Female</MenuItem>
             </Select>
@@ -127,47 +77,69 @@ const ChannelDoc = () => {
               label="Select Doctor"
               onChange={handleDoctorChange}
             >
-              <MenuItem value={"NO_SELECTION"}>Please select</MenuItem>
               <MenuItem value={"MALE"}>Male</MenuItem>
               <MenuItem value={"FEMALE"}>Female</MenuItem>
             </Select>
           </FormControl>
-          {/* <Progress currentStep={0} />
-          <StyledButton fullWidth sx={{ my: 4 }} onClick={handleNextClick}>
-            Next
-          </StyledButton> */}
 
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 700, mt: 2 }} aria-label="customized table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>Date</StyledTableCell>
-                  <StyledTableCell align="right">Time</StyledTableCell>
-                  <StyledTableCell align="right">
-                    No of Appointments
-                  </StyledTableCell>
-                  <StyledTableCell align="right">Action</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map((row) => (
-                  <StyledTableRow key={row.date}>
-                    <StyledTableCell component="th" scope="row">
-                      {row.date}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">{row.time}</StyledTableCell>
-
-                    <StyledTableCell align="right">
-                      {row.totApp}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.totApp}
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <table>
+            <thead>
+              <tr>
+                <th>Doctor</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>No.of Appointments</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Dr. John Doe</td>
+                <td>12/12/2021</td>
+                <td>10.00 AM</td>
+                <td>10</td>
+                <td>
+                  <StyledButton>Book</StyledButton>
+                </td>
+              </tr>
+              <tr>
+                <td>Dr. John Doe</td>
+                <td>12/12/2021</td>
+                <td>10.00 AM</td>
+                <td>10</td>
+                <td>
+                  <StyledButton>Book</StyledButton>
+                </td>
+              </tr>
+              <tr>
+                <td>Dr. John Doe</td>
+                <td>12/12/2021</td>
+                <td>10.00 AM</td>
+                <td>10</td>
+                <td>
+                  <StyledButton>Book</StyledButton>
+                </td>
+              </tr>
+              <tr>
+                <td>Dr. John Doe</td>
+                <td>12/12/2021</td>
+                <td>10.00 AM</td>
+                <td>10</td>
+                <td>
+                  <StyledButton>Book</StyledButton>
+                </td>
+              </tr>
+              <tr>
+                <td>Dr. John Doe</td>
+                <td>12/12/2021</td>
+                <td>10.00 AM</td>
+                <td>10</td>
+                <td>
+                  <StyledButton>Book</StyledButton>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </BlueAcentCard>
       </div>
     </Layout>
