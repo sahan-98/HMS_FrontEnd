@@ -81,65 +81,74 @@ const ChannelDoc = () => {
               <MenuItem value={"FEMALE"}>Female</MenuItem>
             </Select>
           </FormControl>
-
-          <table>
-            <thead>
-              <tr>
-                <th>Doctor</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>No.of Appointments</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Dr. John Doe</td>
-                <td>12/12/2021</td>
-                <td>10.00 AM</td>
-                <td>10</td>
-                <td>
-                  <StyledButton>Book</StyledButton>
-                </td>
-              </tr>
-              <tr>
-                <td>Dr. John Doe</td>
-                <td>12/12/2021</td>
-                <td>10.00 AM</td>
-                <td>10</td>
-                <td>
-                  <StyledButton>Book</StyledButton>
-                </td>
-              </tr>
-              <tr>
-                <td>Dr. John Doe</td>
-                <td>12/12/2021</td>
-                <td>10.00 AM</td>
-                <td>10</td>
-                <td>
-                  <StyledButton>Book</StyledButton>
-                </td>
-              </tr>
-              <tr>
-                <td>Dr. John Doe</td>
-                <td>12/12/2021</td>
-                <td>10.00 AM</td>
-                <td>10</td>
-                <td>
-                  <StyledButton>Book</StyledButton>
-                </td>
-              </tr>
-              <tr>
-                <td>Dr. John Doe</td>
-                <td>12/12/2021</td>
-                <td>10.00 AM</td>
-                <td>10</td>
-                <td>
-                  <StyledButton>Book</StyledButton>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div
+            style={{
+              overflow: "auto",
+              height: "178px",
+              scrollbarWidth: "thin",
+              marginTop: "1rem",
+              marginBottom: "1rem",
+            }}
+          >
+            <table className="fixed_header">
+              <thead>
+                <tr>
+                  <th>Doctor</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>No.of Appointments</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Dr. John Doe</td>
+                  <td>12/12/2021</td>
+                  <td>10.00 AM</td>
+                  <td>10</td>
+                  <td>
+                    <StyledButton>Book</StyledButton>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Dr. John Doe</td>
+                  <td>12/12/2021</td>
+                  <td>10.00 AM</td>
+                  <td>10</td>
+                  <td>
+                    <StyledButton>Book</StyledButton>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Dr. John Doe</td>
+                  <td>12/12/2021</td>
+                  <td>10.00 AM</td>
+                  <td>10</td>
+                  <td>
+                    <StyledButton>Book</StyledButton>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Dr. John Doe</td>
+                  <td>12/12/2021</td>
+                  <td>10.00 AM</td>
+                  <td>10</td>
+                  <td>
+                    <StyledButton>Book</StyledButton>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Dr. John Doe</td>
+                  <td>12/12/2021</td>
+                  <td>10.00 AM</td>
+                  <td>10</td>
+                  <td>
+                    <StyledButton>Book</StyledButton>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </BlueAcentCard>
       </div>
     </Layout>
