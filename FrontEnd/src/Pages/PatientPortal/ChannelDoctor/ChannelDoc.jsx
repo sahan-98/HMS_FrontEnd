@@ -103,7 +103,7 @@ const ChannelDoc = () => {
               <tbody>
                 <tr>
                   <td>Dr. John Doe</td>
-                  <td>12/12/2021</td>
+                  <td>Sunday</td>
                   <td>10.00 AM</td>
                   <td>10</td>
                   <td>
@@ -112,7 +112,7 @@ const ChannelDoc = () => {
                 </tr>
                 <tr>
                   <td>Dr. John Doe</td>
-                  <td>12/12/2021</td>
+                  <td>Monday</td>
                   <td>10.00 AM</td>
                   <td>10</td>
                   <td>
@@ -121,7 +121,7 @@ const ChannelDoc = () => {
                 </tr>
                 <tr>
                   <td>Dr. John Doe</td>
-                  <td>12/12/2021</td>
+                  <td>Tuesday</td>
                   <td>10.00 AM</td>
                   <td>10</td>
                   <td>
@@ -130,7 +130,7 @@ const ChannelDoc = () => {
                 </tr>
                 <tr>
                   <td>Dr. John Doe</td>
-                  <td>12/12/2021</td>
+                  <td>Wednesday</td>
                   <td>10.00 AM</td>
                   <td>10</td>
                   <td>
@@ -139,7 +139,25 @@ const ChannelDoc = () => {
                 </tr>
                 <tr>
                   <td>Dr. John Doe</td>
-                  <td>12/12/2021</td>
+                  <td>Thursday</td>
+                  <td>10.00 AM</td>
+                  <td>10</td>
+                  <td>
+                    <StyledButton>Book</StyledButton>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Dr. John Doe</td>
+                  <td>Friday</td>
+                  <td>10.00 AM</td>
+                  <td>10</td>
+                  <td>
+                    <StyledButton>Book</StyledButton>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Dr. John Doe</td>
+                  <td>Saturday</td>
                   <td>10.00 AM</td>
                   <td>10</td>
                   <td>
