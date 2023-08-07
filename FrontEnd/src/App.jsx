@@ -10,7 +10,6 @@ import FindDoctor from "./Pages/Doctors/UpdateDoctor/FindDoctor";
 import Home from "./Pages/Home/Home/Home";
 import { AddLabAssistant } from "./Pages/LabAssistants/AddLabAssistant.jsx";
 import AllLabAssistants from "./Pages/LabAssistants/AllAssistants.jsx";
-import Login from "./Pages/Login/Login";
 import PLogin from "./Pages/Login/PatientLogin";
 import Registration from "./Pages/Login/Registration/Registration";
 import PageNotFound from "./Pages/PageNotFound/PageNotFound";
@@ -29,6 +28,8 @@ import DoctorViewAppointments from "./Pages/DoctorPortal/ViewAppointments";
 import ViewAssignments from "./Pages/LabAssistantPortal/ViewAssignments";
 import ChannelDoctorStep01 from "./Pages/PatientPortal/ChannelDoctor/Step01";
 import ChannelDoctorStep02 from "./Pages/PatientPortal/ChannelDoctor/Step02";
+import ChannelDoctorResult from "./Pages/PatientPortal/ChannelDoctor/Result";
+import ChannelDoctorPayment from "./Pages/PatientPortal/ChannelDoctor/Payment";
 
 function App() {
   return (
@@ -57,6 +58,9 @@ function App() {
             <Route path="channel-doctor">
               <Route path="step-01" element={<ChannelDoctorStep01 />} />
               <Route path="step-02" element={<ChannelDoctorStep02 />} />
+              <Route path="payment" element={<ChannelDoctorPayment />} />
+              <Route path="completed" element={<ChannelDoctorResult />} />
+
               {/* <Route path="step-02" element={<HDPStep02 />} />
               <Route path="step-03" element={<HDPStep03 />} />
               <Route path="step-04" element={<HDPStep04 />} />

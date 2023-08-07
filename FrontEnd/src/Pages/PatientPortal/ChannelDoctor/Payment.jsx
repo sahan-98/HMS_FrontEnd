@@ -16,15 +16,15 @@ color: #fff;
 }
 `);
 
-const Step02 = () => {
+const Payment = () => {
   const navigate = useNavigate();
 
   const handleNextClick = useCallback(() => {
-    navigate("/patient-portal/channel-doctor/payment");
+    navigate("/patient-portal/channel-doctor/completed");
   }, [navigate]);
 
   const handleBackClick = useCallback(() => {
-    navigate("/patient-portal/channel-doctor/step-01");
+    navigate("/patient-portal/channel-doctor/step-02");
   }, [navigate]);
 
   return (
@@ -42,23 +42,18 @@ const Step02 = () => {
         <BlueAcentCard width="450px">
           <HeadingText text="Channel Doctor" />
           <TextField
-            label="Your name"
+            label="Card number"
             variant="outlined"
             fullWidth
             sx={{ mt: 2 }}
           />
           <TextField
-            label="Mobile no"
+            label="Expiry date"
             variant="outlined"
             fullWidth
             sx={{ mt: 2 }}
           />
-          <TextField
-            label="Email address"
-            variant="outlined"
-            fullWidth
-            sx={{ mt: 2 }}
-          />
+          <TextField label="CVV" variant="outlined" fullWidth sx={{ mt: 2 }} />
 
           <Box
             sx={{
@@ -78,7 +73,7 @@ const Step02 = () => {
               Back
             </Button>
             <StyledButton fullWidth sx={{ my: 4 }} onClick={handleNextClick}>
-              Next
+              Proceed
             </StyledButton>
           </Box>
         </BlueAcentCard>
@@ -87,4 +82,4 @@ const Step02 = () => {
   );
 };
 
-export default Step02;
+export default Payment;
