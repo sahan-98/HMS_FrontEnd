@@ -7,12 +7,12 @@ import {
   styled,
 } from "@mui/material";
 import { useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
 import BlueAcentCard from "../../../components/BlueAcentCard/BlueAcentCard";
 import HeadingText from "../../../components/HeadingText/HeadingText";
 import Header from "../Header";
 import Layout from "../Layout";
 import "./table.css";
+import { useNavigate } from "react-router-dom";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
@@ -28,8 +28,8 @@ padding: 3px 10px;
 }
 `);
 
-const ChannelDoc = () => {
-  const dispatch = useDispatch();
+const Step01 = () => {
+  const navigate = useNavigate();
   const [specialization, setSpecialization] = useState("");
   const [doctor, setDoctor] = useState("");
 
@@ -107,7 +107,13 @@ const ChannelDoc = () => {
                   <td>10.00 AM</td>
                   <td>10</td>
                   <td>
-                    <StyledButton>Book</StyledButton>
+                    <StyledButton
+                      onClick={() => {
+                        navigate("/patient-portal/channel-doctor/step-02");
+                      }}
+                    >
+                      Book
+                    </StyledButton>
                   </td>
                 </tr>
                 <tr>
@@ -173,4 +179,4 @@ const ChannelDoc = () => {
   );
 };
 
-export default ChannelDoc;
+export default Step01;

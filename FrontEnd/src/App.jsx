@@ -27,7 +27,8 @@ import PatientDetails from "./Pages/Patients/PatientsDetails/PatientDetails";
 import ViewDoctors from "./Pages/Patients/ViewDoctors/ViewDoctors";
 import DoctorViewAppointments from "./Pages/DoctorPortal/ViewAppointments";
 import ViewAssignments from "./Pages/LabAssistantPortal/ViewAssignments";
-import ChannelDoctorStep01 from "./Pages/PatientPortal/ChannelDoctor/ChannelDoc";
+import ChannelDoctorStep01 from "./Pages/PatientPortal/ChannelDoctor/Step01";
+import ChannelDoctorStep02 from "./Pages/PatientPortal/ChannelDoctor/Step02";
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
             </Route>
             <Route path="channel-doctor">
               <Route path="step-01" element={<ChannelDoctorStep01 />} />
+              <Route path="step-02" element={<ChannelDoctorStep02 />} />
               {/* <Route path="step-02" element={<HDPStep02 />} />
               <Route path="step-03" element={<HDPStep03 />} />
               <Route path="step-04" element={<HDPStep04 />} />
