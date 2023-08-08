@@ -48,22 +48,7 @@ DoctorRoutes.post("/addDoctor", async (req, res, next) => {
     return next(new HttpError("Invalid inputs! Please check again.", 422));
   }
 
-  const {
-    name,
-    userName,
-    email,
-    password,
-    phone,
-    fee,
-    age,
-    speciality,
-    address,
-    degree,
-    salary,
-    availbleTime,
-    dateOfJoin,
-    gender,
-  } = req.body;
+    const { name, userName, email, password,  phone, fee, speciality, address, degree, salary,availbleTime, dateOfJoin ,gender, availability } = req.body;
 
   let existingDoctor;
   try {
@@ -81,25 +66,25 @@ DoctorRoutes.post("/addDoctor", async (req, res, next) => {
     return next(error);
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-  console.log(hashedPassword);
-  const newDoctor = new Doctor({
-    doctorid: uuid_v4(),
-    userName,
-    name,
-    email,
-    password: hashedPassword,
-    phone,
-    fee,
-    age,
-    speciality,
-    address,
-    degree,
-    salary,
-    availbleTime,
-    dateOfJoin,
-    gender,
-  });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log(hashedPassword);
+    const newDoctor = new Doctor({
+        doctorid: uuid_v4(),
+        userName,
+        name,
+        email,
+        password: hashedPassword,
+        phone,
+        fee, 
+        speciality, 
+        address, 
+        degree, 
+        salary, 
+        availbleTime, 
+        dateOfJoin,
+        gender,
+        availability : "false"
+    });
 
   await newDoctor
     .save()
@@ -168,5 +153,75 @@ DoctorRoutes.delete("/deleteDoctors/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+//doctor login
+
+DoctorRoutes.post('/login', async (req, res) => {
+  const { userName, password } = req.body;
+
+  try {
+    // Find the doctor by their username
+    const doctor = await Doctor.findOne({ userName });
+
+    // Check if the doctor exists
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    // Compare the entered password with the hashed password in the database
+    const isPasswordValid = bcrypt.compare(password, doctor.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // Update availability property to "true"
+    await Doctor.findByIdAndUpdate(doctor._id, { availability: 'true' });
+
+    // Send a success response
+    return res.status(200).json({ message: 'Login successful', doctorId: doctor._id });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+//Doctor Logout function
+
+DoctorRoutes.post('/logout', async (req, res) => {
+  const { doctorid } = req.body;
+
+  try {
+    // Find the doctor by their ID
+    const doctor = await Doctor.findById(doctorid);
+
+    // Check if the doctor exists
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    // Update availability property to "false"
+    await Doctor.findByIdAndUpdate(doctorid, { availability: 'false' });
+
+    // Send a success response
+    return res.status(200).json({ message: 'Logout successful' });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+//get available doctors
+DoctorRoutes.get('/availableDoctors', async (req, res) => {
+  try {
+    // Find doctors with availability set to "true"
+    const availableDoctors = await Doctor.find({ availability: 'true' });
+
+    // Send the list of available doctors as a response
+    return res.status(200).json(availableDoctors);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+
 
 module.exports = DoctorRoutes;
