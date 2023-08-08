@@ -72,7 +72,7 @@ const Banner = () => {
               />
             </div>
             <div>
-              <Typography sx={{ fontWeight: "800" }}>155K</Typography>
+              <Typography sx={{ fontWeight: "800" }}>155</Typography>
               <p>Patients</p>
             </div>
           </Box>
@@ -99,10 +99,10 @@ const Banner = () => {
             </div>
             <div>
               <Typography sx={{ fontWeight: "800" }}>452</Typography>
-              <p>Stuffs</p>
+              <p>Lab Reports</p>
             </div>
           </Box>
-          <Typography>12 stuffs are on vacation</Typography>
+          <Typography>12 Labs Reports pending</Typography>
         </Paper>
       </Box>
     </Box>
