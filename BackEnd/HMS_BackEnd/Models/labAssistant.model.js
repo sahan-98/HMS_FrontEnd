@@ -30,31 +30,21 @@ var labAssistSchema = new mongoose.Schema({
   
       mobile: {
         required: true,
-        unique: true,
         type: String,
       },
   
       email: {
         required: true,
-        unique: true,
         type: String,
       },
   
       address: {
         required: true,
-        unique: true,
         type: String,
       },
   
       dateOfBirth: {
         required: true,
-        unique: true,
-        type: String,
-      },
-  
-      age: {
-        required: true,
-        unique: true,
         type: String,
       },
     

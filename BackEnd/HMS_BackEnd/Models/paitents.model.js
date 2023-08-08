@@ -16,15 +16,11 @@ let paitents = new Schema(
       type: String,
     },
 
-    email: {
-      required: true,
-      unique: true,
-      type: String,
-    },
     firstname: {
       required: true,
       type: String,
     },
+
     lastname: {
       required: true,
       type: String,
@@ -32,7 +28,6 @@ let paitents = new Schema(
 
     mobile: {
       required: true,
-      unique: true,
       type: String,
     },
 
@@ -44,25 +39,16 @@ let paitents = new Schema(
 
     address: {
       required: true,
-      unique: true,
       type: String,
     },
 
     dateOfBirth: {
       required: true,
-      unique: true,
-      type: String,
-    },
-
-    age: {
-      required: true,
-      unique: true,
       type: String,
     },
 
     gender: {
       required: true,
-      unique: true,
       type: String,
     },
 

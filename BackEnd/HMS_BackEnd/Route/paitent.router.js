@@ -14,7 +14,7 @@ let ErrorLog = require("../Models/errorlog.model");
 // add User
 
 PaitentRoutes.post("/add", async (req, res) => {
-  const { mobile,userName, password, email, address, dateOfBirth, age, gender, firstname, lastname, conpass } = req.body;
+  const { mobile, userName, password, email, address, dateOfBirth, gender, firstname, lastname, conpass } = req.body;
 
   const salt = await bcrypt.genSalt();
   const passwordHash = await bcrypt.hash(password, salt);
@@ -26,7 +26,6 @@ PaitentRoutes.post("/add", async (req, res) => {
     email == "" ||
     address == "" ||
     dateOfBirth == "" ||
-    age == "" ||
     gender == "" ||
     firstname == "" ||
     lastname == ""
@@ -59,7 +58,6 @@ PaitentRoutes.post("/add", async (req, res) => {
     email,
     address, 
     dateOfBirth, 
-    age,
     gender,
     firstname,
     lastname,

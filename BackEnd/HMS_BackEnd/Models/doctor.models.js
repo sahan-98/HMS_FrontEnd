@@ -8,7 +8,6 @@ const doctorSchema = new mongoose.Schema({
     password: { type: String, required: [true, 'Password is required'] },
     phone: { type: String, required: [true, 'phoneNumber is required'] },
     fee: { type: String, required: [true, 'fee is required'] },
-    age: { type: String, required: [true, 'age is required'] },
     speciality: { type: String, required: [true, 'speciality is required'] },
     address: { type: String, required: [true, 'ad is required'] },
     degree: { type: String, required: [true, 'degree is required'] },
@@ -16,6 +15,7 @@ const doctorSchema = new mongoose.Schema({
     availbleTime: { type: String, required: [true, 'availableTime is required'] },
     dateOfJoin: { type: String, required: [true, 'Date of join is required'] },
     gender: { type: String, required: [true, 'gender is required'] },
+    availability: { type: Boolean }
 })
 
 module.exports =  mongoose.model('Doctor', doctorSchema);
