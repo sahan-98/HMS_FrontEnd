@@ -1,260 +1,182 @@
 "use strict";
 const express = require("express");
-const companyRoutes = express.Router();
+const labReportsRoutes = express.Router();
 
-let Company = require("../Models/labReport.model");
+let LabReport = require("../Models/labReport.model");
 
-//add event
-companyRoutes.post("/add", async (req, res) => {
-  try {
-    const companyName = req.body.companyName;
-    const category = req.body.category;
-    const contactMobile = req.body.contactMobile;
-    const contactEmail = req.body.contactEmail;
+//Add Lab Report
 
-    let newCompany = new Company({
-      companyName,
-      category,
-      contactMobile,
-      contactEmail,
+labReportsRoutes.post("/add", async (req, res) => {
+  const { reportName,type,doctorid,labAssistantid,paitentid,LDL,HDL,TotalCholesterol,Triglycerides,VLDLlevels,WBCcount,RBCcount,platelets,contactEmail,hemoglobin,hematocrit } = req.body;
+
+  // const salt = await bcrypt.genSalt();
+  // const passwordHash = await bcrypt.hash(password, salt);
+
+  // if (
+  //   mobile == "" ||
+  //   userName == "" ||
+  //   password == "" ||
+  //   email == "" ||
+  //   address == "" ||
+  //   dateOfBirth == "" ||
+  //   firstname == "" ||
+  //   lastname == ""
+  // )
+  //   return res.status(202).json({ warn: "Important field(s) are empty" });
+
+  if (type === "Cholesterol report"){
+    // return res.status(202).json({ warn: "Passwords Do not Match!" });
+
+  // const exist = await LabAssistant.findOne({ email: email });
+  // if (exist) {
+  //   return res
+  //     .status(202)
+  //     .json({ warn: "An account is Exist with this email" });
+  // }
+
+  // const exist2 = await LabReports.findOne({ mobile: mobile });
+  // if (exist2) {
+  //   return res
+  //     .status(202)
+  //     .json({ warn: "This mobile number is not available.Try another one" });
+  // }
+
+  // upload
+
+  const newLabReport1 = new LabReport({
+    reportName,
+    type,
+    doctorid,
+    labAssistantid,
+    paitentid,
+    contactEmail,
+    LDL,
+    HDL,
+    TotalCholesterol,
+    Triglycerides,
+    VLDLlevels,
+    status: "Pending",
+  });
+
+  await newLabReport1
+    .save()
+    .then(async (respond) => {
+      res.status(200).json({ message: "Successfull" });
+    })
+    .catch((err) => {
+      res.status(400).json({ message: "Error!" });
+      console.log("error mail:", err);
     });
+  }
 
-    console.log("company is", newCompany);
+  else if (type === "Full Blood Count report") {
 
-    await newCompany
+    const newLabReport2 = new LabReport({
+      reportName,
+      type,
+      doctorid,
+      labAssistantid,
+      paitentid,
+      WBCcount,
+      RBCcount,
+      platelets,
+      contactEmail,
+      hemoglobin,
+      hematocrit,
+      status: "Pending",
+    });
+  
+    await newLabReport2
       .save()
-      .then(async (CompanyData) => {
-        return res.status(200).json({ data: CompanyData });
+      .then(async (respond) => {
+        res.status(200).json({ message: "Successfull" });
       })
-      .catch(async (err) => {
-        let exist = await Company.find({ companyName: companyName });
-        if (exist) {
-          return res
-            .status(402)
-            .json({ code: "DDUP", warn: "KEY DUPPLICATION" });
-        }
-        return res.status(502).json({ code: "DERROR", warn: "DATABASE ERROR" });
-
-        console.log("Error is", err);
+      .catch((err) => {
+        res.status(400).json({ message: "Error!" });
+        console.log("error mail:", err);
       });
-  } catch (error) {
-    console.error(error);
 
-    return res.status(500).json({ message: "Server Error" });
   }
 });
 
-companyRoutes.post("/update/:id", async (req, res) => {
-  // console.log(req.body);
+
+// Update lab report
+
+labReportsRoutes.post("/update/:id", async (req, res) => {
+  console.log(req.body);
+
+  const {type} = req.body;
+
+  if(type === "Cholesterol report"){
 
   try {
-    Company.findById(req.params.id)
-      .then((responseObj) => {
-        responseObj.category = req.body.category;
-        responseObj.contactMobile = req.body.contactMobile;
-        responseObj.contactEmail = req.body.contactEmail;
+    LabReport.find(req.params.id)
+      .then((labReportObj) => {
+        labReportObj.LDL = req.body.LDL;
+        labReportObj.HDL = req.body.HDL;
+        labReportObj.TotalCholesterol = req.body.TotalCholesterol;
+        labReportObj.Triglycerides = req.body.Triglycerides;
+        labReportObj.VLDLlevels = req.body.VLDLlevels;
+        labReportObj.status = "completed";
 
-        responseObj
+        labReportObj
           .save()
           .then(() => {
-            return res.status(200).json({ success: true });
+            return res.status(200).json("Updated");
           })
-          .catch((err) => {
-            return res
-              .status(402)
-              .json({ code: "DERROR", warn: "DATABASE ERROR" });
-          });
+          .catch((err) => res.status(400).json({ message: err }));
       })
-      .catch((err) => res.status(500).json({ warn: err }));
+      .catch((err) => res.status(400).json({ message: err }));
   } catch (error) {
     console.error(error);
 
     return res.status(500).json({ message: "Server Error" });
   }
-});
 
-// get events list by a host
-companyRoutes.get("/name/:key", async (req, res) => {
+}
+
+else if(type === "Full Blood Count report"){
+
   try {
-    let key = req.params.key;
-    console.log(key);
-    let CompanyData = await Company.find({ companyName: key }).sort({
-      updatedAt: -1,
-    });
-    if (!CompanyData) {
-      return res.status(402).json({ code: "DERROR", warn: "DATABASE ERROR" });
-    } else {
-      return res.status(200).json({ success: true, data: CompanyData });
-    }
+    LabReport.find(req.params.id)
+      .then((labReportObj) => {
+        labReportObj.WBCcount = req.body.WBCcount;
+        labReportObj.RBCcount = req.body.RBCcount;
+        labReportObj.platelets = req.body.platelets;
+        labReportObj.hemoglobin = req.body.hemoglobin;
+        labReportObj.hematocrit = req.body.hematocrit;
+        labReportObj.status = "completed";
+
+        labReportObj
+          .save()
+          .then(() => {
+            return res.status(200).json("Updated");
+          })
+          .catch((err) => res.status(400).json({ message: err }));
+      })
+      .catch((err) => res.status(400).json({ message: err }));
   } catch (error) {
     console.error(error);
 
     return res.status(500).json({ message: "Server Error" });
   }
+
+}
 });
 
-// get events list by a host
-companyRoutes.get("/email/:key", async (req, res) => {
-  try {
-    let key = req.params.key;
-    console.log(key);
-    let CompanyData = await Company.find({ contactEmail: key }).sort({
-      updatedAt: -1,
-    });
-    if (!CompanyData) {
-      return res.status(402).json({ code: "DERROR", warn: "DATABASE ERROR" });
-    } else {
-      res.status(200).json({ success: true, data: CompanyData });
-    }
-  } catch (error) {
-    console.error(error);
+// get lab report
 
-    return res.status(500).json({ message: "Server Error" });
-  }
-});
-
-// update rates of an event
-
-// search by category
-companyRoutes.route("/category/:key").get(async function (req, res) {
-  try {
-    let key = req.params.key;
-    let CompanyData = await Company.find({
-      category: { $regex: key, $options: "i" },
-    });
-    if (!CompanyData) {
-      return res.status(402).json({ code: "DERROR", warn: "DATABASE ERROR" });
-    } else {
-      res.status(200).json({ success: true, data: CompanyData });
-    }
-  } catch (error) {
-    console.error(error);
-
-    return res.status(500).json({ message: "Server Error" });
-  }
-});
-
-// search by event name
-// companyRoutes.route("/search-name/:key").get(function (req, res) {
-//   let key = req.params.key;
-//   Company.find(
-//     { name: { $regex: key, $options: "i" } },
-//     function (err, CompanyData) {
-//       if (err) {
-//         console.log(err);
-//         res.status(400).json("Erro " + err);
-//       } else {
-//         res.status(200).json({ success: true, data: CompanyData });
-//       }
-//     }
-//   ).sort({ visits: -1 });
-// });
-
-// // search by venue
-// companyRoutes.route("/search-venue/:key").get(function (req, res) {
-//   let key = req.params.key;
-
-//   Company.find(
-//     {
-//       $or: [
-//         { city: { $regex: key, $options: "i" } },
-//         { address: { $regex: key, $options: "i" } },
-//         { country: { $regex: key, $options: "i" } },
-//         { province: { $regex: key, $options: "i" } },
-//         { premise: { $regex: key, $options: "i" } },
-//       ],
-//     },
-//     function (err, events) {
-//       if (err) {
-//         res.send(err);
-//       }
-//       res.status(200).json({ success: true, data: events });
-//     }
-//   ).sort({ visits: -1 });
-// });
-
-// // search by All
-
-// companyRoutes.route("/search-all/:key").get(function (req, res) {
-//   let key = String(req.params.key);
-
-//   if (key == "" || key == undefined) {
-//     Company.find(function (err, events) {
-//       if (err) {
-//         res.send(err);
-//       }
-//       res.status(200).json({ success: true, data: events });
-//     }).sort({ visits: -1 });
-//   } else {
-//     Company.find(
-//       {
-//         $or: [
-//           { name: { $regex: key, $options: "i" } },
-//           { category: { $regex: key, $options: "i" } },
-//           { description: { $regex: key, $options: "i" } },
-//           { address: { $regex: key, $options: "i" } },
-//           { country: { $regex: key, $options: "i" } },
-//           { province: { $regex: key, $options: "i" } },
-//           { premise: { $regex: key, $options: "i" } },
-//           { organizer: { $regex: key, $options: "i" } },
-//         ],
-//       },
-//       function (err, events) {
-//         if (err) {
-//           res.send(err);
-//         }
-//         res.status(200).json({ success: true, data: events });
-//       }
-//     ).sort({ visits: -1 });
-//   }
-
-//   console.log("===========key is============");
-//   console.log(key);
-//   console.log("====================================");
-// });
-
-// Company.find({ category: userObj.categories[0] }, function (err, CompanyData) {
-//   if (err) {
-//     console.log(err);
-//     res.status(400).json("Erro " + err);
-//   } else {
-//     eventsArr.push(CompanyData);
-//   }
-// });
-
-// Company.find({ category: userObj.categories[2] }, function (err, CompanyData) {
-//   if (err) {
-//     console.log(err);
-//     res.status(400).json("Erro " + err);
-//   } else {
-//     eventsArr.push(CompanyData);
-//   }
-// });
-// });
-
-// Company.find({ category: key }, function (err, CompanyData) {
-//   if (err) {
-//     console.log(err);
-//     res.status(400).json("Erro " + err);
-//   } else {
-//     res.status(200).json({ success: true, data: CompanyData });
-//   }
-// });
-// });
-
-// get events by id
-companyRoutes.route("/:id").get(async function (req, res) {
+labReportsRoutes.route("/:id").get(async function (req, res) {
   try {
     let id = req.params.id;
 
-    let company = await Company.findById(id);
-    if (!company) {
-      // console.log("err");
-      return res
-        .status(402)
-        .json({ code: "DEMPTY", warn: "DATABASE SCHEMA IS EMPTY" });
+    let labReport = await LabReport.findById(id);
+    if (!labReport) {
+      console.log("err");
+      return res.status(400).json({ message: err });
     } else {
-      return res.status(200).json({ success: true, data: company });
+      // Return the organizer and associated events
+      return res.status(200).json({ success: true, data: labReport });
     }
   } catch (error) {
     console.error(error);
@@ -262,16 +184,15 @@ companyRoutes.route("/:id").get(async function (req, res) {
     return res.status(500).json({ message: "Server Error" });
   }
 });
-//get all
-companyRoutes.get("/", async (req, res) => {
+
+labReportsRoutes.get("/", async (req, res) => {
   try {
-    let companies = await Company.find().sort({ createdAt: -1 });
-    if (!companies) {
-      return res
-        .status(402)
-        .json({ code: "DEMPTY", warn: "DATABASE SCHEMA IS EMPTY" });
+    let labReport = await LabReport.find().sort({ createdAt: -1 });
+    if (!labReport) {
+      console.log("err");
+      return res.status(400).json({ message: "Details not available" });
     } else {
-      res.status(200).json({ success: true, data: companies });
+      res.status(200).json({ success: true, data: labReport });
     }
   } catch (error) {
     console.error(error);
@@ -280,4 +201,6 @@ companyRoutes.get("/", async (req, res) => {
   }
 });
 
-module.exports = companyRoutes;
+//update product by id
+
+module.exports = labReportsRoutes;

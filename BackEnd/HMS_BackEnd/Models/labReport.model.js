@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 let labsReports = new Schema(
   {
     reportName: {
-      unique: true,
+      unique: false,
       type: String,
       required: true,
     },
