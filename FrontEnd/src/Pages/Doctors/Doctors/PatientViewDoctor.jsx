@@ -22,7 +22,6 @@ export default function PatientViewDoctor() {
 
   const handleEditDoctorClick = useCallback(
     (doctor) => {
-      console.log("Edit doctor clicked");
       navigate("/addDoctor", { state: { doctor: doctor } });
     },
     [navigate]

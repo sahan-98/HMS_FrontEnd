@@ -11,20 +11,23 @@ import {
 } from "@mui/material";
 import Calender from "../../Shared/Calender/Calender";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { showSystemAlert } from "../../../app/services/alertServices";
 import PatientService from "../../../app/services/patient-service.js";
 import calculateAge from "../../../utils/calculate-age.js";
 import { Controller } from "react-hook-form";
+import { useLocation } from "react-router-dom";
 
 const AddPatient = () => {
   const [date, setDate] = useState(new Date().toDateString());
+  const location = useLocation();
+  const patientToBeEdited = location.state?.patient;
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-
+    setValue,
     control,
   } = useForm({
     defaultValues: {
@@ -54,6 +57,24 @@ const AddPatient = () => {
     }
   };
 
+  useEffect(() => {
+    if (patientToBeEdited) {
+      setValue("firstname", patientToBeEdited.firstname);
+      setValue("lastname", patientToBeEdited.lastname);
+      setValue("email", patientToBeEdited.email);
+      setValue("userName", patientToBeEdited.userName);
+      setValue("gender", patientToBeEdited.gender);
+      setDate(patientToBeEdited.dateOfBirth);
+      setValue("dateOfJoin", patientToBeEdited.dateOfJoin);
+      setValue("speciality", patientToBeEdited.speciality);
+      setValue("mobile", patientToBeEdited.mobile);
+      setValue("address", patientToBeEdited.address);
+      setValue("age", patientToBeEdited.age);
+      setValue("fee", patientToBeEdited.fee);
+      setValue("salary", patientToBeEdited.salary);
+    }
+  }, [patientToBeEdited, setValue]);
+
   return (
     <Box
       style={{
@@ -64,7 +85,7 @@ const AddPatient = () => {
     >
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-          Add Patient
+          {patientToBeEdited ? "Edit Patient" : "Add Patient"}
         </Typography>
       </Box>
       <hr></hr>

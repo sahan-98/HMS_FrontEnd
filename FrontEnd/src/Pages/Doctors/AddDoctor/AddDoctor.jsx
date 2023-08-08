@@ -13,7 +13,7 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import Calender from "../../Shared/Calender/Calender";
 import { Controller, useForm } from "react-hook-form";
@@ -97,10 +97,10 @@ const AddDoctor = () => {
       setValue("password", doctorToBeEdited.password);
       setValue("conpass", doctorToBeEdited.conpass);
       setValue("gender", doctorToBeEdited.gender);
-      setValue("dateOfJoin", doctorToBeEdited.dateOfJoin);
       setPersonName([doctorToBeEdited.degree]);
       setValue("speciality", doctorToBeEdited.speciality);
       setValue("phone", doctorToBeEdited.phone);
+      setDate(doctorToBeEdited.dateOfJoin);
       setValue("address", doctorToBeEdited.address);
       setValue("age", doctorToBeEdited.age);
       setValue("fee", doctorToBeEdited.fee);
@@ -118,7 +118,7 @@ const AddDoctor = () => {
     >
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-          Add Doctor
+          {doctorToBeEdited ? "Edit Doctor" : "Add Doctor"}
         </Typography>
       </Box>
       <hr></hr>
