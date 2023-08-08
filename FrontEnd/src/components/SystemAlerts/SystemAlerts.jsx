@@ -42,7 +42,7 @@ const SystemAlerts = () => {
       TransitionComponent={transition}
       autoHideDuration={4000}
       sx={{
-        "& .css-1eqdgzv-MuiPaper-root-MuiSnackbarContent-root": {
+        "& .MuiSnackbarContent-root": {
           backgroundColor: "transparent",
           boxShadow: 0,
         },

@@ -2,8 +2,8 @@ const express = require("express");
 const { validationResult } = require("express-validator");
 const mongoose = require("mongoose");
 // const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt')
-const { v4: uuid_v4  } = require('uuid');
+const bcrypt = require("bcrypt");
+const { v4: uuid_v4 } = require("uuid");
 const DoctorRoutes = express.Router();
 
 const HttpError = require("../Models/http-error");
@@ -48,46 +48,58 @@ DoctorRoutes.post("/addDoctor", async (req, res, next) => {
     return next(new HttpError("Invalid inputs! Please check again.", 422));
   }
 
-    const { name, userName, email, password,  phone, fee, age, speciality, address, degree, salary,availbleTime, dateOfJoin ,gender } = req.body;
+  const {
+    name,
+    userName,
+    email,
+    password,
+    phone,
+    fee,
+    age,
+    speciality,
+    address,
+    degree,
+    salary,
+    availbleTime,
+    dateOfJoin,
+    gender,
+  } = req.body;
 
-    let existingDoctor;
-    try{
-      existingDoctor = await Doctor.findOne({ email: email});
-    } catch(err) {
-      const error = new HttpError(
-        'Something went wrong, could not add doctor details.',
-        500
-      );
-      return next(error);
-    }
+  let existingDoctor;
+  try {
+    existingDoctor = await Doctor.findOne({ email: email });
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not add doctor details.",
+      500
+    );
+    return next(error);
+  }
 
-    if(existingDoctor) {
-        const error = new HttpError(
-          'Doctor already exists.',
-          422
-        );
-        return next(error);
-      }
+  if (existingDoctor) {
+    const error = new HttpError("Doctor already exists.", 422);
+    return next(error);
+  }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword);
-    const newDoctor = new Doctor({
-        doctorid: uuid_v4(),
-        userName,
-        name,
-        email,
-        password: hashedPassword,
-        phone,
-        fee, 
-        age, 
-        speciality, 
-        address, 
-        degree, 
-        salary, 
-        availbleTime, 
-        dateOfJoin,
-        gender
-    });
+  const hashedPassword = await bcrypt.hash(password, 10);
+  console.log(hashedPassword);
+  const newDoctor = new Doctor({
+    doctorid: uuid_v4(),
+    userName,
+    name,
+    email,
+    password: hashedPassword,
+    phone,
+    fee,
+    age,
+    speciality,
+    address,
+    degree,
+    salary,
+    availbleTime,
+    dateOfJoin,
+    gender,
+  });
 
   await newDoctor
     .save()

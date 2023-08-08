@@ -9,14 +9,24 @@ import { IconButton, Typography } from "@mui/material";
 import useRequest from "../../../hooks/use-request";
 import DoctorService from "../../../app/services/doctor-service";
 import { useCallback } from "react";
-import { CalendarMonth, Delete, Edit } from "@mui/icons-material";
+import { Delete, Edit } from "@mui/icons-material";
 import { showSystemAlert } from "../../../app/services/alertServices";
+import { useNavigate } from "react-router-dom";
 
 export default function PatientViewDoctor() {
+  const navigate = useNavigate();
   const getAllDoctors = useCallback(async () => {
     const response = await DoctorService.getAllDoctors();
     return response.data;
   }, []);
+
+  const handleEditDoctorClick = useCallback(
+    (doctor) => {
+      console.log("Edit doctor clicked");
+      navigate("/addDoctor", { state: { doctor: doctor } });
+    },
+    [navigate]
+  );
 
   const { loading, error, data, setRefresh } = useRequest({
     requestFn: getAllDoctors,
@@ -79,7 +89,12 @@ export default function PatientViewDoctor() {
               <TableCell align="center">{doctorData?.phone}</TableCell>
               <TableCell align="center">{doctorData?.gender}</TableCell>
               <TableCell align="center">
-                <IconButton title="Edit doctor">
+                <IconButton
+                  title="Edit doctor"
+                  onClick={() => {
+                    handleEditDoctorClick(doctorData);
+                  }}
+                >
                   <Edit />
                 </IconButton>
                 <IconButton
@@ -89,9 +104,6 @@ export default function PatientViewDoctor() {
                   }}
                 >
                   <Delete />
-                </IconButton>
-                <IconButton title="Place appointment">
-                  <CalendarMonth />
                 </IconButton>
               </TableCell>
             </TableRow>
