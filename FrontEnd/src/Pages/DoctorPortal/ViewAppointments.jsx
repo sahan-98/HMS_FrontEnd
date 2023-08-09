@@ -1,5 +1,7 @@
+import { Search } from "@mui/icons-material";
 import {
   Box,
+  IconButton,
   InputAdornment,
   TextField,
   ToggleButton,
@@ -8,10 +10,15 @@ import {
   styled,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import { useCallback, useState } from "react";
+import { GiPowerButton } from "react-icons/gi";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { showSystemAlert } from "../../app/services/alertServices";
+import DoctorService from "../../app/services/doctor-service";
 import Header from "../../components/Header/Header";
 import Layout from "../../components/PortalLayout/Layout";
-import { useState } from "react";
-import { Search } from "@mui/icons-material";
+import { logout } from "../../reducers/loginSlice";
 
 const StyledDiv = styled("div")(
   `
@@ -72,6 +79,9 @@ const StyledTextField = styled(TextField)({
   },
 });
 const ViewAppointments = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const columns = [
     { field: "id", headerName: "Id", width: 150 },
     { field: "firstName", headerName: "First name", width: 150 },
@@ -100,6 +110,24 @@ const ViewAppointments = () => {
     { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
   ];
   const [selectedType, setSelectedType] = useState("pending");
+  const doctorid = useSelector((state) => state.login.userId);
+
+  const handleLogoutClick = useCallback(async () => {
+    console.log("logout");
+    try {
+      const logoutResponse = await DoctorService.logout({ doctorid });
+      console.log(logoutResponse);
+      const { message } = logoutResponse;
+      if (message === "Logout successful") {
+        dispatch(logout());
+        showSystemAlert("You have successfully logged out", "success");
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log(error);
+      showSystemAlert("An error occured while loggin out", "error");
+    }
+  }, [doctorid, dispatch]);
 
   return (
     <Layout>
@@ -166,6 +194,9 @@ const ViewAppointments = () => {
                   Completed
                 </StyledToggleButton>
               </StyledToggleButtonGroup>
+              <IconButton title="Logout" onClick={handleLogoutClick}>
+                <GiPowerButton />
+              </IconButton>
             </Box>
           </Box>
 

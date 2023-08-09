@@ -27,6 +27,10 @@ class DoctorService {
   static async login({ userName, password }) {
     return await post({ path: `/doctor/login`, data: { userName, password } });
   }
+
+  static async logout({ doctorid }) {
+    return await post({ path: `/doctor/logout`, data: { doctorid } });
+  }
 }
 
 export default DoctorService;
