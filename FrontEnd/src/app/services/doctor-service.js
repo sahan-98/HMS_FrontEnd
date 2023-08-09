@@ -23,6 +23,14 @@ class DoctorService {
   static async deleteDoctor({ doctorId }) {
     return await del({ path: `/doctor/deleteDoctors/${doctorId}` });
   }
+
+  static async login({ userName, password }) {
+    return await post({ path: `/doctor/login`, data: { userName, password } });
+  }
+
+  static async logout({ doctorid }) {
+    return await post({ path: `/doctor/logout`, data: { doctorid } });
+  }
 }
 
 export default DoctorService;

@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   InputAdornment,
+  Stack,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
@@ -34,6 +35,20 @@ const StyledText = styled(Typography)(`
   color: #636363;
   font-style: normal;
   font-weight: 400;
+`);
+
+const StyledButton = styled(Button)(`
+border-radius: 7px;
+border: 1px solid #DEDEDE;
+background: #59C169; 
+color: #fff;
+min-width: 30px;
+font-size: 10px;
+font-weight: 600;
+padding: 3px 10px;
+:hover {
+  background: #68E87D;
+}
 `);
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)({
@@ -88,6 +103,16 @@ const ViewAppointments = () => {
       field: "actions",
       headerName: "Actions",
       width: 150,
+      align: "center",
+      headerAlign: "center",
+      disableClickEventBubbling: true,
+      renderCell: (params) => {
+        const onClick = (e) => {
+          const currentRow = params.row;
+          return alert(JSON.stringify(currentRow, null, 4));
+        };
+        return <StyledButton onClick={onClick}>Lab Report</StyledButton>;
+      },
     },
   ];
 
