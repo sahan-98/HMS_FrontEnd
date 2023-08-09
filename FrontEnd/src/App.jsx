@@ -30,6 +30,7 @@ import ChannelDoctorStep02 from "./Pages/PatientPortal/ChannelDoctor/Step02";
 import ChannelDoctorResult from "./Pages/PatientPortal/ChannelDoctor/Result";
 import ChannelDoctorPayment from "./Pages/PatientPortal/ChannelDoctor/Payment";
 import GeneralLogin from "./Pages/Login/GeneralLogin";
+import AdminLogin from "./Pages/Login/AdminLogin";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
         <Routes>
           {/* <Route path="/login" element={<Login />} /> */}
           <Route path="/login" element={<GeneralLogin />} />
+          <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/patient-portal">
             <Route path="landing" index element={<Landing />} />
             <Route
