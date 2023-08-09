@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 // Define collection and schema for Users
-let invoice = new Schema(
+let appoinmentBill = new Schema(
   {
     patientId: {
       required: true,
@@ -21,19 +21,19 @@ let invoice = new Schema(
     // emergancy
     type: {
       required: true,
-      type: Date,
+      type: String,
     },
     queueNumber: {
-      type: Date,
+      type: Number,
     },
     totalPrice: {
       required: true,
-      type: Date,
+      type: Number,
     },
   },
   {
-    collection: "invoice",
+    collection: "appoinmentBill",
   }
 );
 
-module.exports = mongoose.model("invoice", invoice);
+module.exports = mongoose.model("appoinmentBill", appoinmentBill);

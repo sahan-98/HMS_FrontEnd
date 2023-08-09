@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 // Define collection and schema for Users
 let labRepBill = new Schema(
   {
-    patientId: {
+    patientid: {
       required: true,
       type: String,
     },

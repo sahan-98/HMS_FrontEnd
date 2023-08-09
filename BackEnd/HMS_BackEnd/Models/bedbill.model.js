@@ -39,11 +39,6 @@ let bedAllocation = new Schema(
       required: true,
       type: String,
     },
-
-    invoiceNo: {
-      required: true,
-      type: String,
-    },
   },
   {
     collection: "bedAllocation",
