@@ -127,7 +127,7 @@ const ViewAppointments = () => {
       console.log(error);
       showSystemAlert("An error occured while loggin out", "error");
     }
-  }, [doctorid, dispatch]);
+  }, [doctorid, dispatch, navigate]);
 
   return (
     <Layout>
