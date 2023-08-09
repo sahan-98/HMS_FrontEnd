@@ -9,37 +9,10 @@ let LabReport = require("../Models/labReport.model");
 labReportsRoutes.post("/add", async (req, res) => {
   const { reportName,type,doctorid,labAssistantid,paitentid,LDL,HDL,TotalCholesterol,Triglycerides,VLDLlevels,WBCcount,RBCcount,platelets,contactEmail,hemoglobin,hematocrit } = req.body;
 
-  // const salt = await bcrypt.genSalt();
-  // const passwordHash = await bcrypt.hash(password, salt);
-
-  // if (
-  //   mobile == "" ||
-  //   userName == "" ||
-  //   password == "" ||
-  //   email == "" ||
-  //   address == "" ||
-  //   dateOfBirth == "" ||
-  //   firstname == "" ||
-  //   lastname == ""
-  // )
-  //   return res.status(202).json({ warn: "Important field(s) are empty" });
+ 
 
   if (type === "Cholesterol report"){
-    // return res.status(202).json({ warn: "Passwords Do not Match!" });
-
-  // const exist = await LabAssistant.findOne({ email: email });
-  // if (exist) {
-  //   return res
-  //     .status(202)
-  //     .json({ warn: "An account is Exist with this email" });
-  // }
-
-  // const exist2 = await LabReports.findOne({ mobile: mobile });
-  // if (exist2) {
-  //   return res
-  //     .status(202)
-  //     .json({ warn: "This mobile number is not available.Try another one" });
-  // }
+   
 
   // upload
 
@@ -54,6 +27,7 @@ labReportsRoutes.post("/add", async (req, res) => {
     HDL,
     TotalCholesterol,
     Triglycerides,
+    labReportFee : 2000,
     VLDLlevels,
     status: "Pending",
   });
@@ -61,6 +35,8 @@ labReportsRoutes.post("/add", async (req, res) => {
   await newLabReport1
     .save()
     .then(async (respond) => {
+
+      //add report bill
       res.status(200).json({ message: "Successfull" });
     })
     .catch((err) => {
@@ -83,12 +59,15 @@ labReportsRoutes.post("/add", async (req, res) => {
       contactEmail,
       hemoglobin,
       hematocrit,
+      labReportFee : 3000,
       status: "Pending",
     });
   
     await newLabReport2
       .save()
       .then(async (respond) => {
+        
+        //add report bill
         res.status(200).json({ message: "Successfull" });
       })
       .catch((err) => {
@@ -102,7 +81,7 @@ labReportsRoutes.post("/add", async (req, res) => {
 
 // Update lab report
 
-labReportsRoutes.post("/update/:id", async (req, res) => {
+labReportsRoutes.post("/updateResult/:id", async (req, res) => {
   console.log(req.body);
 
   const {type} = req.body;
@@ -110,8 +89,8 @@ labReportsRoutes.post("/update/:id", async (req, res) => {
   if(type === "Cholesterol report"){
 
   try {
-    LabReport.find(req.params.id)
-      .then((labReportObj) => {
+    LabReport.findById(req.params.id)
+      .then(async (labReportObj) => {
         labReportObj.LDL = req.body.LDL;
         labReportObj.HDL = req.body.HDL;
         labReportObj.TotalCholesterol = req.body.TotalCholesterol;
@@ -119,14 +98,18 @@ labReportsRoutes.post("/update/:id", async (req, res) => {
         labReportObj.VLDLlevels = req.body.VLDLlevels;
         labReportObj.status = "completed";
 
-        labReportObj
+        await labReportObj
           .save()
           .then(() => {
-            return res.status(200).json("Updated");
+            return res.status(200).json({data:labReportObj});
           })
-          .catch((err) => res.status(400).json({ message: err }));
+          .catch((err) => {
+            console.error(err);
+            return res.status(400).json({ message: err })});
       })
-      .catch((err) => res.status(400).json({ message: err }));
+      .catch((err) => {
+        console.error(err);
+        res.status(400).json({ message: err })});
   } catch (error) {
     console.error(error);
 
@@ -139,7 +122,7 @@ else if(type === "Full Blood Count report"){
 
   try {
     LabReport.find(req.params.id)
-      .then((labReportObj) => {
+      .then(async (labReportObj) => {
         labReportObj.WBCcount = req.body.WBCcount;
         labReportObj.RBCcount = req.body.RBCcount;
         labReportObj.platelets = req.body.platelets;
@@ -147,7 +130,7 @@ else if(type === "Full Blood Count report"){
         labReportObj.hematocrit = req.body.hematocrit;
         labReportObj.status = "completed";
 
-        labReportObj
+        await labReportObj
           .save()
           .then(() => {
             return res.status(200).json("Updated");

@@ -74,6 +74,15 @@ let labsReports = new Schema(
       type: String,
     },
 
+    status: {
+      type: String,
+    },
+
+    labReportFee: {
+      type: String,
+      required: true,
+    },
+
   },
   {
     timestamps: true,
