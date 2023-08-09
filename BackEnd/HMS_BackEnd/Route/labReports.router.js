@@ -3,74 +3,80 @@ const express = require("express");
 const labReportsRoutes = express.Router();
 
 let LabReport = require("../Models/labReport.model");
+let labRepBill = require("../Models/labrepbill.model");
 
 //Add Lab Report
 
 labReportsRoutes.post("/add", async (req, res) => {
-  const { reportName,type,doctorid,labAssistantid,paitentid,LDL,HDL,TotalCholesterol,Triglycerides,VLDLlevels,WBCcount,RBCcount,platelets,contactEmail,hemoglobin,hematocrit } = req.body;
-
-  // const salt = await bcrypt.genSalt();
-  // const passwordHash = await bcrypt.hash(password, salt);
-
-  // if (
-  //   mobile == "" ||
-  //   userName == "" ||
-  //   password == "" ||
-  //   email == "" ||
-  //   address == "" ||
-  //   dateOfBirth == "" ||
-  //   firstname == "" ||
-  //   lastname == ""
-  // )
-  //   return res.status(202).json({ warn: "Important field(s) are empty" });
-
-  if (type === "Cholesterol report"){
-    // return res.status(202).json({ warn: "Passwords Do not Match!" });
-
-  // const exist = await LabAssistant.findOne({ email: email });
-  // if (exist) {
-  //   return res
-  //     .status(202)
-  //     .json({ warn: "An account is Exist with this email" });
-  // }
-
-  // const exist2 = await LabReports.findOne({ mobile: mobile });
-  // if (exist2) {
-  //   return res
-  //     .status(202)
-  //     .json({ warn: "This mobile number is not available.Try another one" });
-  // }
-
-  // upload
-
-  const newLabReport1 = new LabReport({
+  const {
     reportName,
     type,
     doctorid,
     labAssistantid,
     paitentid,
-    contactEmail,
     LDL,
     HDL,
     TotalCholesterol,
     Triglycerides,
     VLDLlevels,
-    status: "Pending",
-  });
+    WBCcount,
+    RBCcount,
+    platelets,
+    contactEmail,
+    hemoglobin,
+    hematocrit,
+  } = req.body;
 
-  await newLabReport1
-    .save()
-    .then(async (respond) => {
-      res.status(200).json({ message: "Successfull" });
-    })
-    .catch((err) => {
-      res.status(400).json({ message: "Error!" });
-      console.log("error mail:", err);
+  if (type === "Cholesterol report") {
+    // upload
+
+    const newLabReport1 = new LabReport({
+      reportName,
+      type,
+      doctorid,
+      labAssistantid,
+      paitentid,
+      contactEmail,
+      LDL,
+      HDL,
+      TotalCholesterol,
+      Triglycerides,
+      labReportFee: 2000,
+      VLDLlevels,
+      status: "Pending",
     });
-  }
 
-  else if (type === "Full Blood Count report") {
+    await newLabReport1
+      .save()
+      .then(async (respond) => {
+        //add report bill
 
+        const newLabBill = new labRepBill({
+          paitentid,
+          reportNo: respond._id,
+          type,
+          totalPrice: 2000,
+          payStatus: "Pending",
+        });
+
+        await newLabBill
+          .save()
+          .then(async (respond) => {
+            //add report bill
+
+            return res.status(200).json({ message: "Successfull" });
+          })
+          .catch((err) => {
+            res.status(400).json({ message: "Error!" });
+            console.log("error :", err);
+          });
+        // res.status(200).json({ message: "Successfull" });
+      })
+      .catch((err) => {
+        console.log("error :", err);
+        return res.status(400).json({ message: "Error!" });
+      });
+  } else if (type === "Full Blood Count report") {
     const newLabReport2 = new LabReport({
       reportName,
       type,
@@ -83,85 +89,103 @@ labReportsRoutes.post("/add", async (req, res) => {
       contactEmail,
       hemoglobin,
       hematocrit,
+      labReportFee: 3000,
       status: "Pending",
     });
-  
+
     await newLabReport2
       .save()
       .then(async (respond) => {
-        res.status(200).json({ message: "Successfull" });
+        //add report bill
+        const newLabBill = new labRepBill({
+          paitentid,
+          reportNo: respond._id,
+          type,
+          totalPrice: 3000,
+          payStatus: "Pending",
+        });
+
+        await newLabBill
+          .save()
+          .then(async (respond) => {
+            //add report bill
+
+            return res.status(200).json({ message: "Successfull" });
+          })
+          .catch((err) => {
+            console.log("error :", err);
+            return res.status(400).json({ message: "Error!" });
+          });
       })
       .catch((err) => {
-        res.status(400).json({ message: "Error!" });
-        console.log("error mail:", err);
+        console.log("error :", err);
+        return res.status(400).json({ message: "Error!" });
       });
-
   }
 });
 
-
 // Update lab report
 
-labReportsRoutes.post("/update/:id", async (req, res) => {
+labReportsRoutes.post("/updateResult/:id", async (req, res) => {
   console.log(req.body);
 
-  const {type} = req.body;
+  const { type } = req.body;
 
-  if(type === "Cholesterol report"){
+  if (type === "Cholesterol report") {
+    try {
+      LabReport.findById(req.params.id)
+        .then(async (labReportObj) => {
+          labReportObj.LDL = req.body.LDL;
+          labReportObj.HDL = req.body.HDL;
+          labReportObj.TotalCholesterol = req.body.TotalCholesterol;
+          labReportObj.Triglycerides = req.body.Triglycerides;
+          labReportObj.VLDLlevels = req.body.VLDLlevels;
+          labReportObj.status = "completed";
 
-  try {
-    LabReport.find(req.params.id)
-      .then((labReportObj) => {
-        labReportObj.LDL = req.body.LDL;
-        labReportObj.HDL = req.body.HDL;
-        labReportObj.TotalCholesterol = req.body.TotalCholesterol;
-        labReportObj.Triglycerides = req.body.Triglycerides;
-        labReportObj.VLDLlevels = req.body.VLDLlevels;
-        labReportObj.status = "completed";
+          await labReportObj
+            .save()
+            .then(() => {
+              return res.status(200).json({ data: labReportObj });
+            })
+            .catch((err) => {
+              console.error(err);
+              return res.status(400).json({ message: err });
+            });
+        })
+        .catch((err) => {
+          console.error(err);
+          res.status(400).json({ message: err });
+        });
+    } catch (error) {
+      console.error(error);
 
-        labReportObj
-          .save()
-          .then(() => {
-            return res.status(200).json("Updated");
-          })
-          .catch((err) => res.status(400).json({ message: err }));
-      })
-      .catch((err) => res.status(400).json({ message: err }));
-  } catch (error) {
-    console.error(error);
+      return res.status(500).json({ message: "Server Error" });
+    }
+  } else if (type === "Full Blood Count report") {
+    try {
+      LabReport.find(req.params.id)
+        .then(async (labReportObj) => {
+          labReportObj.WBCcount = req.body.WBCcount;
+          labReportObj.RBCcount = req.body.RBCcount;
+          labReportObj.platelets = req.body.platelets;
+          labReportObj.hemoglobin = req.body.hemoglobin;
+          labReportObj.hematocrit = req.body.hematocrit;
+          labReportObj.status = "completed";
 
-    return res.status(500).json({ message: "Server Error" });
+          await labReportObj
+            .save()
+            .then(() => {
+              return res.status(200).json("Updated");
+            })
+            .catch((err) => res.status(400).json({ message: err }));
+        })
+        .catch((err) => res.status(400).json({ message: err }));
+    } catch (error) {
+      console.error(error);
+
+      return res.status(500).json({ message: "Server Error" });
+    }
   }
-
-}
-
-else if(type === "Full Blood Count report"){
-
-  try {
-    LabReport.find(req.params.id)
-      .then((labReportObj) => {
-        labReportObj.WBCcount = req.body.WBCcount;
-        labReportObj.RBCcount = req.body.RBCcount;
-        labReportObj.platelets = req.body.platelets;
-        labReportObj.hemoglobin = req.body.hemoglobin;
-        labReportObj.hematocrit = req.body.hematocrit;
-        labReportObj.status = "completed";
-
-        labReportObj
-          .save()
-          .then(() => {
-            return res.status(200).json("Updated");
-          })
-          .catch((err) => res.status(400).json({ message: err }));
-      })
-      .catch((err) => res.status(400).json({ message: err }));
-  } catch (error) {
-    console.error(error);
-
-    return res.status(500).json({ message: "Server Error" });
-  }
-
-}
 });
 
 // get lab report

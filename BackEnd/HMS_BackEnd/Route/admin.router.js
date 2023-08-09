@@ -142,44 +142,17 @@ userRoutes.post("/validate", async (req, res) => {
         .json({ msg: "Invalid Username or Password", code: 402 });
 
     //jwt secret
-    const token = jwt.sign({ id: Login._id }, config.JWT_SECRET, {
-      expiresIn: 300,
-    });
+
     res.status(200).json({
-      token,
-      User: {
+      daata: {
         id: Login._id,
         username: Login.username,
         email: Login.email,
-        firstname: Login.firstname,
-        lastname: Login.lastname,
-        img: Login.img,
       },
     });
   } catch (err) {
     res.status(400).json({ msg: "Server Error", code: 400 });
     console.log("Error is ", err);
-  }
-});
-
-// User Session Validation by token
-userRoutes.get("/session-validate", async (req, res) => {
-  try {
-    const token = req.header("token");
-
-    console.log("validation is :", token);
-    if (!token) return res.json(false);
-
-    const validate = jwt.verify(token, config.JWT_SECRET);
-    if (!validate) return res.json(false);
-
-    const Login = await user.findById(validate.id);
-    if (!Login) return res.json(false);
-
-    return res.json(true);
-  } catch (error) {
-    res.status(400).json({ msg: "Validation Error" });
-    console.log("Error is ", error);
   }
 });
 
