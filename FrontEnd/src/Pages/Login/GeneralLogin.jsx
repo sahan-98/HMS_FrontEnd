@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import HeadingText from "../../components/HeadingText/HeadingText";
 import DoctorService from "../../app/services/doctor-service";
 import PatientService from "../../app/services/patient-service";
+import { showSystemAlert } from "../../app/services/alertServices";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
@@ -32,6 +33,9 @@ const GeneralLogin = () => {
   const [iamUser, setIAmUser] = useState("");
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [usernameError, setUsernameError] = useState(null);
+  const [passwordError, setPasswordError] = useState(null);
+  const [iamUserError, setIAmUserError] = useState(null);
 
   const handleIAmUserChange = useCallback((event) => {
     setIAmUser(event.target.value);
@@ -46,12 +50,41 @@ const GeneralLogin = () => {
   }, []);
 
   const handleLoginClick = useCallback(async () => {
+    if (userName === "") {
+      setUsernameError("Please enter username");
+      return;
+    } else {
+      setUsernameError(null);
+    }
+    if (password === "") {
+      setPasswordError("Please enter password");
+      return;
+    } else {
+      setPasswordError(null);
+    }
+    if (iamUser === "") {
+      setIAmUserError("Please select user type");
+      return;
+    } else {
+      setIAmUserError(null);
+    }
+
     if (iamUser === "DOCTOR") {
-      const doctorLogin = await DoctorService.login({
-        userName: userName,
-        password: password,
-      });
-      console.log(doctorLogin);
+      try {
+        const doctorLogin = await DoctorService.login({
+          userName: userName,
+          password: password,
+        });
+        console.log(doctorLogin);
+        const { doctorId, message } = doctorLogin;
+        if (doctorId) {
+          showSystemAlert("You have successfully logged in", "success");
+          navigate("/doctor-portal/view-appointments");
+        }
+      } catch (error) {
+        console.log(error);
+        showSystemAlert("Login failed", "error");
+      }
     } else if (iamUser === "PATIENT") {
       const patientLogin = await PatientService.login({
         userName: userName,
@@ -59,7 +92,7 @@ const GeneralLogin = () => {
       });
       console.log(patientLogin);
     }
-  }, [navigate, iamUser]);
+  }, [navigate, iamUser, userName, password]);
 
   return (
     <Layout>
@@ -82,6 +115,8 @@ const GeneralLogin = () => {
             fullWidth
             value={userName}
             onChange={handleUsernameChange}
+            error={usernameError !== null}
+            helperText={usernameError}
           />
           <TextField
             label="Password"
@@ -91,6 +126,8 @@ const GeneralLogin = () => {
             value={password}
             onChange={handlePasswordChange}
             sx={{ mt: 2 }}
+            error={passwordError !== null}
+            helperText={passwordError}
           />
 
           <FormControl fullWidth sx={{ mt: 2, textAlign: "start" }}>
@@ -100,6 +137,8 @@ const GeneralLogin = () => {
               value={iamUser}
               label="I am a"
               onChange={handleIAmUserChange}
+              error={iamUserError !== null}
+              helperText={iamUserError}
             >
               <MenuItem value={"DOCTOR"}>Doctor</MenuItem>
               <MenuItem value={"PATIENT"}>Patient</MenuItem>
