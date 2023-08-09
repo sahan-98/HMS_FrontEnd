@@ -10,7 +10,6 @@ import FindDoctor from "./Pages/Doctors/UpdateDoctor/FindDoctor";
 import Home from "./Pages/Home/Home/Home";
 import { AddLabAssistant } from "./Pages/LabAssistants/AddLabAssistant.jsx";
 import AllLabAssistants from "./Pages/LabAssistants/AllAssistants.jsx";
-import PLogin from "./Pages/Login/PatientLogin";
 import Registration from "./Pages/Login/Registration/Registration";
 import PageNotFound from "./Pages/PageNotFound/PageNotFound";
 import HDPResult from "./Pages/PatientPortal/HeartDiseasePrediction/Result";
@@ -30,6 +29,7 @@ import ChannelDoctorStep01 from "./Pages/PatientPortal/ChannelDoctor/Step01";
 import ChannelDoctorStep02 from "./Pages/PatientPortal/ChannelDoctor/Step02";
 import ChannelDoctorResult from "./Pages/PatientPortal/ChannelDoctor/Result";
 import ChannelDoctorPayment from "./Pages/PatientPortal/ChannelDoctor/Payment";
+import GeneralLogin from "./Pages/Login/GeneralLogin";
 
 function App() {
   return (
@@ -40,7 +40,7 @@ function App() {
       <Router>
         <Routes>
           {/* <Route path="/login" element={<Login />} /> */}
-          <Route path="/login" element={<PLogin />} />
+          <Route path="/login" element={<GeneralLogin />} />
           <Route path="/patient-portal">
             <Route path="landing" index element={<Landing />} />
             <Route
