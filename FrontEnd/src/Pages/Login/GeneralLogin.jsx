@@ -17,6 +17,8 @@ import HeadingText from "../../components/HeadingText/HeadingText";
 import DoctorService from "../../app/services/doctor-service";
 import PatientService from "../../app/services/patient-service";
 import { showSystemAlert } from "../../app/services/alertServices";
+import { login } from "../../reducers/loginSlice";
+import { useDispatch } from "react-redux";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
@@ -30,6 +32,7 @@ color: #fff;
 
 const GeneralLogin = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [iamUser, setIAmUser] = useState("");
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -76,21 +79,25 @@ const GeneralLogin = () => {
           password: password,
         });
         console.log(doctorLogin);
-        const { doctorId, message } = doctorLogin;
+        const { doctorId } = doctorLogin;
         if (doctorId) {
           showSystemAlert("You have successfully logged in", "success");
+          dispatch(login({ userId: doctorId }));
           navigate("/doctor-portal/view-appointments");
         }
       } catch (error) {
-        console.log(error);
         showSystemAlert("Login failed", "error");
       }
     } else if (iamUser === "PATIENT") {
-      const patientLogin = await PatientService.login({
-        userName: userName,
-        password: password,
-      });
-      console.log(patientLogin);
+      try {
+        const patientLogin = await PatientService.login({
+          userName: userName,
+          password: password,
+        });
+        console.log(patientLogin);
+      } catch (error) {
+        console.log(error);
+      }
     }
   }, [navigate, iamUser, userName, password]);
 
@@ -116,7 +123,7 @@ const GeneralLogin = () => {
             value={userName}
             onChange={handleUsernameChange}
             error={usernameError !== null}
-            helperText={usernameError}
+            {...(usernameError && { helperText: usernameError })}
           />
           <TextField
             label="Password"
@@ -127,7 +134,7 @@ const GeneralLogin = () => {
             onChange={handlePasswordChange}
             sx={{ mt: 2 }}
             error={passwordError !== null}
-            helperText={passwordError}
+            {...(passwordError && { helperText: passwordError })}
           />
 
           <FormControl fullWidth sx={{ mt: 2, textAlign: "start" }}>
@@ -138,7 +145,7 @@ const GeneralLogin = () => {
               label="I am a"
               onChange={handleIAmUserChange}
               error={iamUserError !== null}
-              helperText={iamUserError}
+              {...(iamUserError && { helperText: iamUserError })}
             >
               <MenuItem value={"DOCTOR"}>Doctor</MenuItem>
               <MenuItem value={"PATIENT"}>Patient</MenuItem>
