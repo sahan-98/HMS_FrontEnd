@@ -9,15 +9,25 @@ import { IconButton, Typography } from "@mui/material";
 import { useCallback } from "react";
 import LabAssistantService from "../../app/services/lab-assistant-service.js";
 import useRequest from "../../hooks/use-request.js";
-import {AiOutlineDelete, AiOutlineEdit} from "react-icons/ai";
+import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+import { Delete, Edit } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 export default function AllLabAssistants() {
+  const navigate = useNavigate();
   const getAllLabAssistants = useCallback(async () => {
     const response = await LabAssistantService.getAllLabAssistants();
     return response.data;
   }, []);
 
-  const { loading, error, data , setRefresh} = useRequest({
+  const handleEditLabAssistantClick = useCallback(
+    (labAssistant) => {
+      navigate("/add-lab-assistant", { state: { labAssistant: labAssistant } });
+    },
+    [navigate]
+  );
+
+  const { loading, error, data, setRefresh } = useRequest({
     requestFn: getAllLabAssistants,
   });
 
@@ -76,8 +86,13 @@ export default function AllLabAssistants() {
               <TableCell align="center">{labAssistant?.dateOfBirth}</TableCell>
               <TableCell align="center">{labAssistant?.email}</TableCell>
               <TableCell align="center">
-                <IconButton title="Edit doctor">
-                  <AiOutlineEdit />
+                <IconButton
+                  title="Edit doctor"
+                  onClick={() => {
+                    handleEditLabAssistantClick(labAssistant);
+                  }}
+                >
+                  <Edit />
                 </IconButton>
                 <IconButton
                   title="Delete lab assistant"
@@ -85,7 +100,7 @@ export default function AllLabAssistants() {
                     // deleteLabAssistant(labAssistant?._id);
                   }}
                 >
-                  <AiOutlineDelete />
+                  <Delete />
                 </IconButton>
               </TableCell>
             </TableRow>

@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 let labsReports = new Schema(
   {
     reportName: {
-      unique: true,
+      unique: false,
       type: String,
       required: true,
     },
@@ -72,6 +72,15 @@ let labsReports = new Schema(
 
     hematocrit: {
       type: String,
+    },
+
+    status: {
+      type: String,
+    },
+
+    labReportFee: {
+      type: String,
+      required: true,
     },
 
   },
