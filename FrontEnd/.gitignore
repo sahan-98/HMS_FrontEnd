@@ -23,4 +23,3 @@ dist-ssr
 *.sln
 *.sw?
 ../desktop.ini
-yarn.lock
