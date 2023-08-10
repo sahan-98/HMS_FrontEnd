@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   FormControl,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
@@ -103,9 +104,10 @@ const Step02 = () => {
               onChange={handleChestPainTypeChange}
             >
               <MenuItem value={"NO_SELECTION"}>Please select</MenuItem>
-              <MenuItem value={"Angina"}>Angina</MenuItem>
-              <MenuItem value={"Heart attack"}>Heart attack</MenuItem>
-              <MenuItem value={"Aortic dissection"}>Aortic dissection</MenuItem>
+              <MenuItem value={"TA"}>Typical Angina</MenuItem>
+              <MenuItem value={"ATA"}>Atypical Angina</MenuItem>
+              <MenuItem value={"NAP"}>Non-Anginal Pain</MenuItem>
+              <MenuItem value={"ASY"}>Asymptomatic</MenuItem>
             </Select>
           </FormControl>
           <TextField
@@ -113,15 +115,28 @@ const Step02 = () => {
             variant="outlined"
             fullWidth
             sx={{ mt: 2 }}
+            value={cholestrol}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">mm/dl</InputAdornment>
+              ),
+            }}
             onChange={onChangeCholestrol}
           />
-          <TextField
-            label="Fasting Blood Sugar"
-            variant="outlined"
-            fullWidth
-            sx={{ mt: 2 }}
-            onChange={onChangeFastingBloodSugar}
-          />
+          <FormControl fullWidth sx={{ textAlign: "start", mt: 2 }}>
+            <InputLabel id="demo-simple-select-label">
+              Fasting Blood Sugar
+            </InputLabel>
+            <Select
+              value={fastingBloodSugar}
+              label="Fasting Blood Sugar"
+              onChange={onChangeFastingBloodSugar}
+            >
+              <MenuItem value={"NO_SELECTION"}>Please select</MenuItem>
+              <MenuItem value={"1"}>FastingBS &gt; 120 mg/dl</MenuItem>
+              <MenuItem value={"0"}>FastingBS &lt; 120 mg/dl</MenuItem>
+            </Select>
+          </FormControl>
 
           <Progress currentStep={1} />
           <Box

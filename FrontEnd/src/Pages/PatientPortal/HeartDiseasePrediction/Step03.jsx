@@ -1,6 +1,16 @@
 import Header from "../Header";
 import Layout from "../Layout";
-import { Box, Button, TextField, styled } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  styled,
+} from "@mui/material";
 import BlueAcentCard from "../../../components/BlueAcentCard/BlueAcentCard";
 import HeadingText from "../../../components/HeadingText/HeadingText";
 import Progress from "./Progress";
@@ -81,19 +91,35 @@ const Step03 = () => {
             label="Resting bp"
             variant="outlined"
             fullWidth
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">mm Hg</InputAdornment>
+              ),
+            }}
             value={restingBloodPressure}
             onChange={onChangeRestingBloodPressure}
           />
+          <FormControl fullWidth sx={{ textAlign: "start", mt: 2 }}>
+            <InputLabel id="demo-simple-select-label">Resting ECG</InputLabel>
+            <Select
+              value={restingEcg}
+              label="Resting ECG"
+              onChange={onChangeRestingEcg}
+            >
+              <MenuItem value={"NO_SELECTION"}>Please select</MenuItem>
+              <MenuItem value={"Normal"}>
+                Having ST-T wave abnormality (T wave inversions and/or ST
+                elevation or depression of &gt; 0.05 mV)
+              </MenuItem>
+              <MenuItem value={"LVH"}>
+                showing probable or definite left ventricular hypertrophy by
+                Estes&apos; criteria
+              </MenuItem>
+            </Select>
+          </FormControl>
+
           <TextField
-            label="Resting ECG"
-            variant="outlined"
-            fullWidth
-            sx={{ mt: 2 }}
-            onChange={onChangeRestingEcg}
-            value={restingEcg}
-          />
-          <TextField
-            label="Max HR"
+            label="Max Heart Rate"
             variant="outlined"
             fullWidth
             sx={{ mt: 2 }}

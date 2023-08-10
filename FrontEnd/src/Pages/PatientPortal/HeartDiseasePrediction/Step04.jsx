@@ -1,6 +1,15 @@
 import Header from "../Header";
 import Layout from "../Layout";
-import { Box, Button, TextField, styled } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  styled,
+} from "@mui/material";
 import BlueAcentCard from "../../../components/BlueAcentCard/BlueAcentCard";
 import HeadingText from "../../../components/HeadingText/HeadingText";
 import Progress from "./Progress";
@@ -78,12 +87,20 @@ const Step04 = () => {
       >
         <BlueAcentCard>
           <HeadingText text="Heart disease prediction" />
-          <TextField
-            label="St slope"
-            variant="outlined"
-            fullWidth
-            onChange={handleStSlopeChange}
-          />
+
+          <FormControl fullWidth sx={{ textAlign: "start", mt: 2 }}>
+            <InputLabel id="demo-simple-select-label">ST Slope</InputLabel>
+            <Select
+              value={stSlope}
+              label="ST Slope"
+              onChange={handleStSlopeChange}
+            >
+              <MenuItem value={"Up"}>Upsloping</MenuItem>
+              <MenuItem value={"Flat"}>Flat</MenuItem>
+              <MenuItem value={"Down"}>Downsloping</MenuItem>
+            </Select>
+          </FormControl>
+
           <TextField
             label="Old peak"
             variant="outlined"
@@ -91,13 +108,20 @@ const Step04 = () => {
             sx={{ mt: 2 }}
             onChange={handleOldPeakChange}
           />
-          <TextField
-            label="Exercise angina"
-            variant="outlined"
-            fullWidth
-            sx={{ mt: 2 }}
-            onChange={handleExerciseAnginaChange}
-          />
+
+          <FormControl fullWidth sx={{ textAlign: "start", mt: 2 }}>
+            <InputLabel id="demo-simple-select-label">
+              Exercise angina
+            </InputLabel>
+            <Select
+              value={exerciseAngina}
+              label="Exercise angina"
+              onChange={handleExerciseAnginaChange}
+            >
+              <MenuItem value={"Y"}>Yes</MenuItem>
+              <MenuItem value={"N"}>No</MenuItem>
+            </Select>
+          </FormControl>
 
           <Progress currentStep={3} />
           <Box

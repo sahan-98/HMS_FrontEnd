@@ -129,7 +129,7 @@ PaitentRoutes.get("/getAllCountPatient", async (req, res) => {
   }
 });
 
-DoctorRoutes.post("/login", async (req, res) => {
+PaitentRoutes.post("/login", async (req, res) => {
   const { userName, password } = req.body;
 
   try {
