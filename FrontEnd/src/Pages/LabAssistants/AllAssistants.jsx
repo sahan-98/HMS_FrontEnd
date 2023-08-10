@@ -9,7 +9,6 @@ import { IconButton, Typography } from "@mui/material";
 import { useCallback } from "react";
 import LabAssistantService from "../../app/services/lab-assistant-service.js";
 import useRequest from "../../hooks/use-request.js";
-import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { Delete, Edit } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 

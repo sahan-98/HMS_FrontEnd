@@ -4,12 +4,6 @@ const Schema = mongoose.Schema;
 //define collection for events
 let labsReports = new Schema(
   {
-    reportName: {
-      unique: false,
-      type: String,
-      required: true,
-    },
-
     type: {
       type: String,
       required: true,
@@ -25,7 +19,7 @@ let labsReports = new Schema(
       required: true,
     },
 
-    paitentid: {
+    patientid: {
       type: String,
       required: true,
     },

@@ -4,10 +4,8 @@ const labRepBillsRoutes = express.Router();
 
 let labRepBill = require("../Models/labrepbill.model");
 
-//Add Lab Report
 
-// Update lab report
-
+// Update lab report bill
 labRepBillsRoutes.post("/updatePayment/:id", async (req, res) => {
   try {
     labRepBill
@@ -36,19 +34,18 @@ labRepBillsRoutes.post("/updatePayment/:id", async (req, res) => {
   }
 });
 
-// get lab report
-
+// get single lab report bill
 labRepBillsRoutes.route("/:id").get(async function (req, res) {
   try {
     let id = req.params.id;
 
-    let labRepBill = await labRepBill.findById(id);
-    if (!labRepBill) {
+    let labRepBilldata = await labRepBill.findById(id);
+    if (!labRepBilldata) {
       console.log("err");
       return res.status(400).json({ message: err });
     } else {
       // Return the organizer and associated events
-      return res.status(200).json({ success: true, data: labRepBill });
+      return res.status(200).json({ success: true, data: labRepBilldata });
     }
   } catch (error) {
     console.error(error);
@@ -57,17 +54,18 @@ labRepBillsRoutes.route("/:id").get(async function (req, res) {
   }
 });
 
+// get lab report bills for patient
 labRepBillsRoutes.route("/patient/:id").get(async function (req, res) {
   try {
     let id = req.params.id;
 
-    let labRepBill = await labRepBill.find({ patientid: id });
-    if (!labRepBill) {
+    let labRepBilldata = await labRepBill.find({ patientid: id });
+    if (!labRepBilldata) {
       console.log("err");
       return res.status(400).json({ message: err });
     } else {
       // Return the organizer and associated events
-      return res.status(200).json({ success: true, data: labRepBill });
+      return res.status(200).json({ success: true, data: labRepBilldata });
     }
   } catch (error) {
     console.error(error);
@@ -76,20 +74,21 @@ labRepBillsRoutes.route("/patient/:id").get(async function (req, res) {
   }
 });
 
+// get lab report bills for patient completed
 labRepBillsRoutes.route("/completed/:id").get(async function (req, res) {
   try {
     let id = req.params.id;
 
-    let labRepBill = await labRepBill.find({
+    let labRepBilldata = await labRepBill.find({
       payStatus: "completed",
       patientid: id,
     });
-    if (!labRepBill) {
+    if (!labRepBilldata) {
       console.log("err");
       return res.status(400).json({ message: err });
     } else {
       // Return the organizer and associated events
-      return res.status(200).json({ success: true, data: labRepBill });
+      return res.status(200).json({ success: true, data: labRepBilldata });
     }
   } catch (error) {
     console.error(error);
@@ -98,20 +97,21 @@ labRepBillsRoutes.route("/completed/:id").get(async function (req, res) {
   }
 });
 
+// get lab report bills for patient pending
 labRepBillsRoutes.route("/pending/:id").get(async function (req, res) {
   try {
     let id = req.params.id;
 
-    let labRepBill = await labRepBill.find({
-      payStatus: "pending",
+    let labRepBilldata = await labRepBill.find({
+      payStatus: "Pending",
       patientid: id,
     });
-    if (!labRepBill) {
+    if (!labRepBilldata) {
       console.log("err");
       return res.status(400).json({ message: err });
     } else {
       // Return the organizer and associated events
-      return res.status(200).json({ success: true, data: labRepBill });
+      return res.status(200).json({ success: true, data: labRepBilldata });
     }
   } catch (error) {
     console.error(error);
@@ -120,14 +120,15 @@ labRepBillsRoutes.route("/pending/:id").get(async function (req, res) {
   }
 });
 
+// get all lab report bills
 labRepBillsRoutes.get("/", async (req, res) => {
   try {
-    let labRepBill = await labRepBill.find().sort({ createdAt: -1 });
-    if (!labRepBill) {
+    let labRepBilldata = await labRepBill.find().sort({ createdAt: -1 });
+    if (!labRepBilldata) {
       console.log("err");
       return res.status(400).json({ message: "Details not available" });
     } else {
-      res.status(200).json({ success: true, data: labRepBill });
+      res.status(200).json({ success: true, data: labRepBilldata });
     }
   } catch (error) {
     console.error(error);
@@ -136,6 +137,5 @@ labRepBillsRoutes.get("/", async (req, res) => {
   }
 });
 
-//update product by id
 
 module.exports = labRepBillsRoutes;

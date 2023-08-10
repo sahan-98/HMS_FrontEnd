@@ -44,7 +44,7 @@ let paitents = new Schema(
 
     dateOfBirth: {
       required: true,
-      type: String,
+      type: Date,
     },
 
     gender: {
@@ -56,10 +56,10 @@ let paitents = new Schema(
     //   type: String,
     // },
 
-    // // New, Active , Banned
-    // status: {
-    //   type: String,
-    // },
+    // New, Active , Banned
+    status: {
+      type: String,
+    },
   },
   {
     collection: "Paitent",

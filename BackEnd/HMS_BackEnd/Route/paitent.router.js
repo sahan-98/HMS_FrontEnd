@@ -75,108 +75,6 @@ PaitentRoutes.post("/add", async (req, res) => {
     });
 });
 
-//token validate
-
-// PaitentRoutes.post("/validate", async (req, res) => {
-//   // console.log("Secret is :" , config.JWT_SECRET);
-
-//   const { mobile, password } = req.body;
-
-//   try {
-//     const Login = await Paitent.findOne({ mobile: mobile });
-
-//     if (mobile == "" || password == "")
-//       return res
-//         .status(200)
-//         .json({ message: "Mobile or Password field(s) are empty" });
-
-//     if (!Login)
-//       return res.status(200).json({ message: "Invalid login details" });
-
-//     const validate = await bcrypt.compare(password, Login.password);
-
-//     // title: {
-//     //   type: String,
-//     //   required: true,
-//     // },
-
-//     // //
-//     // type: {
-//     //   type: String,
-//     //   required: true,
-//     // },
-//     // User: {
-//     //   type: String,
-//     // },
-//     // description: {
-//     //   type: String,
-//     //   required: true,
-//     // },
-//     // endpoint: {
-//     //   type: String,
-//     //   required: true,
-//     // },
-//     // status: {
-//     //   type: Number,
-//     // },
-
-//     if (!validate) {
-//       const newErrorLog = new ErrorLog({
-//         mobile: mobile,
-//         title: "Security Alert",
-//         type: "invalidLoginAttempt",
-//         description: "An suspisious Login Attemp detected!",
-//         status: 0,
-//         endpoint: "Paitent/validate",
-//         ip: req.connection.remoteAddress,
-//       });
-
-//       await newErrorLog.save();
-
-//       return res.status(202).json({ message: "Password is invalid!" });
-//     }
-
-//     //jwt secret
-//     const token = jwt.sign({ id: Login._id }, config.JWT_SECRET, {
-//       expiresIn: 3000,
-//     });
-//     res.status(200).json({
-//       token,
-//       Paitent: {
-//         id: Login._id,
-//         mobile: Login.mobile,
-//         email: Login.email,
-//         firstname: Login.firstname,
-//         lastname: Login.lastname,
-//         img: Login.img,
-//       },
-//     });
-//   } catch (err) {
-//     console.log("validation error ", err);
-//     return res.status(400).json({ message: "Validation Error" });
-//   }
-// });
-
-// // Paitent Session Validation by token
-// PaitentRoutes.get("/session-validate", async (req, res) => {
-//   try {
-//     const token = req.header("token");
-
-//     console.log("validation is :", token);
-//     if (!token) return res.json(false);
-
-//     const validate = jwt.verify(token, config.JWT_SECRET);
-//     if (!validate) return res.json(false);
-
-//     const Login = await Paitent.findById(validate.id);
-//     if (!Login) return res.json(false);
-
-//     return res.json(true);
-//   } catch (error) {
-//     res.status(400).json({ message: "Validation Error" });
-//     console.log("Error is ", error);
-//   }
-// });
 
 // update Paitent
 PaitentRoutes.post("/update/:id", async (req, res) => {
@@ -197,6 +95,23 @@ PaitentRoutes.post("/update/:id", async (req, res) => {
           .catch((err) => res.status(400).json({ message: err }));
       })
       .catch((err) => res.status(400).json({ message: err }));
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({ message: "Server Error" });
+  }
+});
+
+//get all patient count
+PaitentRoutes.get("/getAllCountPatient", async (req, res) => {
+  try {
+    let paitents = await Paitent.find();
+    if (!paitents) {
+      console.log("err");
+      return res.status(400).json({ message: "Details not available" });
+    } else {
+      return res.status(200).json({ success: true, data: paitents.length });
+    }
   } catch (error) {
     console.error(error);
 
@@ -238,7 +153,5 @@ PaitentRoutes.get("/", async (req, res) => {
     return res.status(500).json({ message: "Server Error" });
   }
 });
-
-//update product by id
 
 module.exports = PaitentRoutes;
