@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   InputAdornment,
-  Stack,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
@@ -107,7 +106,7 @@ const ViewAppointments = () => {
       headerAlign: "center",
       disableClickEventBubbling: true,
       renderCell: (params) => {
-        const onClick = (e) => {
+        const onClick = () => {
           const currentRow = params.row;
           return alert(JSON.stringify(currentRow, null, 4));
         };
