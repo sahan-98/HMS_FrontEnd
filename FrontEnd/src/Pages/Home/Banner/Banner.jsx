@@ -50,7 +50,6 @@ const Banner = () => {
               <p>Doctors</p>
             </div>
           </Box>
-          <Typography>3 doctors joined today</Typography>
         </Paper>
         <Paper elevation={2} sx={{ padding: "1rem", width: "14rem" }}>
           <Box
@@ -76,7 +75,6 @@ const Banner = () => {
               <p>Patients</p>
             </div>
           </Box>
-          <Typography>122 new patients admitted</Typography>
         </Paper>
         <Paper elevation={2} sx={{ padding: "1rem", width: "14rem" }}>
           <Box
@@ -99,10 +97,9 @@ const Banner = () => {
             </div>
             <div>
               <Typography sx={{ fontWeight: "800" }}>452</Typography>
-              <p>Lab Reports</p>
+              <p> Lab reports(12)</p>
             </div>
           </Box>
-          <Typography>12 Labs Reports pending</Typography>
         </Paper>
       </Box>
     </Box>

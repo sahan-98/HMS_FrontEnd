@@ -12,17 +12,17 @@ const doctorSchema = new mongoose.Schema({
   address: { type: String, required: [true, "ad is required"] },
   degree: { type: String, required: [true, "degree is required"] },
   salary: { type: String, required: [true, "phoneNumber is required"] },
-  sunAvailbleTime: { type: Date },
-  monAvailbleTime: { type: Date },
-  tueAvailbleTime: { type: Date },
-  wensAvailbleTime: { type: Date },
-  thusAvailbleTime: { type: Date },
-  friAvailbleTime: { type: Date },
-  satAvailbleTime: { type: Date },
+  sunAvailbleTime: { type: String },
+  monAvailbleTime: { type: String },
+  tueAvailbleTime: { type: String },
+  wensAvailbleTime: { type: String },
+  thusAvailbleTime: { type: String },
+  friAvailbleTime: { type: String },
+  satAvailbleTime: { type: String },
   dateOfJoin: { type: String, required: [true, "Date of join is required"] },
   gender: { type: String, required: [true, "gender is required"] },
   availability: { type: Boolean },
-  status: { type: String}
+  status: { type: String },
 });
 
 module.exports = mongoose.model("Doctor", doctorSchema);

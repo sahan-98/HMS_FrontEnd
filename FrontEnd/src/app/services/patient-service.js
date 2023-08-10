@@ -6,16 +6,16 @@ class PatientService {
   }
 
   static async getAllPatients() {
-    return await get({ path: `/paitent` });
+    return await get({ path: `/patient` });
   }
 
   static async newPatient({ patient }) {
-    return await post({ path: `/paitent/add`, data: patient });
+    return await post({ path: `/patient/add`, data: patient });
   }
 
   static async updatePatient({ patientId, patient }) {
     return await put({
-      path: `paitent/update/${patientId}`,
+      path: `patient/update/${patientId}`,
       data: patient,
     });
   }

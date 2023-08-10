@@ -4,8 +4,10 @@ import { Box, Button, TextField, styled } from "@mui/material";
 import BlueAcentCard from "../../../components/BlueAcentCard/BlueAcentCard";
 import HeadingText from "../../../components/HeadingText/HeadingText";
 import Progress from "./Progress";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setHeartDiseasePrediction } from "../../../reducers/heartDiseasePredictionSlice";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
@@ -19,13 +21,48 @@ color: #fff;
 
 const Step04 = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const heartDiseasePredictionState = useSelector(
+    (state) => state.heartDiseasePrediction
+  );
+  const [stSlope, setStlope] = useState("");
+  const [oldPeak, setOldPeak] = useState("");
+  const [exerciseAngina, setExerciseAngina] = useState("");
+
   const handleNextClick = useCallback(() => {
+    dispatch(
+      setHeartDiseasePrediction({
+        ...heartDiseasePredictionState,
+        stSlope: stSlope,
+        oldPeak: oldPeak,
+        exerciseAngina: exerciseAngina,
+      })
+    );
     navigate("/patient-portal/heart-disease-prediction/result");
-  }, [navigate]);
+  }, [
+    navigate,
+    dispatch,
+    heartDiseasePredictionState,
+    stSlope,
+    oldPeak,
+    exerciseAngina,
+  ]);
 
   const handleBackClick = useCallback(() => {
     navigate("/patient-portal/heart-disease-prediction/step-03");
   }, [navigate]);
+
+  const handleStSlopeChange = useCallback((e) => {
+    setStlope(e.target.value);
+  }, []);
+
+  const handleOldPeakChange = useCallback((e) => {
+    setOldPeak(e.target.value);
+  }, []);
+
+  const handleExerciseAnginaChange = useCallback((e) => {
+    setExerciseAngina(e.target.value);
+  }, []);
 
   return (
     <Layout>
@@ -41,18 +78,25 @@ const Step04 = () => {
       >
         <BlueAcentCard>
           <HeadingText text="Heart disease prediction" />
-          <TextField label="St slope" variant="outlined" fullWidth />
+          <TextField
+            label="St slope"
+            variant="outlined"
+            fullWidth
+            onChange={handleStSlopeChange}
+          />
           <TextField
             label="Old peak"
             variant="outlined"
             fullWidth
             sx={{ mt: 2 }}
+            onChange={handleOldPeakChange}
           />
           <TextField
             label="Exercise angina"
             variant="outlined"
             fullWidth
             sx={{ mt: 2 }}
+            onChange={handleExerciseAnginaChange}
           />
 
           <Progress currentStep={3} />
