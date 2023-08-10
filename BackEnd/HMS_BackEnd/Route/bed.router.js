@@ -13,8 +13,7 @@ const moment = require("moment");
 let Bed = require("../Models/bed.models");
 let BedBill = require("../Models/bedbill.model");
 
-// add LabAssistant
-
+// add a new bed
 bedRoutes.post("/add", async (req, res) => {
   const {
     bedNo,
@@ -26,30 +25,9 @@ bedRoutes.post("/add", async (req, res) => {
     bedFee,
   } = req.body;
 
-  //   const salt = await bcrypt.genSalt();
-  //   const passwordHash = await bcrypt.hash(password, salt);
 
   if (bedNo == "" || wardNo == "" || bedFee == "")
     return res.status(202).json({ warn: "Important field(s) are empty" });
-
-  //   if (password !== conpass)
-  //     return res.status(202).json({ warn: "Passwords Do not Match!" });
-
-  //   const exist = await LabAssistant.findOne({ email: email });
-  //   if (exist) {
-  //     return res
-  //       .status(202)
-  //       .json({ warn: "An account is Exist with this email" });
-  //   }
-
-  //   const exist2 = await LabAssistant.findOne({ mobile: mobile });
-  //   if (exist2) {
-  //     return res
-  //       .status(202)
-  //       .json({ warn: "This mobile number is not available.Try another one" });
-  //   }
-
-  // upload
 
   const newBed = new Bed({
     bedNo,
@@ -72,7 +50,7 @@ bedRoutes.post("/add", async (req, res) => {
     });
 });
 
-// bed allocate
+// bed manual allocate
 bedRoutes.post("/allocateBed/:id", async (req, res) => {
   console.log(req.body);
 
@@ -98,7 +76,7 @@ bedRoutes.post("/allocateBed/:id", async (req, res) => {
   }
 });
 
-// bed allocate
+// bed auto allocate
 bedRoutes.post("/autoAllocateBed", async (req, res) => {
   console.log(req.body);
 
@@ -126,7 +104,7 @@ bedRoutes.post("/autoAllocateBed", async (req, res) => {
 
 //bed release
 bedRoutes.route("/releaseBed/:id").post(async function (req, res) {
-  // add to postman
+
   let nowDate = moment(req.body.releaseDate);
   try {
     Bed.findById(req.params.id)
@@ -173,6 +151,5 @@ bedRoutes.route("/releaseBed/:id").post(async function (req, res) {
   }
 });
 
-//update product by id
 
 module.exports = bedRoutes;

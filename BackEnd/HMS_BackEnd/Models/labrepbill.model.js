@@ -12,7 +12,7 @@ let labRepBill = new Schema(
     },
     reportNo: {
       required: true,
-      type: Number,
+      type: String,
     },
 
     totalPrice: {

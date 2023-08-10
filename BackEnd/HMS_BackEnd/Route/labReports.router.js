@@ -9,11 +9,10 @@ let labRepBill = require("../Models/labrepbill.model");
 
 labReportsRoutes.post("/add", async (req, res) => {
   const {
-    reportName,
     type,
     doctorid,
     labAssistantid,
-    paitentid,
+    patientid,
     LDL,
     HDL,
     TotalCholesterol,
@@ -31,11 +30,10 @@ labReportsRoutes.post("/add", async (req, res) => {
     // upload
 
     const newLabReport1 = new LabReport({
-      reportName,
       type,
       doctorid,
       labAssistantid,
-      paitentid,
+      patientid,
       contactEmail,
       LDL,
       HDL,
@@ -52,7 +50,7 @@ labReportsRoutes.post("/add", async (req, res) => {
         //add report bill
 
         const newLabBill = new labRepBill({
-          paitentid,
+          patientid,
           reportNo: respond._id,
           type,
           totalPrice: 2000,
@@ -78,11 +76,10 @@ labReportsRoutes.post("/add", async (req, res) => {
       });
   } else if (type === "Full Blood Count report") {
     const newLabReport2 = new LabReport({
-      reportName,
       type,
       doctorid,
       labAssistantid,
-      paitentid,
+      patientid,
       WBCcount,
       RBCcount,
       platelets,
@@ -98,7 +95,7 @@ labReportsRoutes.post("/add", async (req, res) => {
       .then(async (respond) => {
         //add report bill
         const newLabBill = new labRepBill({
-          paitentid,
+          patientid,
           reportNo: respond._id,
           type,
           totalPrice: 3000,

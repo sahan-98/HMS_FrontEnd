@@ -1,5 +1,6 @@
 "use strict";
 const express = require("express");
+const axios = require("axios");
 const detectionRoutes = express.Router();
 
 let detection = require("../Models/detection.model");
@@ -19,7 +20,7 @@ detectionRoutes.post("/add", async (req, res) => {
   //  oldpeak = data["oldpeak"];
   //  st_slope = data["st_slope"];
   await axios
-    .post(process.env.FLASKBACKEND + `/predict`, {
+    .post(`http://127.0.0.1:5000/predict`, {
       age: req.body.age,
       sex: req.body.sex,
       chest_pain_type: req.body.chest_pain_type,
@@ -38,7 +39,7 @@ detectionRoutes.post("/add", async (req, res) => {
       console.log("====================================");
 
       const newdetection = new detection({
-        patiendId: req.body.patientId,
+        patientId: req.body.patientId,
         label: flaskRes.data.prediction,
       });
 
@@ -48,20 +49,22 @@ detectionRoutes.post("/add", async (req, res) => {
           let urgency = false;
 
           if (flaskRes.data.prediction) {
-            if (!chest_pain_type == "TA" && exercise_angina == "Y") {
+            if (req.body.chest_pain_type !== "TA" && req.body.exercise_angina === "Y") {
               urgency = true;
             }
           }
           return res.json({
             prediction: flaskRes.data.prediction,
-            status: urgency,
+            urgentStatus: urgency,
           });
         })
         .catch((error) => {
+          console.log(error);
           return res.status(500).send({ error: error.message });
         });
     })
     .catch((err) => {
+      console.log(err);
       return res.status(400).json("Error " + err);
     });
 });

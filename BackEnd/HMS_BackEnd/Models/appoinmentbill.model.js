@@ -6,11 +6,15 @@ const Schema = mongoose.Schema;
 // Define collection and schema for Users
 let appoinmentBill = new Schema(
   {
-    patientId: {
+    patientid: {
       required: true,
       type: String,
     },
-    doctorId: {
+    visitStatus: {
+      required: true,
+      type: String,
+    },
+    doctorid: {
       required: true,
       type: String,
     },
