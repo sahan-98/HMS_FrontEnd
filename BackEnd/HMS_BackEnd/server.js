@@ -49,7 +49,7 @@ app.use(
 );
 
 app.use("/report", labReportRoute);
-app.use("/paitent", paitentRoute);
+app.use("/patient", paitentRoute);
 app.use("/doctor", doctorRoute);
 app.use("/labAssistant", labAssistantRoute);
 app.use("/bed", bedRoute);

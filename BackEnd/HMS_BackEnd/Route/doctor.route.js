@@ -8,36 +8,6 @@ const DoctorRoutes = express.Router();
 
 const HttpError = require("../Models/http-error");
 const Doctor = require("../Models/doctor.models");
-// const Payment = require('../schemas/payment-schema');
-// const Role = require('../_helpers/role');
-
-// user auth
-// const authenticate = async ({ email, password }) => {
-//     let user = null;
-//     try{
-//         user = await User.findOne({ email: email });
-//       } catch(err) {
-//         const error = new HttpError(
-//           'Something went wrong, could not find user.',
-//           500
-//         );
-//         return error;
-//       }
-
-// const { Doctor } = require("../_helpers/role");
-
-//       const match = await bcrypt.compare(password, user.password);
-//       if(match) {
-//         const token = jwt.sign({ sub: user.id, role: user.role }, config.secret);
-//         const { password, ...userWithoutPassword } = user;
-//         return {
-//             ...userWithoutPassword,
-//             token
-//         };
-//       } else {
-//         return res.json({success: false, message: 'passwords do not match'});
-//       }
-// }
 
 // Save Docotr details
 DoctorRoutes.post("/addDoctor", async (req, res, next) => {
@@ -96,7 +66,8 @@ DoctorRoutes.post("/addDoctor", async (req, res, next) => {
         wensAvailbleTime,
         thusAvailbleTime,
         friAvailbleTime,
-        satAvailbleTime
+        satAvailbleTime,
+        status: "New"
       });
 
   await newDoctor
@@ -225,6 +196,17 @@ DoctorRoutes.get('/availableDoctors', async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
+});
+
+//give all doctor count
+DoctorRoutes.get("/allDoctorsCount", async (req, res) => {
+  await Doctor.find({})
+    .then((data) => {
+      return res.status(200).send({ data: data.length });
+    })
+    .catch((error) => {
+      res.status(500).send({ error: error.message });
+    });
 });
 
 

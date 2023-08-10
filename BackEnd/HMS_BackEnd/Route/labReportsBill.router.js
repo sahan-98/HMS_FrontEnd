@@ -74,6 +74,7 @@ labRepBillsRoutes.route("/patient/:id").get(async function (req, res) {
   }
 });
 
+// get lab report bills for patient completed
 labRepBillsRoutes.route("/completed/:id").get(async function (req, res) {
   try {
     let id = req.params.id;
@@ -96,6 +97,7 @@ labRepBillsRoutes.route("/completed/:id").get(async function (req, res) {
   }
 });
 
+// get lab report bills for patient pending
 labRepBillsRoutes.route("/pending/:id").get(async function (req, res) {
   try {
     let id = req.params.id;
@@ -118,6 +120,7 @@ labRepBillsRoutes.route("/pending/:id").get(async function (req, res) {
   }
 });
 
+// get all lab report bills
 labRepBillsRoutes.get("/", async (req, res) => {
   try {
     let labRepBilldata = await labRepBill.find().sort({ createdAt: -1 });

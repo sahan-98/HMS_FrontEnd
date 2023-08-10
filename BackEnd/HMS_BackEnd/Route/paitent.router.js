@@ -102,6 +102,23 @@ PaitentRoutes.post("/update/:id", async (req, res) => {
   }
 });
 
+//get all patient count
+PaitentRoutes.get("/getAllCountPatient", async (req, res) => {
+  try {
+    let paitents = await Paitent.find();
+    if (!paitents) {
+      console.log("err");
+      return res.status(400).json({ message: "Details not available" });
+    } else {
+      return res.status(200).json({ success: true, data: paitents.length });
+    }
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({ message: "Server Error" });
+  }
+});
+
 PaitentRoutes.route("/:id").get(async function (req, res) {
   try {
     let id = req.params.id;
@@ -136,7 +153,5 @@ PaitentRoutes.get("/", async (req, res) => {
     return res.status(500).json({ message: "Server Error" });
   }
 });
-
-//update product by id
 
 module.exports = PaitentRoutes;

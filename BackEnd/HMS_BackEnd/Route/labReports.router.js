@@ -185,8 +185,19 @@ labReportsRoutes.post("/updateResult/:id", async (req, res) => {
   }
 });
 
-// get lab report
+//get pending counts
+labReportsRoutes.get("/pendingBillsCount", async (req, res) => {
+  try {
+    const pendingCount = await LabReport.find({ status: "Pending" });
+    return res.status(200).json({ success: true, count: pendingCount.length });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server Error" });
+  }
+});
 
+
+// get lab report
 labReportsRoutes.route("/:id").get(async function (req, res) {
   try {
     let id = req.params.id;
@@ -222,6 +233,5 @@ labReportsRoutes.get("/", async (req, res) => {
   }
 });
 
-//update product by id
 
 module.exports = labReportsRoutes;
