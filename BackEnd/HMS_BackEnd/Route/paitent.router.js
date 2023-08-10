@@ -14,7 +14,18 @@ let ErrorLog = require("../Models/errorlog.model");
 // add User
 
 PaitentRoutes.post("/add", async (req, res) => {
-  const { mobile, userName, password, email, address, dateOfBirth, gender, firstname, lastname, conpass } = req.body;
+  const {
+    mobile,
+    userName,
+    password,
+    email,
+    address,
+    dateOfBirth,
+    gender,
+    firstname,
+    lastname,
+    conpass,
+  } = req.body;
 
   const salt = await bcrypt.genSalt();
   const passwordHash = await bcrypt.hash(password, salt);
@@ -56,8 +67,8 @@ PaitentRoutes.post("/add", async (req, res) => {
     userName,
     password: passwordHash,
     email,
-    address, 
-    dateOfBirth, 
+    address,
+    dateOfBirth,
     gender,
     firstname,
     lastname,
@@ -74,7 +85,6 @@ PaitentRoutes.post("/add", async (req, res) => {
       console.log("error mail:", err);
     });
 });
-
 
 // update Paitent
 PaitentRoutes.post("/update/:id", async (req, res) => {
@@ -116,6 +126,32 @@ PaitentRoutes.get("/getAllCountPatient", async (req, res) => {
     console.error(error);
 
     return res.status(500).json({ message: "Server Error" });
+  }
+});
+
+DoctorRoutes.post("/login", async (req, res) => {
+  const { userName, password } = req.body;
+
+  try {
+    // Find the doctor by their username
+    const patient = await Paitent.findOne({ userName });
+    // Check if the patient exists
+    if (!patient) {
+      return res.status(404).json({ message: "Paitent not found" });
+    }
+    // Compare the entered password with the hashed password in the database
+    const isPasswordValid = bcrypt.compare(password, patient.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+    // Update availability property to "true"
+
+    // Send a success response
+    return res
+      .status(200)
+      .json({ message: "Login successful", patient: patient });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
 });
 
