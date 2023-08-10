@@ -22,6 +22,7 @@ const doctorSchema = new mongoose.Schema({
   dateOfJoin: { type: String, required: [true, "Date of join is required"] },
   gender: { type: String, required: [true, "gender is required"] },
   availability: { type: Boolean },
+  status: { type: String}
 });
 
 module.exports = mongoose.model("Doctor", doctorSchema);

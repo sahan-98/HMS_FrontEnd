@@ -56,10 +56,10 @@ let paitents = new Schema(
     //   type: String,
     // },
 
-    // // New, Active , Banned
-    // status: {
-    //   type: String,
-    // },
+    // New, Active , Banned
+    status: {
+      type: String,
+    },
   },
   {
     collection: "Paitent",
