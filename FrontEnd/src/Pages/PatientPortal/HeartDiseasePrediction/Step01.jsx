@@ -103,8 +103,8 @@ const Step01 = () => {
               onChange={handleGenderChange}
             >
               <MenuItem value={"NO_SELECTION"}>Please select</MenuItem>
-              <MenuItem value={"MALE"}>Male</MenuItem>
-              <MenuItem value={"FEMALE"}>Female</MenuItem>
+              <MenuItem value={"M"}>Male</MenuItem>
+              <MenuItem value={"F"}>Female</MenuItem>
             </Select>
           </FormControl>
           <Progress currentStep={0} />

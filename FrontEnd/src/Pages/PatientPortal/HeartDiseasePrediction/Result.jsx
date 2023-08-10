@@ -9,6 +9,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import HeartDiseasePredictionService from "../../../app/services/heart-disease-prediction-service";
 import { useSelector } from "react-redux";
 import processingData from "../../../assets/images/processing-data.png";
+import PositiveResult from "./PositiveResult";
+import { useNavigate } from "react-router-dom";
 
 const StyledText = styled("span")(
   `
@@ -29,33 +31,28 @@ const Result = () => {
     urgentStatus: false,
   });
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-  // const heartDiseasePredictionState = useSelector(
-  //   (state) => state.heartDiseasePrediction
-  // );
-  const heartDiseasePredictionState = useMemo(
-    () => ({
-      patientId: 54,
-      age: 54,
-      sex: "M",
-      chest_pain_type: "TA",
-      resting_bp: 180,
-      cholesterol: 250,
-      fasting_bs: 1,
-      resting_ecg: "LVH",
-      max_hr: 300,
-      exercise_angina: "N",
-      oldpeak: 1,
-      st_slope: "Down",
-    }),
-    []
+  const heartDiseasePredictionState = useSelector(
+    (state) => state.heartDiseasePrediction
   );
 
   const getHeartDiseasePrediction = useCallback(async () => {
     try {
       setLoading(true);
       const response = await HeartDiseasePredictionService.predictHeartDisease({
-        ...heartDiseasePredictionState,
+        patientId: 1,
+        age: heartDiseasePredictionState.age,
+        sex: heartDiseasePredictionState.gender,
+        chest_pain_type: heartDiseasePredictionState.chestPainType,
+        resting_bp: heartDiseasePredictionState.restingBloodPressure,
+        cholesterol: heartDiseasePredictionState.cholestrol,
+        fasting_bs: heartDiseasePredictionState.fastingBloodSugar,
+        resting_ecg: heartDiseasePredictionState.restingEcg,
+        max_hr: heartDiseasePredictionState.maxHeartRate,
+        exercise_angina: heartDiseasePredictionState.exerciseAngina,
+        oldpeak: heartDiseasePredictionState.oldPeak,
+        st_slope: heartDiseasePredictionState.stSlope,
       });
       setResult(response);
     } catch (err) {
@@ -87,34 +84,13 @@ const Result = () => {
           mb: 2,
           fontWeight: "bold",
         }}
+        onClick={() => navigate("/patient-portal/channel-doctor/step-01")}
       >
         Channel Doctor
       </Button>
     </>
   );
-  const Positive = (
-    <>
-      <HeadingText text="Heart disease prediction" />
-      <img src={warning} alt="" width={"185px"} />
-      <div>
-        <StyledText fontSize="24px">You are in a risky zone.</StyledText>
-      </div>
-      <Box my={1}>
-        <StyledText fontSize="16px">
-          Channel a doctor to make sure everything is going well.
-        </StyledText>
-      </Box>
-      <Button
-        variant="text"
-        sx={{
-          mb: 2,
-          fontWeight: "bold",
-        }}
-      >
-        Channel Doctor
-      </Button>
-    </>
-  );
+
   const Loading = (
     <>
       <HeadingText text="Heart disease prediction" />
@@ -151,7 +127,13 @@ const Result = () => {
         }}
       >
         <BlueAcentCard>
-          {loading ? Loading : result?.prediction ? Positive : Negative}
+          {loading ? (
+            Loading
+          ) : result?.prediction ? (
+            <PositiveResult urgentStatus={result?.urgentStatus} />
+          ) : (
+            Negative
+          )}
         </BlueAcentCard>
       </div>
     </Layout>
