@@ -44,7 +44,7 @@ let paitents = new Schema(
 
     dateOfBirth: {
       required: true,
-      type: String,
+      type: Date,
     },
 
     gender: {

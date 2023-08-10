@@ -13,23 +13,28 @@ const moment = require("moment");
 let Appointment = require("../Models/appoinmentbill.model");
 let Doctor = require("../Models/doctor.models");
 
-// add LabAssistant
-
+// add a appoiment
 AppointmentRoutes.post("/add", async (req, res) => {
-  const { doctorId, patientid, bookingDate, type, queueNumber, totalPrice } =
+  const { doctorid, patientid, bookingDate, type } =
     req.body;
 
-  // upload
+  const doc = await Doctor.findOne({doctorid:doctorid});
 
-  const doc = Appointment.findById(doctorId);
+  let fee =doc.fee;
+
+  console.log(doc);
+  console.log(fee);
+
+  const QueAppintments = await Appointment.find({doctorid:doctorid, bookingDate:bookingDate });
 
   const newAppointment = new Appointment({
-    doctorId,
+    doctorid,
     patientid,
     bookingDate,
     type,
-    queueNumber,
-    totalPrice: doc.fee,
+    queueNumber : QueAppintments.length +1 ,
+    totalPrice: fee,
+    visitStatus:"pending"
   });
 
   await newAppointment
@@ -43,98 +48,9 @@ AppointmentRoutes.post("/add", async (req, res) => {
     });
 });
 
-// Appointment allocate
-// AppointmentRoutes.post("/allocateAppointment/:id", async (req, res) => {
-//   console.log(req.body);
-
-//   try {
-//     Appointment.findById(req.params.id)
-//       .then((AppointmentObj) => {
-//         AppointmentObj.patientid = req.body.patientid;
-//         AppointmentObj.bookingDate = false;
-//         AppointmentObj.queueNumber = req.body.queueNumber;
-
-//         AppointmentObj.save()
-//           .then(() => {
-//             return res.status(200).json("allocated");
-//           })
-//           .catch((err) => res.status(400).json({ message: err }));
-//       })
-//       .catch((err) => res.status(400).json({ message: err }));
-//   } catch (error) {
-//     console.error(error);
-
-//     return res.status(500).json({ message: "Server Error" });
-//   }
-// });
-
-// Appointment allocate
-// AppointmentRoutes.post("/autoAllocateAppointment", async (req, res) => {
-//   console.log(req.body);
-
-//   try {
-//     Appointment.findOne({ bookingDate: true })
-//       .then((AppointmentObj) => {
-//         AppointmentObj.patientid = req.body.patientid;
-//         AppointmentObj.bookingDate = false;
-//         AppointmentObj.queueNumber = req.body.queueNumber;
-
-//         AppointmentObj.save()
-//           .then(() => {
-//             return res
-//               .status(200)
-//               .json({ allocated_Appointment: AppointmentObj });
-//           })
-//           .catch((err) => res.status(400).json({ message: err }));
-//       })
-//       .catch((err) => res.status(400).json({ message: err }));
-//   } catch (error) {
-//     console.error(error);
-
-//     return res.status(500).json({ message: "Server Error" });
-//   }
-// });
-
-//Appointment release
-// AppointmentRoutes.route("/releaseAppointment/:id").post(async function (
-//   req,
-//   res
-// ) {
-//   // add to postman
-//   let nowDate = moment(req.body.releaseDate);
-//   try {
-//     Appointment.findById(req.params.id)
-//       .then((AppointmentObj) => {
-//         let queueNumber = AppointmentObj.queueNumber;
-//         // calculate number of dates from queueNumber to todayDate
-//         const numberOfDates = nowDate.diff(queueNumber, "days");
-
-//         AppointmentObj.patientid = null;
-//         AppointmentObj.bookingDate = true;
-//         AppointmentObj.queueNumber = null;
-//         AppointmentObj.releaseDate = req.body.releaseDate;
-//         AppointmentObj.estimation = null;
-
-//         AppointmentObj.save()
-//           .then(() => {
-//             // generate invoice and attach to patient
-//             return res.status(200).json({ dates: numberOfDates });
-//           })
-//           .catch((err) => res.status(400).json({ message: err }));
-//       })
-//       .catch((err) => res.status(400).json({ message: err }));
-//   } catch (error) {
-//     console.error(error);
-
-//     return res.status(500).json({ message: "Server Error" });
-//   }
-// });
-
-//update product by id
-
-// get all doctor details
+// get all appoinment details
 AppointmentRoutes.get("/", async (req, res) => {
-  await Appointment.find({})
+  await Appointment.find()
     .then((data) => {
       res.status(200).send({ data: data });
     })
@@ -145,13 +61,63 @@ AppointmentRoutes.get("/", async (req, res) => {
 
 // get single Appointment details
 AppointmentRoutes.get("/patient/:id", async (req, res) => {
-  await Appointment.find({ patientId: req.params.id })
+  await Appointment.find({ patientid: req.params.id })
     .then((data) => {
       return res.status(200).send({ data: data });
     })
     .catch((error) => {
       return res.status(500).send({ error: error.message });
     });
+});
+
+// get completed single Appointment details
+AppointmentRoutes.get("/patient-completed/:id", async (req, res) => {
+  await Appointment.find({ patientid: req.params.id, visitStatus:"completed" })
+    .then((data) => {
+      return res.status(200).send({ data: data });
+    })
+    .catch((error) => {
+      return res.status(500).send({ error: error.message });
+    });
+});
+
+AppointmentRoutes.get("/patient-pending/:id", async (req, res) => {
+  await Appointment.find({ patientid: req.params.id, visitStatus:"pending" })
+    .then((data) => {
+      return res.status(200).send({ data: data });
+    })
+    .catch((error) => {
+      return res.status(500).send({ error: error.message });
+    });
+});
+
+
+AppointmentRoutes.post("/updateVisitStatus/:id", async (req, res) => {
+  try {
+    Appointment
+      .findById(req.params.id)
+      .then(async (appointmentObj) => {
+        appointmentObj.visitStatus = "completed";
+
+        await appointmentObj
+          .save()
+          .then(() => {
+            return res.status(200).json({ data: appointmentObj });
+          })
+          .catch((err) => {
+            console.error(err);
+            return res.status(400).json({ message: err });
+          });
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(400).json({ message: err });
+      });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({ message: "Server Error" });
+  }
 });
 
 module.exports = AppointmentRoutes;
