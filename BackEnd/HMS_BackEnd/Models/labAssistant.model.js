@@ -33,11 +33,6 @@ var labAssistSchema = new mongoose.Schema({
         type: String,
       },
   
-      email: {
-        required: true,
-        type: String,
-      },
-  
       address: {
         required: true,
         type: String,

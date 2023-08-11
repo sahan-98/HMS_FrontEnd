@@ -6,26 +6,22 @@ const Schema = mongoose.Schema;
 // Define collection and schema for Users
 let admin = new Schema({
     
-    username: {
+    userName: {
         required:true,
         unique:true,
         type: String
     },
+
     password: {
         required:true,
         type: String
     },
 
-  
     email: {
         required:true,
         unique:true,
         type:String
     }
-    
-
-
-
 
 }, {
     collection: 'admin'
