@@ -191,13 +191,13 @@ DoctorRoutes.post("/autoAllocateDoc", async (req, res) => {
       .then(async (docObj) => {
         const QueAppintments = await Appointment.find({
           doctorid: docObj._id,
-          bookingDate: bookingDate,
+          bookingDate: req.body.bookingDate,
         });
 
         const newAppointment = new Appointment({
           doctorid: docObj._id,
           patientid: req.body.patientid,
-          bookingDate,
+          bookingDate: req.body.bookingDate,
           type: "urgent",
           queueNumber: QueAppintments.length + 1,
           totalPrice: docObj.fee,
