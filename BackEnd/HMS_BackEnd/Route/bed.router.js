@@ -25,7 +25,6 @@ bedRoutes.post("/add", async (req, res) => {
     bedFee,
   } = req.body;
 
-
   if (bedNo == "" || wardNo == "" || bedFee == "")
     return res.status(202).json({ warn: "Important field(s) are empty" });
 
@@ -104,7 +103,6 @@ bedRoutes.post("/autoAllocateBed", async (req, res) => {
 
 //bed release
 bedRoutes.route("/releaseBed/:id").post(async function (req, res) {
-
   let nowDate = moment(req.body.releaseDate);
   try {
     Bed.findById(req.params.id)
@@ -151,5 +149,20 @@ bedRoutes.route("/releaseBed/:id").post(async function (req, res) {
   }
 });
 
+bedRoutes.get("/", async (req, res) => {
+  try {
+    let data = await Bed.find().sort({ createdAt: -1 });
+    if (!data) {
+      console.log("err");
+      return res.status(400).json({ message: "Details not available" });
+    } else {
+      res.status(200).json({ success: true, data: data });
+    }
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({ message: "Server Error" });
+  }
+});
 
 module.exports = bedRoutes;
