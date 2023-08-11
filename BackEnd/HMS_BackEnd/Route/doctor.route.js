@@ -33,7 +33,6 @@ DoctorRoutes.post("/addDoctor", async (req, res, next) => {
     availbleTime,
     dateOfJoin,
     gender,
-    availability,
     sunAvailbleTime,
     monAvailbleTime,
     tueAvailbleTime,
