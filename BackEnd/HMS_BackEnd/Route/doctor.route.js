@@ -183,7 +183,7 @@ DoctorRoutes.post("/login", async (req, res) => {
   }
 });
 
-bedRoutes.post("/autoAllocateDoc", async (req, res) => {
+DoctorRoutes.post("/autoAllocateDoc", async (req, res) => {
   console.log(req.body);
 
   try {
