@@ -1,10 +1,10 @@
 import { post } from "../api-manager";
 
 class BedService {
-  static async autoAllocateBed({ patieentId, allocatedDate }) {
+  static async autoAllocateBed({ patientid, allocatedDate }) {
     return await post({
       path: `/bed/autoAllocateBed`,
-      data: { patieentId, allocatedDate: allocatedDate },
+      data: { patientid, allocatedDate: allocatedDate },
     });
   }
 }

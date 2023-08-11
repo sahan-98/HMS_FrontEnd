@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import BedService from "../../../app/services/bed-service";
 import DoctorService from "../../../app/services/doctor-service";
+import { showSystemAlert } from "../../../app/services/alertServices";
 
 const StyledText = styled("span")(
   `
@@ -27,22 +28,34 @@ const PositiveResult = ({ urgentStatus }) => {
 
   const allocateDoctor = useCallback(async () => {
     setDoctor(null);
-    const responseBody = await DoctorService.autoAllocateDoctor({
-      patientId: "64d48fb5abfd5cf9d50fafe1",
-      bookingDate: new Date().toISOString().split("T")[0],
-    });
-    const { allocated_doc } = responseBody;
-    setDoctor(allocated_doc);
+    try {
+      const responseBody = await DoctorService.autoAllocateDoctor({
+        patientid: "64d48fb5abfd5cf9d50fafe1",
+        bookingDate: new Date().toISOString().split("T")[0],
+      });
+      const { allocated_doc } = responseBody;
+      setDoctor(allocated_doc);
+    } catch (error) {
+      setBed({ bedNo: "No doctors available" });
+      showSystemAlert("No doctors available", "error");
+      return;
+    }
   }, []);
 
   const allocateBed = useCallback(async () => {
-    setBed(null);
-    const responseBody = await BedService.autoAllocateBed({
-      patientId: "64d48fb5abfd5cf9d50fafe1",
-      allocatedDate: new Date().toISOString().split("T")[0],
-    });
-    const { allocated_bed } = responseBody;
-    setBed(allocated_bed);
+    try {
+      setBed(null);
+      const responseBody = await BedService.autoAllocateBed({
+        patientid: "64d48fb5abfd5cf9d50fafe1",
+        allocatedDate: new Date().toISOString().split("T")[0],
+      });
+      const { allocated_bed } = responseBody;
+      setBed(allocated_bed);
+    } catch (error) {
+      setBed({ bedNo: "No bed available" });
+      showSystemAlert("No bed available", "error");
+      return;
+    }
   }, []);
 
   useEffect(() => {
@@ -65,14 +78,13 @@ const PositiveResult = ({ urgentStatus }) => {
             Please hang on, we will assign a doctor and bed for you.
           </StyledText>
         </Box>
-
         <Box my={1}>
           <StyledText fontSize="16px">
             Doctor :
             {doctor === null ? (
               <CircularProgress size={10} sx={{ ml: 2 }} />
             ) : (
-              ""
+              doctor?.name
             )}
           </StyledText>
         </Box>
@@ -84,32 +96,34 @@ const PositiveResult = ({ urgentStatus }) => {
             ) : (
               bed?.bedNo
             )}
-            <CircularProgress size={10} sx={{ ml: 2 }} />
           </StyledText>
         </Box>
-        <Box display={"flex"} justifyContent={"space-between"} mt={2}>
-          <Button
-            variant="outlined"
-            sx={{
-              mb: 2,
-              fontWeight: "bold",
-            }}
-          >
-            <Call sx={{ fontSize: "16px", mr: 2 }} />
-            Call ambulance
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{
-              mb: 2,
-              fontWeight: "bold",
-              boxShadow: 0,
-            }}
-          >
-            Coninue
-          </Button>
-        </Box>
+        {bed?.bedNo !== "No bed available" ||
+        doctor?.name !== "No doctors available" ? null : (
+          <Box display={"flex"} justifyContent={"space-between"} mt={2}>
+            <Button
+              variant="outlined"
+              sx={{
+                mb: 2,
+                fontWeight: "bold",
+              }}
+            >
+              <Call sx={{ fontSize: "16px", mr: 2 }} />
+              Call ambulance
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{
+                mb: 2,
+                fontWeight: "bold",
+                boxShadow: 0,
+              }}
+            >
+              Coninue
+            </Button>
+          </Box>
+        )}
       </>
     );
   } else {
