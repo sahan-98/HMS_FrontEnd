@@ -3,8 +3,9 @@ import { Box, Button, CircularProgress, styled } from "@mui/material";
 import warning from "../../../assets/images/warning.png";
 import { Call } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import BedService from "../../../app/services/bed-service";
+import DoctorService from "../../../app/services/doctor-service";
 
 const StyledText = styled("span")(
   `
@@ -21,10 +22,19 @@ font-weight: 400;
 
 const PositiveResult = ({ urgentStatus }) => {
   const navigate = useNavigate();
-  const [doctorLoading, setDoctorLoading] = useState(null);
+  const [doctor, setDoctor] = useState(null);
   const [bed, setBed] = useState(null);
 
-  const allocateDoctor = useCallback(() => {}, []);
+  const allocateDoctor = useCallback(async () => {
+    setDoctor(null);
+    const responseBody = await DoctorService.autoAllocateDoctor({
+      patientId: "64d48fb5abfd5cf9d50fafe1",
+      bookingDate: new Date().toISOString().split("T")[0],
+    });
+    const { allocated_doc } = responseBody;
+    setDoctor(allocated_doc);
+  }, []);
+
   const allocateBed = useCallback(async () => {
     setBed(null);
     const responseBody = await BedService.autoAllocateBed({
@@ -34,6 +44,13 @@ const PositiveResult = ({ urgentStatus }) => {
     const { allocated_bed } = responseBody;
     setBed(allocated_bed);
   }, []);
+
+  useEffect(() => {
+    if (urgentStatus) {
+      allocateBed();
+      allocateDoctor();
+    }
+  }, [urgentStatus, allocateBed, allocateDoctor]);
 
   if (urgentStatus) {
     return (
@@ -52,7 +69,7 @@ const PositiveResult = ({ urgentStatus }) => {
         <Box my={1}>
           <StyledText fontSize="16px">
             Doctor :
-            {doctorLoading === null ? (
+            {doctor === null ? (
               <CircularProgress size={10} sx={{ ml: 2 }} />
             ) : (
               ""
