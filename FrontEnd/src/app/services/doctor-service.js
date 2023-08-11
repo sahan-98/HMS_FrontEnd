@@ -31,6 +31,13 @@ class DoctorService {
   static async logout({ doctorid }) {
     return await post({ path: `/doctor/logout`, data: { doctorid } });
   }
+
+  static async autoAllocateDoctor({ bookingDate, patientid }) {
+    return await post({
+      path: `/doctor/autoAllocateDoc`,
+      data: { bookingDate, patientid },
+    });
+  }
 }
 
 export default DoctorService;
