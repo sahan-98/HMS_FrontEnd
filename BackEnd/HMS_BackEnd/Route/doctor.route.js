@@ -8,6 +8,7 @@ const DoctorRoutes = express.Router();
 
 const HttpError = require("../Models/http-error");
 const Doctor = require("../Models/doctor.models");
+let Appointment = require("../Models/appoinmentbill.model");
 
 // Save Docotr details
 DoctorRoutes.post("/addDoctor", async (req, res, next) => {
@@ -18,13 +19,29 @@ DoctorRoutes.post("/addDoctor", async (req, res, next) => {
     return next(new HttpError("Invalid inputs! Please check again.", 422));
   }
 
-    const { name, userName, email, password,  phone, fee, speciality, address, degree, salary,availbleTime, dateOfJoin ,gender, availability,sunAvailbleTime,
-      monAvailbleTime,
-      tueAvailbleTime,
-      wensAvailbleTime,
-      thusAvailbleTime,
-      friAvailbleTime,
-      satAvailbleTime } = req.body;
+  const {
+    name,
+    userName,
+    email,
+    password,
+    phone,
+    fee,
+    speciality,
+    address,
+    degree,
+    salary,
+    availbleTime,
+    dateOfJoin,
+    gender,
+    availability,
+    sunAvailbleTime,
+    monAvailbleTime,
+    tueAvailbleTime,
+    wensAvailbleTime,
+    thusAvailbleTime,
+    friAvailbleTime,
+    satAvailbleTime,
+  } = req.body;
 
   let existingDoctor;
   try {
@@ -42,33 +59,33 @@ DoctorRoutes.post("/addDoctor", async (req, res, next) => {
     return next(error);
   }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword);
-    const newDoctor = new Doctor({
-        doctorid: uuid_v4(),
-        userName,
-        name,
-        email,
-        password: hashedPassword,
-        phone,
-        fee, 
-        speciality, 
-        address, 
-        degree, 
-        salary, 
-        availbleTime, 
-        dateOfJoin,
-        gender,
-        availability : false,
-        sunAvailbleTime,
-        monAvailbleTime,
-        tueAvailbleTime,
-        wensAvailbleTime,
-        thusAvailbleTime,
-        friAvailbleTime,
-        satAvailbleTime,
-        status: "New"
-      });
+  const hashedPassword = await bcrypt.hash(password, 10);
+  console.log(hashedPassword);
+  const newDoctor = new Doctor({
+    doctorid: uuid_v4(),
+    userName,
+    name,
+    email,
+    password: hashedPassword,
+    phone,
+    fee,
+    speciality,
+    address,
+    degree,
+    salary,
+    availbleTime,
+    dateOfJoin,
+    gender,
+    availability: false,
+    sunAvailbleTime,
+    monAvailbleTime,
+    tueAvailbleTime,
+    wensAvailbleTime,
+    thusAvailbleTime,
+    friAvailbleTime,
+    satAvailbleTime,
+    status: "New",
+  });
 
   await newDoctor
     .save()
@@ -140,7 +157,7 @@ DoctorRoutes.delete("/deleteDoctors/:id", async (req, res) => {
 
 //doctor login
 
-DoctorRoutes.post('/login', async (req, res) => {
+DoctorRoutes.post("/login", async (req, res) => {
   const { userName, password } = req.body;
 
   try {
@@ -148,25 +165,62 @@ DoctorRoutes.post('/login', async (req, res) => {
     const doctor = await Doctor.findOne({ userName });
     // Check if the doctor exists
     if (!doctor) {
-      return res.status(404).json({ message: 'Doctor not found' });
+      return res.status(404).json({ message: "Doctor not found" });
     }
     // Compare the entered password with the hashed password in the database
     const isPasswordValid = bcrypt.compare(password, doctor.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
     // Update availability property to "true"
     await Doctor.findByIdAndUpdate(doctor._id, { availability: true });
     // Send a success response
-    return res.status(200).json({ message: 'Login successful', doctorId: doctor._id });
+    return res
+      .status(200)
+      .json({ message: "Login successful", doctorId: doctor._id });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 });
 
+DoctorRoutes.post("/autoAllocateDoc", async (req, res) => {
+  console.log(req.body);
+
+  try {
+    Doctor.findOne({ availability: true })
+      .then(async (docObj) => {
+        const QueAppintments = await Appointment.find({
+          doctorid: docObj._id,
+          bookingDate: req.body.bookingDate,
+        });
+
+        const newAppointment = new Appointment({
+          doctorid: docObj._id,
+          patientid: req.body.patientid,
+          bookingDate: req.body.bookingDate,
+          type: "urgent",
+          queueNumber: QueAppintments.length + 1,
+          totalPrice: docObj.fee,
+          visitStatus: "pending",
+        });
+
+        newAppointment
+          .save()
+          .then(() => {
+            return res.status(200).json({ allocated_doc: docObj });
+          })
+          .catch((err) => res.status(400).json({ message: err }));
+      })
+      .catch((err) => res.status(400).json({ message: err }));
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({ message: "Server Error" });
+  }
+});
 //Doctor Logout function
 
-DoctorRoutes.post('/logout', async (req, res) => {
+DoctorRoutes.post("/logout", async (req, res) => {
   const { doctorid } = req.body;
 
   try {
@@ -174,22 +228,22 @@ DoctorRoutes.post('/logout', async (req, res) => {
     const doctor = await Doctor.findById(doctorid);
     // Check if the doctor exists
     if (!doctor) {
-      return res.status(404).json({ message: 'Doctor not found' });
+      return res.status(404).json({ message: "Doctor not found" });
     }
     // Update availability property to "false"
     await Doctor.findByIdAndUpdate(doctorid, { availability: false });
     // Send a success response
-    return res.status(200).json({ message: 'Logout successful' });
+    return res.status(200).json({ message: "Logout successful" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 });
 
 //get available doctors
-DoctorRoutes.get('/availableDoctors', async (req, res) => {
+DoctorRoutes.get("/availableDoctors", async (req, res) => {
   try {
     // Find doctors with availability set to "true"
-    const availableDoctors = await Doctor.find({ availability: 'true' });
+    const availableDoctors = await Doctor.find({ availability: "true" });
 
     // Send the list of available doctors as a response
     return res.status(200).json(availableDoctors);
@@ -208,7 +262,5 @@ DoctorRoutes.get("/allDoctorsCount", async (req, res) => {
       res.status(500).send({ error: error.message });
     });
 });
-
-
 
 module.exports = DoctorRoutes;
