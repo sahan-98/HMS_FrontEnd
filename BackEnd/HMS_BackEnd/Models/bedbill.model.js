@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 // Define collection and schema for Users
 let bedAllocation = new Schema(
   {
-    patientId: {
+    patientid: {
       required: true,
       type: String,
     },
@@ -34,11 +34,11 @@ let bedAllocation = new Schema(
       type: String,
     },
 
-    // bed status
-    bedStatus: {
-      required: true,
-      type: String,
-    },
+    // // bed status
+    // bedStatus: {
+    //   required: true,
+    //   type: String,
+    // },
   },
   {
     collection: "bedAllocation",
