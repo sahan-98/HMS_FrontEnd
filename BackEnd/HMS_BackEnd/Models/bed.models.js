@@ -37,7 +37,6 @@ var bedSchema = new mongoose.Schema({
     type: Number,
   },
   estimation: {
-    required: true,
     type: Number,
   },
 });
