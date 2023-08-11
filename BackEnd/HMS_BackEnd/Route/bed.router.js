@@ -123,19 +123,20 @@ bedRoutes.route("/releaseBed/:id").post(async function (req, res) {
 
         await bedObj
           .save()
-          .then(async () => {
+          .then(async (respond) => {
             const newBedBill = new BedBill({
-              bedNo: req.params.id,
+              bedNo: respond.bedNo,
               patientid: patient,
               availability: true,
-              wardNo,
+              wardNo: respond.wardNo,
               allocationDate: allocatedDate,
               totalPrice,
               dayStayed: numberOfDates,
               payStatus: "pending",
             });
 
-            await newBedBill.save();
+            await newBedBill
+            .save();
 
             return res.status(200).json({ bill: newBedBill });
           })

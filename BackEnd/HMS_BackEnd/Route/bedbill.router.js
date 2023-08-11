@@ -10,15 +10,15 @@ const moment = require("moment");
 // const jwt = require("jsonwebtoken");
 // var Mailgen = require("mailgen");
 
-let Bed = require("../Models/bed.models");
+
 let BedBill = require("../Models/bedbill.model");
 
-// bed bill allocate
+// bed bill update
 bedRoutes.post("/pay/:id", async (req, res) => {
   console.log(req.body);
 
   try {
-    Bed.findById(req.params.id)
+    BedBill.findById(req.params.id)
       .then((bedObj) => {
         bedObj.payStatus = "completed";
 
@@ -37,12 +37,12 @@ bedRoutes.post("/pay/:id", async (req, res) => {
   }
 });
 
-// bed allocate
+// payed bed bills for patient 
 bedRoutes.get("/payed/:id", async (req, res) => {
   console.log(req.body);
 
   try {
-    Bed.find({ payStatus: "completed", patientId: req.params.id })
+    BedBill.find({ payStatus: "completed", patientid: req.params.id })
       .then((bedObj) => {
         return res.status(200).json({ data: bedObj });
       })
@@ -54,11 +54,12 @@ bedRoutes.get("/payed/:id", async (req, res) => {
   }
 });
 
+// pending bed bills for patient 
 bedRoutes.get("/pending/:id", async (req, res) => {
   console.log(req.body);
 
   try {
-    Bed.find({ payStatus: "pending", patientId: req.params.id })
+    BedBill.find({ payStatus: "pending", patientid: req.params.id })
       .then((bedObj) => {
         return res.status(200).json({ data: bedObj });
       })
