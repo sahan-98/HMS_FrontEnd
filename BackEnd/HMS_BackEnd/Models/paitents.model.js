@@ -52,14 +52,6 @@ let paitents = new Schema(
       type: String,
     },
 
-    // imgURL: {
-    //   type: String,
-    // },
-
-    // New, Active , Banned
-    status: {
-      type: String,
-    },
   },
   {
     collection: "Paitent",

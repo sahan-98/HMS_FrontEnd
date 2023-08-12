@@ -95,7 +95,13 @@ PaitentRoutes.post("/update/:id", async (req, res) => {
       .then((paitentObj) => {
         paitentObj.firstname = req.body.firstname;
         paitentObj.lastname = req.body.lastname;
+        paitentObj.userName = req.body.userName;
+        paitentObj.password = req.body.password;
         paitentObj.email = req.body.email;
+        paitentObj.mobile = req.body.mobile;
+        paitentObj.address = req.body.address;
+        paitentObj.dateOfBirth = req.body.dateOfBirth;
+        paitentObj.gender = req.body.gender;
 
         paitentObj
           .save()
@@ -133,7 +139,7 @@ PaitentRoutes.post("/login", async (req, res) => {
   const { userName, password } = req.body;
 
   try {
-    // Find the doctor by their username
+    // Find the patient by their username
     const patient = await Paitent.findOne({ userName });
     // Check if the patient exists
     if (!patient) {
@@ -144,8 +150,6 @@ PaitentRoutes.post("/login", async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
-    // Update availability property to "true"
-
     // Send a success response
     return res
       .status(200)

@@ -84,6 +84,11 @@ LabAssistantRoutes.post("/update/:id", async (req, res) => {
         labAssistantObj.firstname = req.body.firstname;
         labAssistantObj.lastname = req.body.lastname;
         labAssistantObj.email = req.body.email;
+        labAssistantObj.userName = req.body.userName;
+        labAssistantObj.password = req.body.password;
+        labAssistantObj.address = req.body.address;
+        labAssistantObj.dateOfBirth = req.body.dateOfBirth;
+        labAssistantObj.mobile = req.body.mobile;
 
         labAssistantObj
           .save()
@@ -97,6 +102,31 @@ LabAssistantRoutes.post("/update/:id", async (req, res) => {
     console.error(error);
 
     return res.status(500).json({ message: "Server Error" });
+  }
+});
+
+//Lab Assistant login
+LabAssistantRoutes.post("/login", async (req, res) => {
+  const { userName, password } = req.body;
+
+  try {
+    // Find the Lab Assistant by their username
+    const labAssistant = await LabAssistant.findOne({ userName });
+    // Check if the Lab Assistant exists
+    if (!labAssistant) {
+      return res.status(404).json({ message: "Lab Assistant not found" });
+    }
+    // Compare the entered password with the hashed password in the database
+    const isPasswordValid = bcrypt.compare(password, labAssistant.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+    // Send a success response
+    return res
+      .status(200)
+      .json({ message: "Login successful", labAssistant: labAssistant });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
 });
 

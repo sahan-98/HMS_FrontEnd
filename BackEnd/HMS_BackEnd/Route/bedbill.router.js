@@ -10,16 +10,15 @@ const moment = require("moment");
 // const jwt = require("jsonwebtoken");
 // var Mailgen = require("mailgen");
 
-let Bed = require("../Models/bed.models");
+
 let BedBill = require("../Models/bedbill.model");
 
-
-// bed bill allocate
+// bed bill update
 bedRoutes.post("/pay/:id", async (req, res) => {
   console.log(req.body);
 
   try {
-    Bed.findById(req.params.id)
+    BedBill.findById(req.params.id)
       .then((bedObj) => {
         bedObj.payStatus = "completed";
 
@@ -38,23 +37,14 @@ bedRoutes.post("/pay/:id", async (req, res) => {
   }
 });
 
-// bed allocate
-bedRoutes.post("/payed/:id", async (req, res) => {
+// payed bed bills for patient 
+bedRoutes.get("/payed/:id", async (req, res) => {
   console.log(req.body);
 
   try {
-    Bed.find({ payStatus: "completed", patientId: req.params.id })
+    BedBill.find({ payStatus: "completed", patientid: req.params.id })
       .then((bedObj) => {
-        bedObj.patientid = req.body.patientid;
-        bedObj.availability = false;
-        bedObj.allocatedDate = req.body.allocatedDate;
-
-        bedObj
-          .save()
-          .then(() => {
-            return res.status(200).json({ allocated_bed: bedObj });
-          })
-          .catch((err) => res.status(400).json({ message: err }));
+        return res.status(200).json({ data: bedObj });
       })
       .catch((err) => res.status(400).json({ message: err }));
   } catch (error) {
@@ -64,22 +54,14 @@ bedRoutes.post("/payed/:id", async (req, res) => {
   }
 });
 
-bedRoutes.post("/pending/:id", async (req, res) => {
+// pending bed bills for patient 
+bedRoutes.get("/pending/:id", async (req, res) => {
   console.log(req.body);
 
   try {
-    Bed.find({ payStatus: "pending", patientId: req.params.id })
+    BedBill.find({ payStatus: "pending", patientid: req.params.id })
       .then((bedObj) => {
-        bedObj.patientid = req.body.patientid;
-        bedObj.availability = false;
-        bedObj.allocatedDate = req.body.allocatedDate;
-
-        bedObj
-          .save()
-          .then(() => {
-            return res.status(200).json({ allocated_bed: bedObj });
-          })
-          .catch((err) => res.status(400).json({ message: err }));
+        return res.status(200).json({ data: bedObj });
       })
       .catch((err) => res.status(400).json({ message: err }));
   } catch (error) {
