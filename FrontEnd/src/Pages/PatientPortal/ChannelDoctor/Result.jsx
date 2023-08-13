@@ -4,7 +4,7 @@ import Header from "../Header";
 import Layout from "../Layout";
 import done from "../../../assets/images/done.png";
 import warning from "../../../assets/images/warning.png";
-import { Box, Button, styled } from "@mui/material";
+import { Box, styled } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import AppointmentService from "../../../app/services/appointment-service";
@@ -12,7 +12,7 @@ import processingData from "../../../assets/images/processing-data.png";
 
 const StyledText = styled("span")(
   `
-  color: #636363;
+color: #636363;
 text-align: center;
 font-family: Hina Mincho;
 font-style: normal;

@@ -36,19 +36,21 @@ const StyledText = styled(Typography)(`
   font-weight: 400;
 `);
 
-const StyledButton = styled(Button)(`
+const StyledButton = styled(Button)(
+  ({ btnColor }) => `
 border-radius: 7px;
 border: 1px solid #DEDEDE;
-background: #59C169; 
+background:${btnColor ? btnColor : "#59C169"}; 
 color: #fff;
 min-width: 30px;
 font-size: 10px;
 font-weight: 600;
 padding: 3px 10px;
 :hover {
-  background: #68E87D;
+  background: ${btnColor ? btnColor : "#59C169"}; ;
 }
-`);
+`
+);
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)({
   borderRadius: 30,
@@ -110,7 +112,14 @@ const ViewAppointments = () => {
           const currentRow = params.row;
           return alert(JSON.stringify(currentRow, null, 4));
         };
-        return <StyledButton onClick={onClick}>Lab Report</StyledButton>;
+        return (
+          <>
+            <StyledButton onClick={onClick}>Lab Report</StyledButton>
+            <StyledButton onClick={onClick} btnColor="#ff6c37">
+              Bed Bill
+            </StyledButton>
+          </>
+        );
       },
     },
   ];
