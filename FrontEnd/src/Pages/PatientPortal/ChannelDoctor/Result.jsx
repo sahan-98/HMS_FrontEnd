@@ -17,6 +17,7 @@ text-align: center;
 font-family: Hina Mincho;
 font-style: normal;
 font-weight: 400;
+padding-top: 3rem;
 padding-bottom: 3rem;
 `,
   (props) => ({
@@ -79,19 +80,9 @@ const Result = () => {
       </div>
       <Box my={1}>
         <StyledText fontSize="16px">
-          Please wait, we are processing your results.
+          Please wait, we are placing an appointment for you.
         </StyledText>
       </Box>
-      <Button
-        variant="text"
-        sx={{
-          mb: 2,
-          fontWeight: "bold",
-        }}
-        disabled
-      >
-        Channel Doctor
-      </Button>
     </>
   );
 
