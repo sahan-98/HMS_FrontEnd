@@ -95,7 +95,7 @@ const Result = () => {
       </div>
       <Box my={3}>
         <StyledText fontSize="16px">
-          Couldn't place the appointment. Please try again.
+          Couldn&apos;t place the appointment. Please try again.
         </StyledText>
       </Box>
     </>
@@ -112,15 +112,6 @@ const Result = () => {
         }}
       >
         <BlueAcentCard>
-          <Button
-            sx={{
-              position: "absolute",
-              top: "10px",
-            }}
-            onClick={() => setAppointmentPlaced(!appointmentPlaced)}
-          >
-            sw
-          </Button>
           {loading ? Loading : appointmentPlaced ? Success : Failed}
         </BlueAcentCard>
       </div>
