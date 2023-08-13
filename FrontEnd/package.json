@@ -42,6 +42,7 @@
     "react-select": "^5.4.0",
     "recharts": "^2.1.13",
     "styled-components": "^5.3.5",
+    "sweetalert2": "^11.7.22",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {

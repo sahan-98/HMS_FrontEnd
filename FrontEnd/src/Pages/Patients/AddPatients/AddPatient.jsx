@@ -45,7 +45,7 @@ const AddPatient = () => {
 
     try {
       const response = await PatientService.newPatient({
-        Patient: formData,
+        patient: formData,
       });
       console.log(response);
       showSystemAlert("Patient profile created", "success");

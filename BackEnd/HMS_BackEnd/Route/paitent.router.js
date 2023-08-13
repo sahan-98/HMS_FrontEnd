@@ -27,9 +27,8 @@ PaitentRoutes.post("/add", async (req, res) => {
     conpass,
   } = req.body;
 
-  const salt = await bcrypt.genSalt();
-  const passwordHash = await bcrypt.hash(password, salt);
-
+  const passwordHash = await bcrypt.hash(password, 10);
+  console.log(passwordHash);
   if (
     mobile == "" ||
     userName == "" ||

@@ -242,7 +242,7 @@ DoctorRoutes.post("/logout", async (req, res) => {
 DoctorRoutes.get("/availableDoctors", async (req, res) => {
   try {
     // Find doctors with availability set to "true"
-    const availableDoctors = await Doctor.find({ availability: "true" });
+    const availableDoctors = await Doctor.find({ availability: true });
 
     // Send the list of available doctors as a response
     return res.status(200).json(availableDoctors);

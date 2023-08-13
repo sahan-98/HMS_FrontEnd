@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import HeadingText from "../../../components/HeadingText/HeadingText";
 import { useDispatch, useSelector } from "react-redux";
 import { setHeartDiseasePrediction } from "../../../reducers/heartDiseasePredictionSlice";
+import calculateAge from "../../../utils/calculate-age";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
@@ -33,9 +34,10 @@ const Step01 = () => {
     (state) => state.heartDiseasePrediction
   );
   const navigate = useNavigate();
-  const [gender, setGender] = useState("NO_SELECTION");
-  const [name, setName] = useState("");
-  const [age, setAge] = useState(0);
+  const patient = useSelector((state) => state.patient);
+  const [gender, setGender] = useState(patient.gender.substring(0, 1));
+  const [name, setName] = useState(patient.firstname);
+  const [age, setAge] = useState(calculateAge(new Date(patient.dateOfBirth)));
 
   const handleNextClick = useCallback(() => {
     dispatch(
@@ -85,6 +87,7 @@ const Step01 = () => {
             label="Name"
             variant="outlined"
             fullWidth
+            value={name}
             onChange={onChangeName}
           />
           <TextField
@@ -92,6 +95,7 @@ const Step01 = () => {
             variant="outlined"
             fullWidth
             sx={{ mt: 2 }}
+            value={age}
             onChange={onChangeAge}
           />
           <FormControl fullWidth sx={{ mt: 2, textAlign: "start" }}>

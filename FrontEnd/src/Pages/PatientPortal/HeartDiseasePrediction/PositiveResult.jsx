@@ -6,11 +6,13 @@ import { useNavigate } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import BedService from "../../../app/services/bed-service";
 import DoctorService from "../../../app/services/doctor-service";
-import { showSystemAlert } from "../../../app/services/alertServices";
+import PropTypes from "prop-types";
+import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
 const StyledText = styled("span")(
   `
-  color: #636363;
+color: #636363;
 text-align: center;
 font-family: Hina Mincho;
 font-style: normal;
@@ -25,38 +27,51 @@ const PositiveResult = ({ urgentStatus }) => {
   const navigate = useNavigate();
   const [doctor, setDoctor] = useState(null);
   const [bed, setBed] = useState(null);
+  const patient = useSelector((state) => state.patient);
 
   const allocateDoctor = useCallback(async () => {
     setDoctor(null);
     try {
       const responseBody = await DoctorService.autoAllocateDoctor({
-        patientid: "64d48fb5abfd5cf9d50fafe1",
+        patientid: patient._id,
         bookingDate: new Date().toISOString().split("T")[0],
       });
       const { allocated_doc } = responseBody;
       setDoctor(allocated_doc);
     } catch (error) {
-      setBed({ bedNo: "No doctors available" });
-      showSystemAlert("No doctors available", "error");
+      setDoctor({ name: "No doctors available" });
+      Swal.fire({
+        title: "Sorry!",
+        text: "No doctors available",
+        icon: "error",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+      });
       return;
     }
-  }, []);
+  }, [patient]);
 
   const allocateBed = useCallback(async () => {
     try {
       setBed(null);
       const responseBody = await BedService.autoAllocateBed({
-        patientid: "64d48fb5abfd5cf9d50fafe1",
+        patientid: patient._id,
         allocatedDate: new Date().toISOString().split("T")[0],
       });
       const { allocated_bed } = responseBody;
       setBed(allocated_bed);
     } catch (error) {
       setBed({ bedNo: "No bed available" });
-      showSystemAlert("No bed available", "error");
+      Swal.fire({
+        title: "Sorry!",
+        text: "No beds available",
+        icon: "error",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+      });
       return;
     }
-  }, []);
+  }, [patient]);
 
   useEffect(() => {
     if (urgentStatus) {
@@ -98,8 +113,8 @@ const PositiveResult = ({ urgentStatus }) => {
             )}
           </StyledText>
         </Box>
-        {bed?.bedNo !== "No bed available" ||
-        doctor?.name !== "No doctors available" ? null : (
+        {bed?.bedNo === "No bed available" ||
+        doctor?.name === "No doctors available" ? null : (
           <Box display={"flex"} justifyContent={"space-between"} mt={2}>
             <Button
               variant="outlined"
@@ -118,6 +133,13 @@ const PositiveResult = ({ urgentStatus }) => {
                 mb: 2,
                 fontWeight: "bold",
                 boxShadow: 0,
+              }}
+              disabled={
+                bed?.bedNo === "No bed available" ||
+                doctor?.name === "No doctors available"
+              }
+              onClick={() => {
+                navigate("/patient-portal/heart-disease-prediction/payment");
               }}
             >
               Coninue
@@ -155,3 +177,7 @@ const PositiveResult = ({ urgentStatus }) => {
 };
 
 export default PositiveResult;
+
+PositiveResult.propTypes = {
+  urgentStatus: PropTypes.bool,
+};

@@ -38,6 +38,12 @@ class DoctorService {
       data: { bookingDate, patientid },
     });
   }
+
+  static async getAvailableDoctors() {
+    return await get({
+      path: `/doctor/availableDoctors`,
+    });
+  }
 }
 
 export default DoctorService;
