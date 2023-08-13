@@ -64,13 +64,36 @@ AppointmentRoutes.get("/", async (req, res) => {
 });
 
 AppointmentRoutes.get("/:patientId", async (req, res, next) => {
-  await Appointment.find({ patientid: req.params.patientId })
-    .then((data) => {
-      res.status(200).send({ data: data });
-    })
-    .catch((error) => {
-      res.status(500).send({ error: error.message });
-    });
+  try {
+    const appointments = await Appointment.aggregate([
+      {
+        $match: {
+          patientid: req.params.patientId,
+        },
+      },
+      {
+        $lookup: {
+          from: "doctors",
+          localField: "doctorid",
+          foreignField: "doctorid",
+          as: "doctor",
+        },
+      },
+      {
+        $unwind: "$doctor",
+      },
+      {
+        $project: {
+          password: 0,
+        },
+      },
+    ]);
+    res.status(200).json({ data: appointments });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server Error" });
+    return next(err);
+  }
 });
 
 // get single Appointment details
