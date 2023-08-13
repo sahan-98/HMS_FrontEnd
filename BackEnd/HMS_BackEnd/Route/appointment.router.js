@@ -15,26 +15,30 @@ let Doctor = require("../Models/doctor.models");
 
 // add a appoiment
 AppointmentRoutes.post("/add", async (req, res) => {
-  const { doctorid, patientid, bookingDate, type } =
+  const { doctorid, patientid, bookingDate, type, doctorAvailability } =
     req.body;
 
-  const doc = await Doctor.findOne({doctorid:doctorid});
+  const doc = await Doctor.findOne({ doctorid: doctorid });
 
-  let fee =doc.fee;
+  let fee = doc.fee;
 
   console.log(doc);
   console.log(fee);
 
-  const QueAppintments = await Appointment.find({doctorid:doctorid, bookingDate:bookingDate });
+  const QueAppintments = await Appointment.find({
+    doctorid: doctorid,
+    doctorAvailability: doctorAvailability,
+  });
 
   const newAppointment = new Appointment({
     doctorid,
     patientid,
     bookingDate,
+    doctorAvailability,
     type,
-    queueNumber : QueAppintments.length +1 ,
+    queueNumber: QueAppintments.length + 1,
     totalPrice: fee,
-    visitStatus:"pending"
+    visitStatus: "pending",
   });
 
   await newAppointment
@@ -72,7 +76,7 @@ AppointmentRoutes.get("/patient/:id", async (req, res) => {
 
 // get completed single Appointment details
 AppointmentRoutes.get("/patient-completed/:id", async (req, res) => {
-  await Appointment.find({ patientid: req.params.id, visitStatus:"completed" })
+  await Appointment.find({ patientid: req.params.id, visitStatus: "completed" })
     .then((data) => {
       return res.status(200).send({ data: data });
     })
@@ -82,7 +86,7 @@ AppointmentRoutes.get("/patient-completed/:id", async (req, res) => {
 });
 
 AppointmentRoutes.get("/patient-pending/:id", async (req, res) => {
-  await Appointment.find({ patientid: req.params.id, visitStatus:"pending" })
+  await Appointment.find({ patientid: req.params.id, visitStatus: "pending" })
     .then((data) => {
       return res.status(200).send({ data: data });
     })
@@ -91,11 +95,9 @@ AppointmentRoutes.get("/patient-pending/:id", async (req, res) => {
     });
 });
 
-
 AppointmentRoutes.post("/updateVisitStatus/:id", async (req, res) => {
   try {
-    Appointment
-      .findById(req.params.id)
+    Appointment.findById(req.params.id)
       .then(async (appointmentObj) => {
         appointmentObj.visitStatus = "completed";
 

@@ -22,7 +22,10 @@ let appoinmentBill = new Schema(
       required: true,
       type: Date,
     },
-    // emergancy
+    doctorAvailability: {
+      required: true,
+      type: String,
+    },
     type: {
       required: true,
       type: String,

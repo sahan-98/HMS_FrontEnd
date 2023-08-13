@@ -23,13 +23,7 @@ const AddPatient = () => {
   const location = useLocation();
   const patientToBeEdited = location.state?.patient;
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-    control,
-  } = useForm({
+  const { register, handleSubmit, setValue, control } = useForm({
     defaultValues: {
       gender: "",
     },

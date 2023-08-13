@@ -5,6 +5,7 @@ import BlueAcentCard from "../../../components/BlueAcentCard/BlueAcentCard";
 import HeadingText from "../../../components/HeadingText/HeadingText";
 import Header from "../Header";
 import Layout from "../Layout";
+import { useSelector } from "react-redux";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
@@ -18,6 +19,7 @@ color: #fff;
 
 const Step02 = () => {
   const navigate = useNavigate();
+  const patient = useSelector((state) => state.patient);
 
   const handleNextClick = useCallback(() => {
     navigate("/patient-portal/channel-doctor/payment");
@@ -46,18 +48,21 @@ const Step02 = () => {
             variant="outlined"
             fullWidth
             sx={{ mt: 2 }}
+            value={patient?.firstname}
           />
           <TextField
             label="Mobile no"
             variant="outlined"
             fullWidth
             sx={{ mt: 2 }}
+            value={patient?.mobile}
           />
           <TextField
             label="Email address"
             variant="outlined"
             fullWidth
             sx={{ mt: 2 }}
+            value={patient?.email}
           />
 
           <Box

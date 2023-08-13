@@ -5,7 +5,10 @@ import Layout from "../Layout";
 import done from "../../../assets/images/done.png";
 import warning from "../../../assets/images/warning.png";
 import { Box, Button, styled } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import AppointmentService from "../../../app/services/appointment-service";
+import processingData from "../../../assets/images/processing-data.png";
 
 const StyledText = styled("span")(
   `
@@ -22,7 +25,34 @@ padding-bottom: 3rem;
 );
 
 const Result = () => {
-  const [result, setResult] = useState(true);
+  const [appointmentPlaced, setAppointmentPlaced] = useState(true);
+  const appointmentDetails = useSelector((state) => state.placeAppointment);
+  const [loading, setLoading] = useState(true);
+
+  const placeAppointment = useCallback(async () => {
+    try {
+      const newAppointment = await AppointmentService.placeNewAppointment({
+        data: {
+          ...appointmentDetails,
+        },
+      });
+      console.log(newAppointment);
+      const { message } = newAppointment;
+      if (message === "Successfull") {
+        setAppointmentPlaced(true);
+      } else {
+        setAppointmentPlaced(false);
+      }
+    } catch (error) {
+      setAppointmentPlaced(false);
+    } finally {
+      setLoading(false);
+    }
+  }, [appointmentDetails]);
+
+  useEffect(() => {
+    placeAppointment();
+  }, [placeAppointment]);
 
   const Success = (
     <>
@@ -39,6 +69,32 @@ const Result = () => {
       </Box>
     </>
   );
+
+  const Loading = (
+    <>
+      <HeadingText text="Heart disease prediction" />
+      <img src={processingData} alt="" width={"185px"} />
+      <div>
+        <StyledText fontSize="24px">Loading results</StyledText>
+      </div>
+      <Box my={1}>
+        <StyledText fontSize="16px">
+          Please wait, we are processing your results.
+        </StyledText>
+      </Box>
+      <Button
+        variant="text"
+        sx={{
+          mb: 2,
+          fontWeight: "bold",
+        }}
+        disabled
+      >
+        Channel Doctor
+      </Button>
+    </>
+  );
+
   const Failed = (
     <>
       <HeadingText text="Channel Doctor" />
@@ -70,12 +126,11 @@ const Result = () => {
               position: "absolute",
               top: "10px",
             }}
-            onClick={() => setResult(!result)}
+            onClick={() => setAppointmentPlaced(!appointmentPlaced)}
           >
             sw
           </Button>
-
-          {result ? Success : Failed}
+          {loading ? Loading : appointmentPlaced ? Success : Failed}
         </BlueAcentCard>
       </div>
     </Layout>

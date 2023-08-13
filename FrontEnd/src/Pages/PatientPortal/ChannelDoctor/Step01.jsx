@@ -14,6 +14,9 @@ import Layout from "../Layout";
 import "./table.css";
 import { useNavigate } from "react-router-dom";
 import DoctorService from "../../../app/services/doctor-service";
+import { useDispatch, useSelector } from "react-redux";
+import { placeAppointment } from "../../../reducers/placeAppointmentSlice";
+import PropTypes from "prop-types";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
@@ -31,6 +34,8 @@ padding: 3px 10px;
 
 const TableRow = ({ doctor, dateName, timeKeyName }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const patient = useSelector((state) => state.patient);
 
   return (
     <tr>
@@ -41,6 +46,15 @@ const TableRow = ({ doctor, dateName, timeKeyName }) => {
       <td>
         <StyledButton
           onClick={() => {
+            dispatch(
+              placeAppointment({
+                doctorid: doctor?.doctorid,
+                patientid: patient?._id,
+                bookingDate: new Date().toISOString().split("T")[0],
+                type: "Urgent",
+                doctorAvailability: timeKeyName,
+              })
+            );
             navigate(`/patient-portal/channel-doctor/step-02`);
           }}
         >
@@ -51,8 +65,15 @@ const TableRow = ({ doctor, dateName, timeKeyName }) => {
   );
 };
 
+TableRow.propTypes = {
+  doctor: PropTypes.object,
+  dateName: PropTypes.string,
+  timeKeyName: PropTypes.string,
+};
+
 const Step01 = () => {
   const navigate = useNavigate();
+
   const [specialization, setSpecialization] = useState("");
   const [specializationList, setSpecializationList] = useState([]);
   const [doctorList, setDoctorList] = useState([]);
