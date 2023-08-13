@@ -12,7 +12,9 @@ import { DataGrid } from "@mui/x-data-grid";
 import Header from "./Header";
 import Layout from "./Layout";
 import { Search } from "@mui/icons-material";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import AppointmentService from "../../app/services/appointment-service";
+import { useSelector } from "react-redux";
 
 const StyledDiv = styled("div")(
   `
@@ -88,22 +90,76 @@ const StyledTextField = styled(TextField)({
     fontSize: "14px",
   },
 });
+const dayNames = {
+  sunAvailbleTime: "Sunday",
+  monAvailbleTime: "Monday",
+  tueAvailbleTime: "Tuesday",
+  wensAvailbleTime: "Wednesday",
+  thusAvailbleTime: "Thursday",
+  friAvailbleTime: "Friday",
+  satAvailbleTime: "Saturday",
+};
 
 const ViewAppointments = () => {
+  const [appointments, setAppointments] = useState([]);
+
+  const patient = useSelector((state) => state.patient);
+  const [selectedType, setSelectedType] = useState("pending");
+  const [searchText, setSearchText] = useState("");
+
+  const loadAppointments = useCallback(async () => {
+    try {
+      let appointments = await AppointmentService.getAppointmentsByPatientId({
+        patientId: patient._id,
+      });
+      appointments = appointments?.data.map((appointment, index) => ({
+        id: index + 1,
+        doctorName: appointment?.doctor?.name,
+        date: dayNames[appointment?.doctorAvailability],
+        time: appointment?.doctor[appointment?.doctorAvailability],
+        visitStatus: appointment?.visitStatus,
+        queueNumber: appointment?.queueNumber,
+        appointment,
+      }));
+      setAppointments(appointments);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [patient]);
+
+  useEffect(() => {
+    loadAppointments();
+  }, [loadAppointments]);
+
   const columns = [
     { field: "id", headerName: "#", width: 50 },
-    { field: "doctorName", headerName: "Doctor name", width: 180 },
-    { field: "date", headerName: "Date", width: 120 },
-    { field: "time", headerName: "Time", width: 120 },
     {
-      field: "status",
+      field: "doctorName",
+      headerName: "Doctor name",
+      width: 180,
+      align: "center",
+      headerAlign: "center",
+    },
+    { field: "date", headerName: "Date", width: 100 },
+    { field: "time", headerName: "Time", width: 100 },
+    {
+      field: "visitStatus",
       headerName: "Appointment status",
       width: 150,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "queueNumber",
+      headerName: "Appointment Number",
+      width: 70,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "actions",
       headerName: "Actions",
-      width: 150,
+      width: 180,
       align: "center",
       headerAlign: "center",
       disableClickEventBubbling: true,
@@ -124,58 +180,22 @@ const ViewAppointments = () => {
     },
   ];
 
-  const rows = [
-    {
-      id: 1,
-      doctorName: "Snow",
-      date: "2021-02-05",
-      time: "10:00AM",
-      status: "Success",
-      actions: "Lab report",
-    },
-    {
-      id: 2,
-      doctorName: "Lannister",
-      date: "2021-02-05",
-      time: "10:00AM",
-      status: "Success",
-      actions: "Lab report",
-    },
-    {
-      id: 3,
-      doctorName: "Stark",
-      date: "2021-02-05",
-      time: "10:00AM",
-      status: "Success",
-      actions: "Lab report",
-    },
+  let filteredAppointments = [...appointments];
+  if (searchText.length > 0) {
+    filteredAppointments = appointments.filter(
+      (appointment) =>
+        appointment?.doctorName
+          .toLowerCase()
+          .includes(searchText.toLowerCase()) ||
+        appointment?.date.toLowerCase().includes(searchText.toLowerCase())
+    );
+  }
 
-    {
-      id: 4,
-      doctorName: "Stark",
-      date: "2021-02-05",
-      time: "10:00AM",
-      status: "Success",
-      actions: "Lab report",
-    },
-    {
-      id: 5,
-      doctorName: "Stark",
-      date: "2021-02-05",
-      time: "10:00AM",
-      status: "Success",
-      actions: "Lab report",
-    },
-    {
-      id: 6,
-      doctorName: "Stark",
-      date: "2021-02-05",
-      time: "10:00AM",
-      status: "Success",
-      actions: "Lab report",
-    },
-  ];
-  const [selectedType, setSelectedType] = useState("pending");
+  filteredAppointments = filteredAppointments.filter((appointment) =>
+    selectedType === "pending"
+      ? appointment?.visitStatus === "pending"
+      : appointment?.visitStatus === "completed"
+  );
 
   return (
     <Layout>
@@ -188,7 +208,7 @@ const ViewAppointments = () => {
           alignItems: "start",
         }}
       >
-        <StyledDiv width="800px">
+        <StyledDiv width="850px">
           <Box
             sx={{
               display: "flex",
@@ -217,6 +237,11 @@ const ViewAppointments = () => {
                 size="small"
                 sx={{
                   width: "230px",
+                }}
+                value={searchText}
+                onChange={(event) => {
+                  setSearchText(event.target.value);
+                  filteredAppointments();
                 }}
               />
               <StyledToggleButtonGroup
@@ -247,7 +272,7 @@ const ViewAppointments = () => {
 
           <div style={{ height: "55vh", width: "100%", padding: "1rem 0" }}>
             <DataGrid
-              rows={rows}
+              rows={filteredAppointments}
               columns={columns}
               initialState={{
                 pagination: {

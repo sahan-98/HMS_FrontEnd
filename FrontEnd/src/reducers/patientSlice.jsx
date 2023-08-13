@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const patientSlice = createSlice({
   name: "patient",
   initialState: {
-    _id: "64d48fb5abfd5cf9d50fafe1",
+    _id: "",
     userName: "",
     firstname: "",
     lastname: "",

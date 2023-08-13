@@ -4,11 +4,12 @@ import Header from "../Header";
 import Layout from "../Layout";
 import done from "../../../assets/images/done.png";
 import warning from "../../../assets/images/warning.png";
-import { Box, styled } from "@mui/material";
+import { Box, Button, styled } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import AppointmentService from "../../../app/services/appointment-service";
 import processingData from "../../../assets/images/processing-data.png";
+import { useNavigate } from "react-router";
 
 const StyledText = styled("span")(
   `
@@ -26,6 +27,7 @@ padding-bottom: 3rem;
 );
 
 const Result = () => {
+  const navigate = useNavigate();
   const [appointmentPlaced, setAppointmentPlaced] = useState(true);
   const appointmentDetails = useSelector((state) => state.placeAppointment);
   const [loading, setLoading] = useState(true);
@@ -68,6 +70,20 @@ const Result = () => {
           the session time available.
         </StyledText>
       </Box>
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{
+          mb: 2,
+          fontWeight: "bold",
+          boxShadow: 0,
+        }}
+        onClick={() => {
+          navigate("/patient-portal/landing");
+        }}
+      >
+        Back to Home
+      </Button>
     </>
   );
 
@@ -78,7 +94,7 @@ const Result = () => {
       <div>
         <StyledText fontSize="24px">Loading results</StyledText>
       </div>
-      <Box my={1}>
+      <Box my={3}>
         <StyledText fontSize="16px">
           Please wait, we are placing an appointment for you.
         </StyledText>

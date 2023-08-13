@@ -84,7 +84,7 @@ AppointmentRoutes.get("/:patientId", async (req, res, next) => {
       },
       {
         $project: {
-          password: 0,
+          "doctor.password": 0,
         },
       },
     ]);
