@@ -63,7 +63,7 @@ AppointmentRoutes.get("/", async (req, res) => {
     });
 });
 
-AppointmentRoutes.get("/:patientId", async (req, res, next) => {
+AppointmentRoutes.get("/patient/:patientId", async (req, res, next) => {
   try {
     const appointments = await Appointment.aggregate([
       {
@@ -85,6 +85,24 @@ AppointmentRoutes.get("/:patientId", async (req, res, next) => {
       {
         $project: {
           "doctor.password": 0,
+        },
+      },
+    ]);
+    res.status(200).json({ data: appointments });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server Error" });
+    return next(err);
+  }
+});
+
+AppointmentRoutes.get("/doctor/:doctorId", async (req, res, next) => {
+  try {
+    console.log(req.params.doctorId);
+    const appointments = await Appointment.aggregate([
+      {
+        $match: {
+          doctorid: "fba5eb15-da3f-4ed6-b763-ac19bf45b45a",
         },
       },
     ]);

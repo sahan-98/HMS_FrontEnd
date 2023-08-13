@@ -176,7 +176,7 @@ DoctorRoutes.post("/login", async (req, res) => {
     // Send a success response
     return res
       .status(200)
-      .json({ message: "Login successful", doctorId: doctor._id });
+      .json({ message: "Login successful", doctor: doctor });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

@@ -29,6 +29,7 @@ import ChannelDoctorPayment from "./Pages/PatientPortal/ChannelDoctor/Payment";
 import GeneralLogin from "./Pages/Login/GeneralLogin";
 import AdminLogin from "./Pages/Login/AdminLogin";
 import PatientLogin from "./Pages/PatientPortal/PatientLogin";
+import DoctorLogin from "./Pages/DoctorPortal/DoctorLogin";
 
 function App() {
   return (
@@ -42,6 +43,8 @@ function App() {
           <Route path="/login" element={<GeneralLogin />} />
           <Route path="/patient-login" element={<PatientLogin />} />
           <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/doctor-login" element={<DoctorLogin />} />
+
           <Route path="/patient-portal">
             <Route path="landing" index element={<Landing />} />
             <Route

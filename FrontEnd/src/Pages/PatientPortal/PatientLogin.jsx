@@ -85,7 +85,7 @@ const PatientLogin = () => {
         }}
       >
         <BlueAcentCard>
-          <HeadingText text="Login to your account" />
+          <HeadingText text="Patient Login" />
           <TextField
             label="User Name"
             variant="outlined"

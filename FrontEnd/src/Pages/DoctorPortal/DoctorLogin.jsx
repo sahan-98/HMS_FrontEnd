@@ -1,15 +1,15 @@
 import BlueAcentCard from "../../components/BlueAcentCard/BlueAcentCardLogin";
-
 import Layout from "../PatientPortal/Layout";
 import { Button, TextField, styled } from "@mui/material";
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HeadingText from "../../components/HeadingText/HeadingText";
-import PatientService from "../../app/services/patient-service";
 import { showSystemAlert } from "../../app/services/alertServices";
 import { login } from "../../reducers/loginSlice";
 import { useDispatch } from "react-redux";
 import Header from "../../components/Header/Header";
+import DoctorService from "../../app/services/doctor-service";
+import { setDoctor } from "../../reducers/doctorSlice";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
@@ -52,14 +52,16 @@ const DoctorLogin = () => {
     }
 
     try {
-      const patientLogin = await PatientService.login({
+      const doctorLogin = await DoctorService.login({
         userName: userName,
         password: password,
       });
-      const { doctorId } = patientLogin;
+      console.log(doctorLogin);
+      const doctorId = doctorLogin?.doctor?._id;
       if (doctorId) {
         showSystemAlert("You have successfully logged in", "success");
         dispatch(login({ userId: doctorId }));
+        dispatch(setDoctor({ ...doctorLogin.doctor }));
         navigate("/doctor-portal/view-appointments");
       }
     } catch (error) {
@@ -80,7 +82,7 @@ const DoctorLogin = () => {
         }}
       >
         <BlueAcentCard>
-          <HeadingText text="Login to your account" />
+          <HeadingText text="Doctor Login" />
           <TextField
             label="User Name"
             variant="outlined"

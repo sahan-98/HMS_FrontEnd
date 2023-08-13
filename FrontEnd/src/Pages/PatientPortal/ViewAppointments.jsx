@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  IconButton,
   InputAdornment,
   TextField,
   ToggleButton,
@@ -14,7 +15,12 @@ import Layout from "./Layout";
 import { Search } from "@mui/icons-material";
 import { useCallback, useEffect, useState } from "react";
 import AppointmentService from "../../app/services/appointment-service";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { GiPowerButton } from "react-icons/gi";
+import PatientService from "../../app/services/patient-service";
+import { logout } from "../../reducers/loginSlice";
+import { useNavigate } from "react-router";
+import { showSystemAlert } from "../../app/services/alertServices";
 
 const StyledDiv = styled("div")(
   `
@@ -102,10 +108,12 @@ const dayNames = {
 
 const ViewAppointments = () => {
   const [appointments, setAppointments] = useState([]);
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const patient = useSelector((state) => state.patient);
   const [selectedType, setSelectedType] = useState("pending");
   const [searchText, setSearchText] = useState("");
+  const patientId = useSelector((state) => state.patient._id);
 
   const loadAppointments = useCallback(async () => {
     try {
@@ -197,6 +205,22 @@ const ViewAppointments = () => {
       : appointment?.visitStatus === "completed"
   );
 
+  const handleLogoutClick = useCallback(async () => {
+    console.log("logout");
+    try {
+      const logoutResponse = await PatientService.logout({ patientId });
+      const { message } = logoutResponse;
+      if (message === "Logout successful") {
+        dispatch(logout());
+        showSystemAlert("You have successfully logged out", "success");
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log(error);
+      showSystemAlert("An error occured while loggin out", "error");
+    }
+  }, [patientId, dispatch, navigate]);
+
   return (
     <Layout>
       <Header />
@@ -241,7 +265,6 @@ const ViewAppointments = () => {
                 value={searchText}
                 onChange={(event) => {
                   setSearchText(event.target.value);
-                  filteredAppointments();
                 }}
               />
               <StyledToggleButtonGroup
@@ -267,6 +290,9 @@ const ViewAppointments = () => {
                   Completed
                 </StyledToggleButton>
               </StyledToggleButtonGroup>
+              <IconButton title="Logout" onClick={handleLogoutClick}>
+                <GiPowerButton />
+              </IconButton>
             </Box>
           </Box>
 

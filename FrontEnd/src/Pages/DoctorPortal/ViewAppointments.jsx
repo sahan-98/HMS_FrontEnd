@@ -10,7 +10,7 @@ import {
   styled,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { GiPowerButton } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +19,9 @@ import DoctorService from "../../app/services/doctor-service";
 import Header from "../../components/Header/Header";
 import Layout from "../../components/PortalLayout/Layout";
 import { logout } from "../../reducers/loginSlice";
+import AppointmentService from "../../app/services/appointment-service";
+import { Button } from "@mui/base";
+import LabReport from "../LabReport/LabReport";
 
 const StyledDiv = styled("div")(
   `
@@ -78,44 +81,109 @@ const StyledTextField = styled(TextField)({
     fontSize: "14px",
   },
 });
+
+const dayNames = {
+  sunAvailbleTime: "Sunday",
+  monAvailbleTime: "Monday",
+  tueAvailbleTime: "Tuesday",
+  wensAvailbleTime: "Wednesday",
+  thusAvailbleTime: "Thursday",
+  friAvailbleTime: "Friday",
+  satAvailbleTime: "Saturday",
+};
+
+const StyledButton = styled(Button)(
+  ({ btnColor }) => `
+border-radius: 7px;
+border: 1px solid #DEDEDE;
+background:${btnColor ? btnColor : "#59C169"}; 
+color: #fff;
+min-width: 30px;
+font-size: 10px;
+font-weight: 600;
+padding: 5px 10px;
+:hover {
+  background: ${btnColor ? btnColor : "#59C169"}; ;
+}
+`
+);
+
 const ViewAppointments = () => {
+  const [appointments, setAppointments] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [selectedType, setSelectedType] = useState("pending");
+  const [searchText, setSearchText] = useState("");
+  const [labReportOpen, setLabReportOpen] = useState(false);
+  const [labReportToShow, setLabReportToShow] = useState({});
+  const doctor = useSelector((state) => state.doctor);
 
   const columns = [
-    { field: "id", headerName: "Id", width: 150 },
-    { field: "firstName", headerName: "First name", width: 150 },
-    { field: "lastName", headerName: "Last name", width: 150 },
+    { field: "id", headerName: "#", width: 50 },
+
+    { field: "date", headerName: "Date", width: 100 },
+    { field: "time", headerName: "Time", width: 160 },
     {
-      field: "age",
-      headerName: "Age",
+      field: "visitStatus",
+      headerName: "Appointment status",
       width: 150,
+      align: "center",
+      headerAlign: "center",
     },
     {
-      field: "fullName",
-      headerName: "Full name",
-      width: 150,
+      field: "queueNumber",
+      headerName: "Appointment No",
+      width: 140,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 180,
+      align: "center",
+      headerAlign: "center",
+      disableClickEventBubbling: true,
+      renderCell: (params) => {
+        const onClick = () => {
+          const { appointment } = params.row;
+          setLabReportToShow(appointment);
+          setLabReportOpen(true);
+        };
+        return (
+          <>
+            <StyledButton onClick={onClick}>Assign Lab task</StyledButton>
+          </>
+        );
+      },
     },
   ];
 
-  const rows = [
-    { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-    { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-    { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-    { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-  ];
-  const [selectedType, setSelectedType] = useState("pending");
-  const doctorid = useSelector((state) => state.login.userId);
+  const loadAppointments = useCallback(async () => {
+    try {
+      let appointments = await AppointmentService.getAppointmentsByDoctorId({
+        doctorId: doctor.doctorid,
+      });
+      appointments = appointments?.data.map((appointment, index) => ({
+        id: index + 1,
+        date: dayNames[appointment?.doctorAvailability],
+        time: doctor[appointment?.doctorAvailability],
+        visitStatus: appointment?.visitStatus,
+        queueNumber: appointment?.queueNumber,
+        appointment,
+      }));
+      setAppointments(appointments);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [doctor]);
 
   const handleLogoutClick = useCallback(async () => {
     console.log("logout");
     try {
-      const logoutResponse = await DoctorService.logout({ doctorid });
+      const logoutResponse = await DoctorService.logout({
+        doctorId: doctor.doctorid,
+      });
       console.log(logoutResponse);
       const { message } = logoutResponse;
       if (message === "Logout successful") {
@@ -127,11 +195,37 @@ const ViewAppointments = () => {
       console.log(error);
       showSystemAlert("An error occured while loggin out", "error");
     }
-  }, [doctorid, dispatch, navigate]);
+  }, [doctor, dispatch, navigate]);
+
+  useEffect(() => {
+    loadAppointments();
+  }, [loadAppointments]);
+
+  let filteredAppointments = [...appointments];
+  if (searchText.length > 0) {
+    filteredAppointments = appointments.filter(
+      (appointment) =>
+        appointment?.visitStatus
+          .toLowerCase()
+          .includes(searchText.toLowerCase()) ||
+        appointment?.date.toLowerCase().includes(searchText.toLowerCase())
+    );
+  }
+
+  filteredAppointments = filteredAppointments.filter((appointment) =>
+    selectedType === "pending"
+      ? appointment?.visitStatus === "pending"
+      : appointment?.visitStatus === "completed"
+  );
 
   return (
     <Layout>
       <Header />
+      <LabReport
+        open={labReportOpen}
+        setOpen={setLabReportOpen}
+        data={labReportToShow}
+      />
       <div
         style={{
           height: "70vh",
@@ -170,6 +264,10 @@ const ViewAppointments = () => {
                 sx={{
                   width: "230px",
                 }}
+                value={searchText}
+                onChange={(event) => {
+                  setSearchText(event.target.value);
+                }}
               />
               <StyledToggleButtonGroup
                 color="primary"
@@ -202,7 +300,7 @@ const ViewAppointments = () => {
 
           <div style={{ height: "55vh", width: "100%", padding: "1rem 0" }}>
             <DataGrid
-              rows={rows}
+              rows={filteredAppointments}
               columns={columns}
               initialState={{
                 pagination: {

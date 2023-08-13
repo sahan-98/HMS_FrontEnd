@@ -10,7 +10,13 @@ class AppointmentService {
 
   static async getAppointmentsByPatientId({ patientId }) {
     return await get({
-      path: `/appoinment/${patientId}`,
+      path: `/appoinment/patient/${patientId}`,
+    });
+  }
+
+  static async getAppointmentsByDoctorId({ doctorId }) {
+    return await get({
+      path: `/appoinment/doctor/${doctorId}`,
     });
   }
 }
