@@ -12,12 +12,15 @@ import PropTypes from "prop-types";
 import { useCallback, useEffect, useState } from "react";
 import PatientService from "../../app/services/patient-service";
 import LabAssistantService from "../../app/services/lab-assistant-service";
+import LabReportService from "../../app/services/lab-report-service";
+import { showSystemAlert } from "../../app/services/alertServices";
 
 const LabReport = ({ open, setOpen, data }) => {
   const [patient, setPatient] = useState({});
   const [labAssistants, setLabAssistants] = useState([]);
   const [selectedLabAssistant, setSelectedLabAssistant] =
     useState("NO_SELECTION");
+  const [labReportType, setLabReportType] = useState("Full Blood Count report");
 
   const fetchPatient = useCallback(async () => {
     const patient = await PatientService.gePatientById({
@@ -30,6 +33,35 @@ const LabReport = ({ open, setOpen, data }) => {
     const labAssistants = await LabAssistantService.getAllLabAssistants();
     setLabAssistants(labAssistants?.data);
   }, []);
+
+  const handleLabReportTypeChange = useCallback((e) => {
+    setLabReportType(e.target.value);
+  }, []);
+
+  const saveLabReport = useCallback(async () => {
+    try {
+      const response = await LabReportService.newLabReport({
+        data: {
+          type: labReportType,
+          doctorid: data.doctorid,
+          labAssistantid: selectedLabAssistant,
+          patientid: patient?._id,
+          contactEmail: patient?.email,
+          LDL: "",
+          HDL: "",
+          TotalCholesterol: "",
+          Triglycerides: "",
+          VLDLlevels: "",
+        },
+      });
+      console.log(response);
+      setOpen(false);
+      showSystemAlert("Lab task assigned", "success");
+    } catch (error) {
+      console.log(error);
+      showSystemAlert("An error occured while assigning lab task", "error");
+    }
+  }, [patient, data, labReportType, selectedLabAssistant, setOpen]);
 
   useEffect(() => {
     fetchPatient();
@@ -85,6 +117,29 @@ const LabReport = ({ open, setOpen, data }) => {
 
       <Grid container my={1.5}>
         <Grid item xs={12} sm={4}>
+          Report type
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth sx={{ textAlign: "start" }}>
+            <Select
+              value={labReportType}
+              onChange={handleLabReportTypeChange}
+              size="small"
+            >
+              <MenuItem value={"NO_SELECTION"}>Please select</MenuItem>
+              <MenuItem value={"Full Blood Count report"}>
+                Full Blood Count report
+              </MenuItem>
+              <MenuItem value={"Cholesterol report"}>
+                Cholesterol report
+              </MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+      </Grid>
+
+      <Grid container my={1.5}>
+        <Grid item xs={12} sm={4}>
           Patient name
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -118,7 +173,7 @@ const LabReport = ({ open, setOpen, data }) => {
           LDL
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField variant="outlined" fullWidth size="small" />
+          <TextField variant="outlined" fullWidth size="small" disabled />
         </Grid>
       </Grid>
 
@@ -127,7 +182,7 @@ const LabReport = ({ open, setOpen, data }) => {
           HDL
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField variant="outlined" fullWidth size="small" />
+          <TextField variant="outlined" fullWidth size="small" disabled />
         </Grid>
       </Grid>
 
@@ -136,7 +191,7 @@ const LabReport = ({ open, setOpen, data }) => {
           TotalCholesterol
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField variant="outlined" fullWidth size="small" />
+          <TextField variant="outlined" fullWidth size="small" disabled />
         </Grid>
       </Grid>
 
@@ -145,7 +200,7 @@ const LabReport = ({ open, setOpen, data }) => {
           Triglycerides
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField variant="outlined" fullWidth size="small" />
+          <TextField variant="outlined" fullWidth size="small" disabled />
         </Grid>
       </Grid>
 
@@ -154,7 +209,7 @@ const LabReport = ({ open, setOpen, data }) => {
           VLDLlevels
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField variant="outlined" fullWidth size="small" />
+          <TextField variant="outlined" fullWidth size="small" disabled />
         </Grid>
       </Grid>
       <Box display={"flex"} gap={2} justifyContent={"start"} my={2}>
@@ -167,6 +222,7 @@ const LabReport = ({ open, setOpen, data }) => {
           sx={{
             boxShadow: "none",
           }}
+          onClick={saveLabReport}
         >
           Save
         </Button>

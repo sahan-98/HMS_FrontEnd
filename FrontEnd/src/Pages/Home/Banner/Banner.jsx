@@ -1,12 +1,66 @@
 import { Box, Paper, Typography } from "@mui/material";
-import React from "react";
-import { FaAccessibleIcon, FaAmbulance, FaUserTie } from "react-icons/fa";
-import { GiCherish } from "react-icons/gi";
+import { useCallback, useEffect, useState } from "react";
+import { FaAccessibleIcon } from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
-import { TbBed } from "react-icons/tb";
-import { MdPersonPin } from "react-icons/md";
+import { GiCherish } from "react-icons/gi";
+import DoctorService from "../../../app/services/doctor-service";
+import LabReportService from "../../../app/services/lab-report-service";
+import PatientService from "../../../app/services/patient-service";
 
 const Banner = () => {
+  const [doctors, setDoctors] = useState("");
+  const [patients, setPatients] = useState("");
+  const [labReports, setLabReports] = useState("");
+  const [pendingLabReports, setPendingLabReports] = useState("");
+
+  const getDoctorCount = useCallback(async () => {
+    try {
+      const reponse = await DoctorService.getDoctorCount();
+      setDoctors(reponse.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const getPatientCount = useCallback(async () => {
+    try {
+      const reponse = await PatientService.getPatientCount();
+      setPatients(reponse.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const getLabReportCount = useCallback(async () => {
+    try {
+      const reponse = await LabReportService.getAllReportCount();
+      setLabReports(reponse.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const getPendingLabReportCount = useCallback(async () => {
+    try {
+      const reponse = await LabReportService.getPendingCount();
+      setPendingLabReports(reponse.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    getDoctorCount();
+    getPatientCount();
+    getLabReportCount();
+    getPendingLabReportCount();
+  }, [
+    getDoctorCount,
+    getPatientCount,
+    getLabReportCount,
+    getPendingLabReportCount,
+  ]);
+
   return (
     <Box>
       <Box
@@ -46,7 +100,7 @@ const Banner = () => {
               />
             </div>
             <div>
-              <Typography sx={{ fontWeight: "800" }}>128</Typography>
+              <Typography sx={{ fontWeight: "800" }}>{doctors}</Typography>
               <p>Doctors</p>
             </div>
           </Box>
@@ -71,7 +125,7 @@ const Banner = () => {
               />
             </div>
             <div>
-              <Typography sx={{ fontWeight: "800" }}>155</Typography>
+              <Typography sx={{ fontWeight: "800" }}>{patients}</Typography>
               <p>Patients</p>
             </div>
           </Box>
@@ -96,8 +150,8 @@ const Banner = () => {
               />
             </div>
             <div>
-              <Typography sx={{ fontWeight: "800" }}>452</Typography>
-              <p> Lab reports(12)</p>
+              <Typography sx={{ fontWeight: "800" }}>{labReports}</Typography>
+              <p> Lab reports({pendingLabReports})</p>
             </div>
           </Box>
         </Paper>
