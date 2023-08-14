@@ -3,7 +3,6 @@ import {
   Button,
   FormControl,
   Grid,
-  InputLabel,
   MenuItem,
   Select,
   TextField,

@@ -44,6 +44,12 @@ class DoctorService {
       path: `/doctor/availableDoctors`,
     });
   }
+
+  static async getDoctorCount() {
+    return await get({
+      path: `/doctor/allDoctorsCount`,
+    });
+  }
 }
 
 export default DoctorService;

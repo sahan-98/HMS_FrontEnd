@@ -9,6 +9,10 @@ class PatientService {
     return await get({ path: `/patient` });
   }
 
+  static async getPatientCount() {
+    return await get({ path: `/patient/getAllCountPatient` });
+  }
+
   static async newPatient({ patient }) {
     return await post({ path: `/patient/add`, data: patient });
   }
