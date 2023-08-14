@@ -224,7 +224,7 @@ const ViewAppointments = () => {
       <LabReport
         open={labReportOpen}
         setOpen={setLabReportOpen}
-        data={labReportToShow}
+        data={{ ...labReportToShow, doctorName: doctor.name }}
       />
       <div
         style={{

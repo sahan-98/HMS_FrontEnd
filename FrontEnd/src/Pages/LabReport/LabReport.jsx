@@ -1,18 +1,62 @@
-import { Box, Button, Grid, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import CustomModal from "../../components/CustomModal/CustomModal";
 import PropTypes from "prop-types";
+import { useCallback, useEffect, useState } from "react";
+import PatientService from "../../app/services/patient-service";
+import LabAssistantService from "../../app/services/lab-assistant-service";
 
 const LabReport = ({ open, setOpen, data }) => {
+  const [patient, setPatient] = useState({});
+  const [labAssistants, setLabAssistants] = useState([]);
+  const [selectedLabAssistant, setSelectedLabAssistant] =
+    useState("NO_SELECTION");
+
+  const fetchPatient = useCallback(async () => {
+    const patient = await PatientService.gePatientById({
+      patientId: data.patientid,
+    });
+    setPatient(patient?.data);
+  }, [data]);
+
+  const fetchLabAssistants = useCallback(async () => {
+    const labAssistants = await LabAssistantService.getAllLabAssistants();
+    setLabAssistants(labAssistants?.data);
+  }, []);
+
+  useEffect(() => {
+    fetchPatient();
+    fetchLabAssistants();
+  }, [fetchPatient, fetchLabAssistants]);
+
+  const handleLabAssistantChange = useCallback((e) => {
+    setSelectedLabAssistant(e.target.value);
+  }, []);
+
   return (
     <CustomModal open={open}>
       <h2>Assign Lab Task</h2>
 
       <Grid container my={1}>
         <Grid item xs={12} sm={4}>
-          Doctor name
+          Doctor
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField variant="outlined" fullWidth size="small" />
+          <TextField
+            variant="outlined"
+            value={data.doctorName}
+            fullWidth
+            size="small"
+            disabled
+          />
         </Grid>
       </Grid>
 
@@ -21,7 +65,22 @@ const LabReport = ({ open, setOpen, data }) => {
           Lab assistant
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField variant="outlined" fullWidth size="small" />
+          <FormControl fullWidth sx={{ textAlign: "start" }}>
+            <Select
+              value={selectedLabAssistant ? selectedLabAssistant : ""}
+              onChange={handleLabAssistantChange}
+              size="small"
+            >
+              <MenuItem value={"NO_SELECTION"}>Please select</MenuItem>
+              {labAssistants.map((labAssistant, index) => {
+                return (
+                  <MenuItem value={labAssistant?._id} key={index}>
+                    {labAssistant?.firstname} {labAssistant?.lastname}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
         </Grid>
       </Grid>
 
@@ -30,7 +89,13 @@ const LabReport = ({ open, setOpen, data }) => {
           Patient name
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField variant="outlined" fullWidth size="small" />
+          <TextField
+            variant="outlined"
+            fullWidth
+            size="small"
+            value={patient?.firstname + " " + patient?.lastname}
+            disabled
+          />
         </Grid>
       </Grid>
 
@@ -39,7 +104,13 @@ const LabReport = ({ open, setOpen, data }) => {
           Contact Email
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField variant="outlined" fullWidth size="small" />
+          <TextField
+            variant="outlined"
+            fullWidth
+            size="small"
+            value={patient?.email}
+            disabled
+          />
         </Grid>
       </Grid>
 

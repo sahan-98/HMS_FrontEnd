@@ -1,7 +1,7 @@
 import { del, get, post, put } from "../api-manager";
 
 class PatientService {
-  static async gePatientsById({ patientId }) {
+  static async gePatientById({ patientId }) {
     return await get({ path: `/patient/${patientId}` });
   }
 
