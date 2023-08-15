@@ -5,6 +5,7 @@ import loginReducer from "../reducers/loginSlice";
 import patientReducer from "../reducers/patientSlice";
 import doctorReducer from "../reducers/doctorSlice";
 import placeAppointmentReducer from "../reducers/placeAppointmentSlice";
+import labAssistantReducer from "../reducers/labAssistantSlice";
 
 const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
     patient: patientReducer,
     doctor: doctorReducer,
     placeAppointment: placeAppointmentReducer,
+    labAssistant: labAssistantReducer,
   },
 });
 

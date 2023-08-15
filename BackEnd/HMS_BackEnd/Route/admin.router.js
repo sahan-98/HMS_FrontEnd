@@ -151,5 +151,4 @@ userRoutes.get("/", async (req, res) => {
     .sort({ updatedAt: 1 });
 });
 
-
 module.exports = userRoutes;
