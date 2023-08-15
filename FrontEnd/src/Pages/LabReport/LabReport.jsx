@@ -104,7 +104,9 @@ const LabReport = ({ open, setOpen, data }) => {
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth sx={{ textAlign: "start" }}>
             <Select
-              value={selectedLabAssistant ? selectedLabAssistant : ""}
+              value={
+                selectedLabAssistant ? selectedLabAssistant : "NO_SELECTION"
+              }
               onChange={handleLabAssistantChange}
               size="small"
             >

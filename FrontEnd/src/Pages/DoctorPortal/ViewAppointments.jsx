@@ -93,19 +93,21 @@ const dayNames = {
 };
 
 const StyledButton = styled(Button)(
-  ({ btnColor }) => `
+  `
 border-radius: 7px;
 border: 1px solid #DEDEDE;
-background:${btnColor ? btnColor : "#59C169"}; 
 color: #fff;
 min-width: 30px;
 font-size: 10px;
 font-weight: 600;
 padding: 5px 10px;
-:hover {
-  background: ${btnColor ? btnColor : "#59C169"}; ;
-}
-`
+`,
+  ({ btnColor }) => ({
+    background: btnColor ? btnColor : "#59C169",
+    "&:hover": {
+      background: btnColor ? btnColor : "#59C169",
+    },
+  })
 );
 
 const ViewAppointments = () => {

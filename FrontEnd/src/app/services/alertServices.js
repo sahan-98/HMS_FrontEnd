@@ -1,5 +1,5 @@
 import { hideAlert, showAlert } from "../../reducers/alertSlice";
-import store from "../store";
+import { store } from "../store";
 
 export const showSystemAlert = (message, severity) => {
   store.dispatch(

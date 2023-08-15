@@ -11,7 +11,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import Header from "../../components/Header/Header";
 import Layout from "../../components/PortalLayout/Layout";
 import { Search } from "@mui/icons-material";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import LabReportService from "../../app/services/lab-report-service";
 import { useSelector } from "react-redux";
 
@@ -111,6 +111,11 @@ const ViewAssignments = () => {
 
   const rows = [];
   const [selectedType, setSelectedType] = useState("pending");
+
+  useEffect(() => {
+    loadLabTasks();
+  }, [loadLabTasks]);
+
   return (
     <Layout>
       <Header />

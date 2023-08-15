@@ -35,14 +35,15 @@ const Landing = () => {
           gap: "6rem",
         }}
       >
-        <PatientChoiseCard onClick={handleCDClick}>
-          <img src={doctor} alt="doctor" />
-          <h4>Channel doctor</h4>
-        </PatientChoiseCard>
         <PatientChoiseCard onClick={handleHDPCardClick}>
           <img src={heart} alt="check heart disease" />
           <h4>Check Heart Disease</h4>
         </PatientChoiseCard>
+        <PatientChoiseCard onClick={handleCDClick}>
+          <img src={doctor} alt="doctor" />
+          <h4>Channel doctor</h4>
+        </PatientChoiseCard>
+
         <PatientChoiseCard onClick={handleAppointmentsClick}>
           <img
             src={appointment}
