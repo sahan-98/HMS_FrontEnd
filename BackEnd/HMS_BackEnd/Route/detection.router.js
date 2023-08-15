@@ -39,7 +39,7 @@ detectionRoutes.post("/add", async (req, res) => {
       console.log("====================================");
 
       const newdetection = new detection({
-        patientId: req.body.patientId,
+        patientid: req.body.patientid,
         label: flaskRes.data.prediction,
       });
 
@@ -70,12 +70,67 @@ detectionRoutes.post("/add", async (req, res) => {
 });
 
 
+//estimate bed stay days
+// detectionRoutes.post("/stayDays", async (req, res) => {
+
+//   await axios
+//     .post(`http://127.0.0.1:5001/predict`, {
+//       Available_Extra_Rooms_in_Hospital: req.body.Available_Extra_Rooms_in_Hospital,
+//       staff_available: req.body.staff_available,
+//       Visitors_with_Patient: req.body.Visitors_with_Patient,
+//       Admission_Deposit: req.body.Admission_Deposit,
+//       Ward_Facility_Code_B: req.body.Ward_Facility_Code_B,
+//       Ward_Facility_Code_C: req.body.Ward_Facility_Code_C,
+//       Ward_Facility_Code_D: req.body.Ward_Facility_Code_D,
+//       Ward_Facility_Code_E: req.body.Ward_Facility_Code_E,
+//       Ward_Facility_Code_F: req.body.Ward_Facility_Code_F,
+//       Age_20_Nov: req.body.Age_20_Nov,
+//       Age_21_30: req.body.Age_21_30,
+//       Age_31_40: req.body.Age_31_40,
+//       Age_41_50: req.body.Age_41_50,
+//       Age_51_60: req.body.Age_51_60,
+//       Age_61_70: req.body.Age_61_70,
+//       Age_71_80: req.body.Age_71_80,
+//       Age_81_90: req.body.Age_81_90,
+//       Age_91_100: req.body.Age_91_100,
+//       gender_Male: req.body.gender_Male,
+//       gender_Other: req.body.gender_Other,
+//       Type_of_Admission_Trauma: req.body.Type_of_Admission_Trauma,
+//       Type_of_Admission_Urgent: req.body.Type_of_Admission_Urgent,
+//       Severity_of_Illness_Minor: req.body.Severity_of_Illness_Minor,
+//       Severity_of_Illness_Moderate: req.body.Severity_of_Illness_Moderate,
+//       Insurance_Yes: req.body.Insurance_Yes,
+//     })
+//     .then(async (flaskRes) => {
+//       console.log("==========Flask Response is============");
+//       console.log(flaskRes);
+//       console.log("====================================");
+
+//       const newdetection = new detection({
+//         patientid: req.body.patientid,
+//         label: flaskRes.data.prediction,
+//       });
+
+//       await newdetection
+//         .save()
+//         .catch((error) => {
+//           console.log(error);
+//           return res.status(500).send({ error: error.message });
+//         });
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       return res.status(400).json("Error " + err);
+//     });
+// });
+
+
 // get events list by a host
 detectionRoutes.get("/patient/:key", async (req, res) => {
   try {
     let key = req.params.key;
     console.log(key);
-    let detectionData = await detection.find({ patientId: key }).sort({
+    let detectionData = await detection.find({ patientid: key }).sort({
       updatedAt: -1,
     });
     if (!detectionData) {
