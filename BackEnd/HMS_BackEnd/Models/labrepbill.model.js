@@ -28,6 +28,9 @@ let labRepBill = new Schema(
   },
   {
     collection: "labRepBill",
+  },
+  {
+    timestamps: true,
   }
 );
 

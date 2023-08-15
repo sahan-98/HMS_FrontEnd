@@ -17,12 +17,10 @@ const labReportRoute = require("./Route/labReports.router.js");
 const doctorRoute = require("./Route/doctor.route.js");
 const labAssistantRoute = require("./Route/labAssistants.router.js");
 const bedRoute = require("./Route/bed.router.js");
-const prediction = require("./Route/detection.router.js")
-const appoiment = require("./Route/appointment.router.js")
-const labReportBills = require("./Route/labReportsBill.router.js")
-const bedBills = require("./Route/bedbill.router.js")
-
-
+const prediction = require("./Route/detection.router.js");
+const appoiment = require("./Route/appointment.router.js");
+const labReportBills = require("./Route/labReportsBill.router.js");
+const bedBills = require("./Route/bedbill.router.js");
 
 mongoose.Promise = global.Promise;
 mongoose

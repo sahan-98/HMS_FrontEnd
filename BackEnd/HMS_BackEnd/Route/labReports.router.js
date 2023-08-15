@@ -4,6 +4,7 @@ const labReportsRoutes = express.Router();
 
 let LabReport = require("../Models/labReport.model");
 let labRepBill = require("../Models/labrepbill.model");
+let Appointment = require("../Models/appoinmentbill.model");
 
 //Add Lab Report
 
@@ -13,6 +14,7 @@ labReportsRoutes.post("/add", async (req, res) => {
     doctorid,
     labAssistantid,
     patientid,
+    appointmentId,
     LDL,
     HDL,
     TotalCholesterol,
@@ -47,6 +49,10 @@ labReportsRoutes.post("/add", async (req, res) => {
     await newLabReport1
       .save()
       .then(async (respond) => {
+        const appoiment = await Appointment.findById(appointmentId);
+        console.log(appoiment);
+        appoiment.labReportid = respond._id;
+        await appoiment.save();
         //add report bill
 
         const newLabBill = new labRepBill({
@@ -93,6 +99,11 @@ labReportsRoutes.post("/add", async (req, res) => {
     await newLabReport2
       .save()
       .then(async (respond) => {
+        const appoiment = await Appointment.findById(appointmentId);
+        console.log(appoiment);
+        appoiment.labReportid = respond._id;
+        await appoiment.save();
+
         //add report bill
         const newLabBill = new labRepBill({
           patientid,
@@ -226,6 +237,77 @@ labReportsRoutes.route("/:id").get(async function (req, res) {
     return res.status(500).json({ message: "Server Error" });
   }
 });
+
+// get lab report
+labReportsRoutes
+  .route("/get-by-lab-assistant/:labAssistantId")
+  .get(async function (req, res) {
+    try {
+      let labAssistantId = req.params.labAssistantId;
+
+      let labReport = await LabReport.aggregate([
+        {
+          $match: {
+            labAssistantid: labAssistantId,
+          },
+        },
+        {
+          $lookup: {
+            from: "doctors",
+            localField: "doctorid",
+            foreignField: "doctorid",
+            as: "doctor",
+          },
+        },
+        {
+          $unwind: "$doctor",
+        },
+        { $addFields: { labAssistantid: { $toObjectId: "$labAssistantid" } } },
+        {
+          $lookup: {
+            from: "labassistants",
+            localField: "labAssistantid",
+            foreignField: "_id",
+            as: "labAssistant",
+          },
+        },
+        {
+          $unwind: "$labAssistant",
+        },
+        { $addFields: { patientid: { $toObjectId: "$patientid" } } },
+        {
+          $lookup: {
+            from: "Paitent",
+            localField: "patientid",
+            foreignField: "_id",
+            as: "patient",
+          },
+        },
+        {
+          $unwind: "$patient",
+        },
+        {
+          $project: {
+            "doctor.password": 0,
+            "labAssistant.password": 0,
+            "patient.password": 0,
+          },
+        },
+      ]);
+
+      if (!labReport) {
+        console.log("err");
+        return res.status(400).json({ message: err });
+      } else {
+        // Return the organizer and associated events
+        return res.status(200).json({ success: true, data: labReport });
+      }
+    } catch (error) {
+      console.error(error);
+
+      return res.status(500).json({ message: "Server Error" });
+    }
+  });
 
 labReportsRoutes.get("/", async (req, res) => {
   try {

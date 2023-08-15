@@ -42,6 +42,9 @@ let bedAllocation = new Schema(
   },
   {
     collection: "bedAllocation",
+  },
+  {
+    timestamps: true,
   }
 );
 
