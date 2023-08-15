@@ -31,6 +31,12 @@ class PatientService {
   static async login({ userName, password }) {
     return await post({ path: `/patient/login`, data: { userName, password } });
   }
+  static async logout({ patientId }) {
+    return await post({
+      path: `/patient/logout`,
+      data: { id: patientId },
+    });
+  }
 }
 
 export default PatientService;

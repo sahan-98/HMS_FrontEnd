@@ -190,14 +190,14 @@ const ViewAppointments = () => {
     console.log("logout");
     try {
       const logoutResponse = await DoctorService.logout({
-        doctorId: doctor.doctorid,
+        doctorid: doctor._id,
       });
       console.log(logoutResponse);
       const { message } = logoutResponse;
       if (message === "Logout successful") {
         dispatch(logout());
         showSystemAlert("You have successfully logged out", "success");
-        navigate("/login");
+        navigate("/doctor-login");
       }
     } catch (error) {
       console.log(error);

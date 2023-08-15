@@ -1,4 +1,3 @@
-import BlueAcentCard from "../../components/BlueAcentCard/BlueAcentCardLogin";
 import {
   Box,
   Button,
@@ -10,21 +9,19 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import Header from "../../components/Header/Header";
-import HeadingText from "../../components/HeadingText/HeadingText";
-import Layout from "../PatientPortal/Layout";
-import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { showSystemAlert } from "../../app/services/alertServices";
-import PatientService from "../../app/services/patient-service";
-import Calender from "../Shared/Calender/Calender";
+import { DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers";
-import { Container } from "@mui/system";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { setPatient } from "../../reducers/patientSlice";
 import { useNavigate } from "react-router-dom";
+import { showSystemAlert } from "../../app/services/alertServices";
+import PatientService from "../../app/services/patient-service";
+import Header from "../../components/Header/Header";
+import HeadingText from "../../components/HeadingText/HeadingText";
+import { setPatient } from "../../reducers/patientSlice";
+import Layout from "../PatientPortal/Layout";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;

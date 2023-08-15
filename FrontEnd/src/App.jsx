@@ -95,7 +95,7 @@ function App() {
             />
           </Route>
           {/* NESTED ROUTING APPLIED */}
-          <Route path="/admin" element={<Dashboard />}>
+          <Route path="/" element={<Dashboard />}>
             <Route index element={<Home></Home>} />
             <Route path="doctors" element={<PatientViewDoctor />} />
             <Route path="addDoctor" element={<AddDoctor />} />

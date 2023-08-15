@@ -14,7 +14,7 @@ class LabReportService {
   }
 
   static async updateLabReport({ reportId, data }) {
-    return await post({ path: `/report/${reportId}`, data });
+    return await post({ path: `/report/updateResult/${reportId}`, data });
   }
 
   static async getLabReport({ reportId }) {

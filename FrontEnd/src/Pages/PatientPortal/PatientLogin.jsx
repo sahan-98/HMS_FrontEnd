@@ -1,7 +1,7 @@
 import BlueAcentCard from "../../components/BlueAcentCard/BlueAcentCardLogin";
 
 import Layout from "../PatientPortal/Layout";
-import { Button, TextField, styled } from "@mui/material";
+import { Button, Divider, TextField, styled } from "@mui/material";
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HeadingText from "../../components/HeadingText/HeadingText";
@@ -106,8 +106,22 @@ const PatientLogin = () => {
             error={passwordError !== null}
             {...(passwordError && { helperText: passwordError })}
           />
-          <StyledButton fullWidth sx={{ my: 4 }} onClick={handleLoginClick}>
+          <StyledButton
+            fullWidth
+            sx={{ my: 2, mt: 3 }}
+            onClick={handleLoginClick}
+          >
             Login
+          </StyledButton>
+          <Divider />
+          <StyledButton
+            fullWidth
+            sx={{ my: 2, mb: 3 }}
+            onClick={() => {
+              navigate("/patient-registration");
+            }}
+          >
+            Register
           </StyledButton>
         </BlueAcentCard>
       </div>

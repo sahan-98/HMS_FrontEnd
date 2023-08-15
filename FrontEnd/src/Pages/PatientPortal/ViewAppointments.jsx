@@ -21,6 +21,7 @@ import PatientService from "../../app/services/patient-service";
 import { logout } from "../../reducers/loginSlice";
 import { useNavigate } from "react-router";
 import { showSystemAlert } from "../../app/services/alertServices";
+import LabReport from "../LabReport/LabReport";
 
 const StyledDiv = styled("div")(
   `
@@ -114,6 +115,8 @@ const ViewAppointments = () => {
   const [selectedType, setSelectedType] = useState("pending");
   const [searchText, setSearchText] = useState("");
   const patientId = useSelector((state) => state.patient._id);
+  const [labReportOpen, setLabReportOpen] = useState(false);
+  const [labReportToShow, setLabReportToShow] = useState({});
 
   const loadAppointments = useCallback(async () => {
     try {
@@ -172,13 +175,19 @@ const ViewAppointments = () => {
       headerAlign: "center",
       disableClickEventBubbling: true,
       renderCell: (params) => {
+        const { appointment } = params.row;
         const onClick = () => {
-          const currentRow = params.row;
-          return alert(JSON.stringify(currentRow, null, 4));
+          setLabReportToShow(appointment);
+          setLabReportOpen(true);
         };
         return (
           <>
-            <StyledButton onClick={onClick}>Lab Report</StyledButton>
+            <StyledButton
+              onClick={onClick}
+              disabled={appointment.labReportid ? false : true}
+            >
+              Lab Report
+            </StyledButton>
           </>
         );
       },
@@ -210,7 +219,7 @@ const ViewAppointments = () => {
       if (message === "Logout successful") {
         dispatch(logout());
         showSystemAlert("You have successfully logged out", "success");
-        navigate("/login");
+        navigate("/patient-login");
       }
     } catch (error) {
       console.log(error);
@@ -221,6 +230,11 @@ const ViewAppointments = () => {
   return (
     <Layout>
       <Header />
+      <LabReport
+        open={labReportOpen}
+        setOpen={setLabReportOpen}
+        data={{ ...labReportToShow }}
+      />
       <div
         style={{
           height: "70vh",

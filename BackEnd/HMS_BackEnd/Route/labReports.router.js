@@ -135,64 +135,40 @@ labReportsRoutes.post("/add", async (req, res) => {
 // Update lab report
 
 labReportsRoutes.post("/updateResult/:id", async (req, res) => {
-  console.log(req.body);
-
-  const { type } = req.body;
-
-  if (type === "Cholesterol report") {
-    try {
-      LabReport.findById(req.params.id)
-        .then(async (labReportObj) => {
-          labReportObj.LDL = req.body.LDL;
-          labReportObj.HDL = req.body.HDL;
-          labReportObj.TotalCholesterol = req.body.TotalCholesterol;
-          labReportObj.Triglycerides = req.body.Triglycerides;
-          labReportObj.VLDLlevels = req.body.VLDLlevels;
-          labReportObj.status = "completed";
-
-          await labReportObj
-            .save()
-            .then(() => {
-              return res.status(200).json({ data: labReportObj });
-            })
-            .catch((err) => {
-              console.error(err);
-              return res.status(400).json({ message: err });
-            });
-        })
-        .catch((err) => {
-          console.error(err);
-          res.status(400).json({ message: err });
-        });
-    } catch (error) {
-      console.error(error);
-
-      return res.status(500).json({ message: "Server Error" });
+  try {
+    const {
+      LDL,
+      HDL,
+      TotalCholesterol,
+      Triglycerides,
+      VLDLlevels,
+      WBCcount,
+      RBCcount,
+      platelets,
+      hemoglobin,
+      hematocrit,
+    } = req.body;
+    const labreport = await LabReport.findById(req.params.id);
+    if (labreport.type === "Cholesterol report") {
+      labreport.LDL = LDL;
+      labreport.HDL = HDL;
+      labreport.TotalCholesterol = TotalCholesterol;
+      labreport.Triglycerides = Triglycerides;
+      labreport.VLDLlevels = VLDLlevels;
+      labreport.status = "completed";
+    } else if (labreport.type === "Full Blood Count report") {
+      labreport.WBCcount = WBCcount;
+      labreport.RBCcount = RBCcount;
+      labreport.platelets = platelets;
+      labreport.hemoglobin = hemoglobin;
+      labreport.hematocrit = hematocrit;
+      labreport.status = "completed";
     }
-  } else if (type === "Full Blood Count report") {
-    try {
-      LabReport.find(req.params.id)
-        .then(async (labReportObj) => {
-          labReportObj.WBCcount = req.body.WBCcount;
-          labReportObj.RBCcount = req.body.RBCcount;
-          labReportObj.platelets = req.body.platelets;
-          labReportObj.hemoglobin = req.body.hemoglobin;
-          labReportObj.hematocrit = req.body.hematocrit;
-          labReportObj.status = "completed";
-
-          await labReportObj
-            .save()
-            .then(() => {
-              return res.status(200).json("Updated");
-            })
-            .catch((err) => res.status(400).json({ message: err }));
-        })
-        .catch((err) => res.status(400).json({ message: err }));
-    } catch (error) {
-      console.error(error);
-
-      return res.status(500).json({ message: "Server Error" });
-    }
+    await labreport.save();
+    return res.status(200).json({ data: labreport });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ message: err });
   }
 });
 
