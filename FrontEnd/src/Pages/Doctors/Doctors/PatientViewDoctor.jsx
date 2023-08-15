@@ -66,7 +66,6 @@ export default function PatientViewDoctor() {
               Name
             </TableCell>
             <TableCell align="center">Speciality</TableCell>
-            <TableCell align="center">Available</TableCell>
             <TableCell align="center">Fee</TableCell>
             <TableCell align="center">Phone</TableCell>
             <TableCell align="center">Gender</TableCell>
@@ -83,7 +82,6 @@ export default function PatientViewDoctor() {
                 {doctorData?.name}
               </TableCell>
               <TableCell align="center">{doctorData?.speciality}</TableCell>
-              <TableCell align="center">{doctorData?.availbleTime}</TableCell>
               <TableCell align="center">{doctorData?.fee}</TableCell>
               <TableCell align="center">{doctorData?.phone}</TableCell>
               <TableCell align="center">{doctorData?.gender}</TableCell>
