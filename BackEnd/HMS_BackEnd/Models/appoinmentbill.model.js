@@ -25,7 +25,6 @@ let appoinmentBill = new Schema(
       required: true,
       type: Date,
     },
-
     type: {
       required: true,
       type: String,
