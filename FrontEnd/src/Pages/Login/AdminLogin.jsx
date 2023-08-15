@@ -9,6 +9,7 @@ import HeadingText from "../../components/HeadingText/HeadingText";
 import { login } from "../../reducers/loginSlice";
 import Header from "../PatientPortal/Header";
 import Layout from "../PatientPortal/Layout";
+import UserService from "../../app/services/user-service";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
@@ -51,16 +52,16 @@ const AdminLogin = () => {
     }
 
     try {
-      const doctorLogin = await DoctorService.login({
+      const userLogin = await UserService.login({
         userName: userName,
         password: password,
       });
-      console.log(doctorLogin);
-      const { doctorId } = doctorLogin;
-      if (doctorId) {
+      console.log(userLogin);
+      const { _id } = userLogin.userObj;
+      if (_id) {
         showSystemAlert("You have successfully logged in", "success");
-        dispatch(login({ userId: doctorId }));
-        navigate("/doctor-portal/view-appointments");
+        dispatch(login({ userId: _id }));
+        navigate("/");
       }
     } catch (error) {
       showSystemAlert("Login failed", "error");

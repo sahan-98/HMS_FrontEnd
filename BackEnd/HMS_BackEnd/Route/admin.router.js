@@ -4,19 +4,10 @@ const bcrypt = require("bcrypt");
 const session = require("express-session");
 const auth = require("./Auth");
 const config = require("../configure.js");
-var nodemailer = require("nodemailer");
-const jwt = require("jsonwebtoken");
-var Mailgen = require("mailgen");
+
 require("dotenv").config();
 
 let user = require("../Models/admin.model");
-
-const sgMail = require("@sendgrid/mail");
-sgMail.setApiKey(process.env.SENDGRD_DKEY);
-
-console.log("========key=============");
-console.log(process.env.SENDGRD_DKEY);
-console.log("====================================");
 
 //email configurarion
 // function sendMail(mailOptions) {
@@ -86,7 +77,7 @@ userRoutes.post("/add", async (req, res) => {
 });
 
 // Admin login
-user.post("/login", async (req, res) => {
+userRoutes.post("/login", async (req, res) => {
   const { userName, password } = req.body;
 
   try {
@@ -94,7 +85,7 @@ user.post("/login", async (req, res) => {
     const userObj = await user.findOne({ userName });
     // Check if the admin exists
     if (!userObj) {
-      return res.status(404).json({ message: "Paitent not found" });
+      return res.status(404).json({ message: "User not found" });
     }
     // Compare the entered password with the hashed password in the database
     const isPasswordValid = bcrypt.compare(password, userObj.password);
