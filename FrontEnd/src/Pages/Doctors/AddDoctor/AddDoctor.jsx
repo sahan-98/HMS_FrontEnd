@@ -94,8 +94,6 @@ const AddDoctor = () => {
       setValue("name", doctorToBeEdited.name);
       setValue("email", doctorToBeEdited.email);
       setValue("userName", doctorToBeEdited.userName);
-      setValue("password", doctorToBeEdited.password);
-      setValue("conpass", doctorToBeEdited.conpass);
       setValue("gender", doctorToBeEdited.gender);
       setPersonName([doctorToBeEdited.degree]);
       setValue("speciality", doctorToBeEdited.speciality);
@@ -105,6 +103,13 @@ const AddDoctor = () => {
       setValue("age", doctorToBeEdited.age);
       setValue("fee", doctorToBeEdited.fee);
       setValue("salary", doctorToBeEdited.salary);
+      setValue("sunAvailbleTime", doctorToBeEdited.sunAvailbleTime);
+      setValue("monAvailbleTime", doctorToBeEdited.monAvailbleTime);
+      setValue("tueAvailbleTime", doctorToBeEdited.tueAvailbleTime);
+      setValue("wensAvailbleTime", doctorToBeEdited.wensAvailbleTime);
+      setValue("thusAvailbleTime", doctorToBeEdited.thusAvailbleTime);
+      setValue("friAvailbleTime", doctorToBeEdited.friAvailbleTime);
+      setValue("satAvailbleTime", doctorToBeEdited.satAvailbleTime);
     }
   }, [doctorToBeEdited, setValue]);
 
@@ -400,7 +405,7 @@ const AddDoctor = () => {
             name="availbleTime"
             required
             fullWidth
-            {...register("sunday", {
+            {...register("sunAvailbleTime", {
               // required: {
               //   value: true,
               //   message: "*Availble time is required",
@@ -413,7 +418,7 @@ const AddDoctor = () => {
             name="availbleTime"
             required
             fullWidth
-            {...register("monday", {
+            {...register("monAvailbleTime", {
               // required: {
               //   value: true,
               //   message: "*Availble time is required",
@@ -426,20 +431,32 @@ const AddDoctor = () => {
             name="availbleTime"
             required
             fullWidth
-            {...register("tuesday", {
+            {...register("tueAvailbleTime", {
               // required: {
               //   value: true,
               //   message: "*Availble time is required",
               // },
             })}
           />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Typography variant="OVERLINE TEXT"></Typography>
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          md={8}
+          sx={{ marginLeft: { md: "-5rem" } }}
+          display={"flex"}
+          gap={2}
+        >
           <TextField
             id="standard-basic"
             label="Wednesday"
             name="availbleTime"
             required
             fullWidth
-            {...register("wednesday", {
+            {...register("wensAvailbleTime", {
               // required: {
               //   value: true,
               //   message: "*Availble time is required",
@@ -452,7 +469,7 @@ const AddDoctor = () => {
             name="availbleTime"
             required
             fullWidth
-            {...register("thursday", {
+            {...register("thusAvailbleTime", {
               // required: {
               //   value: true,
               //   message: "*Availble time is required",
@@ -465,7 +482,7 @@ const AddDoctor = () => {
             name="availbleTime"
             required
             fullWidth
-            {...register("friday", {
+            {...register("friAvailbleTime", {
               // required: {
               //   value: true,
               //   message: "*Availble time is required",
@@ -478,7 +495,7 @@ const AddDoctor = () => {
             name="availbleTime"
             required
             fullWidth
-            {...register("saturday", {
+            {...register("satAvailbleTime", {
               // required: {
               //   value: true,
               //   message: "*Availble time is required",
