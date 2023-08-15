@@ -19,7 +19,6 @@ let appoinmentBill = new Schema(
       type: String,
     },
     labReportid: {
-      required: true,
       type: String,
     },
     bookingDate: {
@@ -27,7 +26,6 @@ let appoinmentBill = new Schema(
       type: Date,
     },
     doctorAvailability: {
-      required: true,
       type: String,
     },
     type: {

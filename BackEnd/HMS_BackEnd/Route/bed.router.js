@@ -25,6 +25,13 @@ bedRoutes.post("/add", async (req, res) => {
     bedFee,
   } = req.body;
 
+  const exist = await Bed.findOne({ patientid: patientid });
+  if (exist) {
+    return res
+      .status(202)
+      .json({ warn: "A bed is Exist with this patient Id" });
+  }
+
   if (bedNo == "" || wardNo == "" || bedFee == "")
     return res.status(202).json({ warn: "Important field(s) are empty" });
 
@@ -52,8 +59,18 @@ bedRoutes.post("/add", async (req, res) => {
 // bed manual allocate
 bedRoutes.post("/allocateBed/:id", async (req, res) => {
   console.log(req.body);
-
   try {
+
+    const {
+      patientid,
+    } = req.body;
+
+    const exist = await Bed.findOne({ patientid: patientid });
+  if (exist) {
+    return res
+      .status(202)
+      .json({ warn: "A bed is Exist with this patientId" });
+  }
     Bed.findById(req.params.id)
       .then((bedObj) => {
         bedObj.patientid = req.body.patientid;
@@ -149,6 +166,31 @@ bedRoutes.route("/releaseBed/:id").post(async function (req, res) {
     return res.status(500).json({ message: "Server Error" });
   }
 });
+
+
+// get patient for bed details
+bedRoutes.get("/allocateBed/:id", async (req, res) => {
+  await Bed.find({ patientid: req.params.id })
+    .then((data) => {
+      return res.status(200).send({ data: data });
+    })
+    .catch((error) => {
+      return res.status(500).send({ error: error.message });
+    });
+});
+
+//get extra bed count
+bedRoutes.get("/availableBedCount", async (req, res) => {
+  try {
+    const availbleBedCount = await Bed.find({ availability: "true" });
+    return res.status(200).json({ success: true, count: availbleBedCount.length });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server Error" });
+  }
+});
+
+
 
 bedRoutes.get("/", async (req, res) => {
   try {
