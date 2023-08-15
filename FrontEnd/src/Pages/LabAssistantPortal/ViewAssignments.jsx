@@ -11,7 +11,9 @@ import { DataGrid } from "@mui/x-data-grid";
 import Header from "../../components/Header/Header";
 import Layout from "../../components/PortalLayout/Layout";
 import { Search } from "@mui/icons-material";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import LabReportService from "../../app/services/lab-report-service";
+import { useSelector } from "react-redux";
 
 const StyledDiv = styled("div")(
   `
@@ -73,6 +75,8 @@ const StyledTextField = styled(TextField)({
 });
 
 const ViewAssignments = () => {
+  const [labTasks, setLabTasks] = useState([]);
+
   const columns = [
     { field: "id", headerName: "Id", width: 150 },
     { field: "firstName", headerName: "First name", width: 150 },
@@ -89,17 +93,23 @@ const ViewAssignments = () => {
     },
   ];
 
-  const rows = [
-    { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-    { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-    { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-    { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-  ];
+  const labAssistant = useSelector((state) => state.labAssistant);
+
+  const loadLabTasks = useCallback(async () => {
+    try {
+      let labTasks = await LabReportService.getLabReportByLabAssistantId({
+        labAssistantId: labAssistant._id,
+      });
+      labTasks = labTasks?.data.map((labTask, index) => ({
+        id: index + 1,
+      }));
+      setLabTasks(labTasks);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [labAssistant]);
+
+  const rows = [];
   const [selectedType, setSelectedType] = useState("pending");
   return (
     <Layout>

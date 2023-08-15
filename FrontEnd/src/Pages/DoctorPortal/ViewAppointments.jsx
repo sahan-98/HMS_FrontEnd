@@ -145,14 +145,20 @@ const ViewAppointments = () => {
       headerAlign: "center",
       disableClickEventBubbling: true,
       renderCell: (params) => {
+        const { appointment } = params.row;
         const onClick = () => {
-          const { appointment } = params.row;
           setLabReportToShow(appointment);
           setLabReportOpen(true);
         };
         return (
           <>
-            <StyledButton onClick={onClick}>Assign Lab task</StyledButton>
+            {appointment.labReportid ? (
+              <StyledButton onClick={onClick} btnColor={"#3E84E3"}>
+                View Lab Report
+              </StyledButton>
+            ) : (
+              <StyledButton onClick={onClick}>Assign Lab task</StyledButton>
+            )}
           </>
         );
       },
@@ -198,8 +204,10 @@ const ViewAppointments = () => {
   }, [doctor, dispatch, navigate]);
 
   useEffect(() => {
-    loadAppointments();
-  }, [loadAppointments]);
+    if (!labReportOpen) {
+      loadAppointments();
+    }
+  }, [loadAppointments, labReportOpen]);
 
   let filteredAppointments = [...appointments];
   if (searchText.length > 0) {

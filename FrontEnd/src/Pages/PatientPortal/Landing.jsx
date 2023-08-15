@@ -2,6 +2,7 @@ import Layout from "./Layout";
 import PatientChoiseCard from "./PatientChoiseCard";
 import doctor from "../../assets/images/doctor.png";
 import heart from "../../assets/images/heart.png";
+import bill from "../../assets/images/bill.png";
 import appointment from "../../assets/images/appointment.png";
 import Header from "./Header";
 import { useCallback } from "react";
@@ -50,6 +51,15 @@ const Landing = () => {
             style={{ marginTop: "8px" }}
           />
           <h4>View Appointments</h4>
+        </PatientChoiseCard>
+        <PatientChoiseCard onClick={handleAppointmentsClick}>
+          <img
+            src={bill}
+            alt="appointments"
+            width="100px"
+            style={{ marginTop: "3px" }}
+          />
+          <h4>View Bills</h4>
         </PatientChoiseCard>
       </div>
     </Layout>

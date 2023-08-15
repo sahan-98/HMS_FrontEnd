@@ -42,6 +42,7 @@ const LabReport = ({ open, setOpen, data }) => {
     try {
       const response = await LabReportService.newLabReport({
         data: {
+          appointmentId: data._id,
           type: labReportType,
           doctorid: data.doctorid,
           labAssistantid: selectedLabAssistant,
@@ -52,6 +53,11 @@ const LabReport = ({ open, setOpen, data }) => {
           TotalCholesterol: "",
           Triglycerides: "",
           VLDLlevels: "",
+          WBCcount: "",
+          RBCcount: "",
+          platelets: "",
+          hemoglobin: "",
+          hematocrit: "",
         },
       });
       console.log(response);
@@ -126,7 +132,6 @@ const LabReport = ({ open, setOpen, data }) => {
               onChange={handleLabReportTypeChange}
               size="small"
             >
-              <MenuItem value={"NO_SELECTION"}>Please select</MenuItem>
               <MenuItem value={"Full Blood Count report"}>
                 Full Blood Count report
               </MenuItem>
@@ -167,51 +172,98 @@ const LabReport = ({ open, setOpen, data }) => {
           />
         </Grid>
       </Grid>
+      {labReportType === "Full Blood Count report" ? (
+        <>
+          <Grid container my={1.5}>
+            <Grid item xs={12} sm={4}>
+              LDL
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField variant="outlined" fullWidth size="small" disabled />
+            </Grid>
+          </Grid>
 
-      <Grid container my={1.5}>
-        <Grid item xs={12} sm={4}>
-          LDL
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField variant="outlined" fullWidth size="small" disabled />
-        </Grid>
-      </Grid>
+          <Grid container my={1.5}>
+            <Grid item xs={12} sm={4}>
+              HDL
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField variant="outlined" fullWidth size="small" disabled />
+            </Grid>
+          </Grid>
 
-      <Grid container my={1.5}>
-        <Grid item xs={12} sm={4}>
-          HDL
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField variant="outlined" fullWidth size="small" disabled />
-        </Grid>
-      </Grid>
+          <Grid container my={1.5}>
+            <Grid item xs={12} sm={4}>
+              TotalCholesterol
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField variant="outlined" fullWidth size="small" disabled />
+            </Grid>
+          </Grid>
 
-      <Grid container my={1.5}>
-        <Grid item xs={12} sm={4}>
-          TotalCholesterol
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField variant="outlined" fullWidth size="small" disabled />
-        </Grid>
-      </Grid>
+          <Grid container my={1.5}>
+            <Grid item xs={12} sm={4}>
+              Triglycerides
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField variant="outlined" fullWidth size="small" disabled />
+            </Grid>
+          </Grid>
 
-      <Grid container my={1.5}>
-        <Grid item xs={12} sm={4}>
-          Triglycerides
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField variant="outlined" fullWidth size="small" disabled />
-        </Grid>
-      </Grid>
+          <Grid container my={1.5}>
+            <Grid item xs={12} sm={4}>
+              VLDLlevels
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField variant="outlined" fullWidth size="small" disabled />
+            </Grid>
+          </Grid>
+        </>
+      ) : (
+        <>
+          <Grid container my={1.5}>
+            <Grid item xs={12} sm={4}>
+              WBCcount
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField variant="outlined" fullWidth size="small" disabled />
+            </Grid>
+          </Grid>
+          <Grid container my={1.5}>
+            <Grid item xs={12} sm={4}>
+              RBCcount
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField variant="outlined" fullWidth size="small" disabled />
+            </Grid>
+          </Grid>
+          <Grid container my={1.5}>
+            <Grid item xs={12} sm={4}>
+              Platelets
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField variant="outlined" fullWidth size="small" disabled />
+            </Grid>
+          </Grid>
+          <Grid container my={1.5}>
+            <Grid item xs={12} sm={4}>
+              Hemoglobin
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField variant="outlined" fullWidth size="small" disabled />
+            </Grid>
+          </Grid>
+          <Grid container my={1.5}>
+            <Grid item xs={12} sm={4}>
+              Hematocrit
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField variant="outlined" fullWidth size="small" disabled />
+            </Grid>
+          </Grid>
+        </>
+      )}
 
-      <Grid container my={1.5}>
-        <Grid item xs={12} sm={4}>
-          VLDLlevels
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField variant="outlined" fullWidth size="small" disabled />
-        </Grid>
-      </Grid>
       <Box display={"flex"} gap={2} justifyContent={"start"} my={2}>
         <Button variant="outlined" fullWidth onClick={() => setOpen(false)}>
           Back

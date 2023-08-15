@@ -179,9 +179,6 @@ const ViewAppointments = () => {
         return (
           <>
             <StyledButton onClick={onClick}>Lab Report</StyledButton>
-            <StyledButton onClick={onClick} btnColor="#ff6c37">
-              Bed Bill
-            </StyledButton>
           </>
         );
       },

@@ -21,6 +21,12 @@ class LabReportService {
     return await get({ path: `/report/${reportId}` });
   }
 
+  static async getLabReportByLabAssistantId({ labAssistantId }) {
+    return await get({
+      path: `/report/get-by-lab-assistant/${labAssistantId}`,
+    });
+  }
+
   static async getAllLabReports() {
     return await get({ path: `/report` });
   }
