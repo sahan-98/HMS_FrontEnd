@@ -15,7 +15,7 @@ let Doctor = require("../Models/doctor.models");
 
 // add a appoiment
 AppointmentRoutes.post("/add", async (req, res) => {
-  const { doctorid, patientid,labReportid, bookingDate, type, doctorAvailability } =
+  const { doctorid, patientid, bookingDate, type, doctorAvailability } =
     req.body;
 
   const doc = await Doctor.findOne({ doctorid: doctorid });
@@ -33,7 +33,6 @@ AppointmentRoutes.post("/add", async (req, res) => {
   const newAppointment = new Appointment({
     doctorid,
     patientid,
-    labReportid,
     bookingDate,
     doctorAvailability,
     type,
@@ -103,7 +102,7 @@ AppointmentRoutes.get("/doctor/:doctorId", async (req, res, next) => {
     const appointments = await Appointment.aggregate([
       {
         $match: {
-          doctorid: "fba5eb15-da3f-4ed6-b763-ac19bf45b45a",
+          doctorid: req.params.doctorId,
         },
       },
     ]);

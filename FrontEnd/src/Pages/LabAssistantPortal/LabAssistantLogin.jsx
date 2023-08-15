@@ -1,28 +1,27 @@
-import BlueAcentCard from "../../components/BlueAcentCard/BlueAcentCardLogin";
-
-import Layout from "../PatientPortal/Layout";
-import { Button, Divider, TextField, styled } from "@mui/material";
+import { Button, TextField, styled } from "@mui/material";
 import { useCallback, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import HeadingText from "../../components/HeadingText/HeadingText";
-import PatientService from "../../app/services/patient-service";
-import { showSystemAlert } from "../../app/services/alertServices";
-import { login } from "../../reducers/loginSlice";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { showSystemAlert } from "../../app/services/alertServices";
+import LabAssistantService from "../../app/services/lab-assistant-service";
+import BlueAcentCard from "../../components/BlueAcentCard/BlueAcentCardLogin";
 import Header from "../../components/Header/Header";
-import { setPatient } from "../../reducers/patientSlice";
+import HeadingText from "../../components/HeadingText/HeadingText";
+import { setLabAssistant } from "../../reducers/labAssistantSlice";
+import { login } from "../../reducers/loginSlice";
+import Layout from "../PatientPortal/Layout";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
 border: 1px solid #DEDEDE;
-background: #59C169;
+background: #59C169; 
 color: #fff;
 :hover {
   background: #68E87D;
 }
 `);
 
-const PatientLogin = () => {
+const LabAssistantLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [userName, setUserName] = useState("");
@@ -53,22 +52,20 @@ const PatientLogin = () => {
     }
 
     try {
-      const loginResponse = await PatientService.login({
+      const labAssistantLogin = await LabAssistantService.login({
         userName: userName,
         password: password,
       });
-      const { patient } = loginResponse;
-      if (patient?.userName) {
+      console.log(labAssistantLogin);
+      const labAssistantId = labAssistantLogin?.labAssistant?._id;
+      if (labAssistantId) {
         showSystemAlert("You have successfully logged in", "success");
-        dispatch(login({ userId: patient?._id }));
-        dispatch(setPatient({ ...patient }));
-        navigate("/patient-portal/landing");
-      } else {
-        throw new Error("Invalid username or password");
+        dispatch(login({ userId: labAssistantId }));
+        dispatch(setLabAssistant({ ...labAssistantLogin.labAssistant }));
+        navigate("/lab-assistant-portal/view-assignments");
       }
     } catch (error) {
       console.log(error);
-      showSystemAlert("Invalid username or password", "error");
     }
   }, [navigate, userName, password, dispatch]);
 
@@ -85,7 +82,7 @@ const PatientLogin = () => {
         }}
       >
         <BlueAcentCard>
-          <HeadingText text="Patient Login" />
+          <HeadingText text="Lab Assistant Login" />
           <TextField
             label="User Name"
             variant="outlined"
@@ -106,22 +103,8 @@ const PatientLogin = () => {
             error={passwordError !== null}
             {...(passwordError && { helperText: passwordError })}
           />
-          <StyledButton
-            fullWidth
-            sx={{ my: 2, mt: 3 }}
-            onClick={handleLoginClick}
-          >
+          <StyledButton fullWidth sx={{ my: 4 }} onClick={handleLoginClick}>
             Login
-          </StyledButton>
-          <Divider />
-          <StyledButton
-            fullWidth
-            sx={{ my: 2, mb: 3 }}
-            onClick={() => {
-              navigate("/patient-registration");
-            }}
-          >
-            Register
           </StyledButton>
         </BlueAcentCard>
       </div>
@@ -129,4 +112,4 @@ const PatientLogin = () => {
   );
 };
 
-export default PatientLogin;
+export default LabAssistantLogin;

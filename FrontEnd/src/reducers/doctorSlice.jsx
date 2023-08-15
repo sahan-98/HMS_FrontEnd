@@ -6,6 +6,7 @@ export const doctorSlice = createSlice({
     _id: "",
     doctorid: "",
     userName: "",
+    name: "",
     firstname: "",
     lastname: "",
     mobile: "",
@@ -26,6 +27,7 @@ export const doctorSlice = createSlice({
       state._id = action.payload._id;
       state.doctorid = action.payload.doctorid;
       state.userName = action.payload.userName;
+      state.name = action.payload.name;
       state.firstname = action.payload.firstname;
       state.lastname = action.payload.lastname;
       state.mobile = action.payload.mobile;
@@ -46,6 +48,7 @@ export const doctorSlice = createSlice({
       state.doctorid = "";
       state.userName = "";
       state.firstname = "";
+      state.name = "";
       state.lastname = "";
       state.mobile = "";
       state.email = "";

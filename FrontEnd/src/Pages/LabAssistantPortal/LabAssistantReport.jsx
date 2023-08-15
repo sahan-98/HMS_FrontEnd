@@ -15,119 +15,85 @@ import LabAssistantService from "../../app/services/lab-assistant-service";
 import LabReportService from "../../app/services/lab-report-service";
 import { showSystemAlert } from "../../app/services/alertServices";
 import { useForm } from "react-hook-form";
-import DoctorService from "../../app/services/doctor-service";
 
-const LabReport = ({ open, setOpen, data }) => {
+const LabAssistantReport = ({ open, setOpen, data }) => {
   const [patient, setPatient] = useState({});
   const [labAssistants, setLabAssistants] = useState([]);
-  const { register, setValue } = useForm({
-    defaultValues: {},
-  });
-  const [doctorName, setDoctorName] = useState("");
-
   const [selectedLabAssistant, setSelectedLabAssistant] =
     useState("NO_SELECTION");
-  const [labReportType, setLabReportType] = useState("Full Blood Count report");
-
-  const fetchPatient = useCallback(async () => {
-    const patient = await PatientService.gePatientById({
-      patientId: data.patientid,
-    });
-    setPatient(patient?.data);
-  }, [data]);
+  const [labReportType, setLabReportType] = useState("");
 
   const fetchLabAssistants = useCallback(async () => {
     const labAssistants = await LabAssistantService.getAllLabAssistants();
     setLabAssistants(labAssistants?.data);
-  }, []);
-
-  const fetchLabReport = useCallback(async () => {
-    let labReport = await LabReportService.getLabReport({
-      reportId: data.labReportid,
-    });
-    labReport = labReport?.data;
-    if (labReport.status === "completed") {
-      setValue("LDL", labReport?.LDL ? labReport?.LDL : "");
-      setValue("HDL", labReport?.HDL ? labReport?.HDL : "");
-      setValue(
-        "TotalCholesterol",
-        labReport?.TotalCholesterol ? labReport?.TotalCholesterol : ""
-      );
-      setValue(
-        "Triglycerides",
-        labReport?.Triglycerides ? labReport?.Triglycerides : ""
-      );
-      setValue(
-        "VLDLlevels",
-        labReport?.VLDLlevels ? labReport?.VLDLlevels : ""
-      );
-      setValue("WBCcount", labReport?.WBCcount ? labReport?.WBCcount : "");
-      setValue("RBCcount", labReport?.RBCcount ? labReport?.RBCcount : "");
-      setValue("platelets", labReport?.platelets ? labReport?.platelets : "");
-      setValue(
-        "hemoglobin",
-        labReport?.hemoglobin ? labReport?.hemoglobin : ""
-      );
-      setValue(
-        "hematocrit",
-        labReport?.hematocrit ? labReport?.hematocrit : ""
-      );
-      setSelectedLabAssistant(labReport?.labAssistantid);
-      setLabReportType(labReport?.type);
-    }
-    let doctor = await DoctorService.getDoctorById({
-      doctorId: data.doctorid,
-    });
-    doctor = doctor?.data;
-    setDoctorName(doctor?.name);
-  }, [data, setValue]);
+    setSelectedLabAssistant(data?.labAssistantid);
+  }, [data]);
 
   const handleLabReportTypeChange = useCallback((e) => {
     setLabReportType(e.target.value);
   }, []);
 
-  const saveLabReport = useCallback(async () => {
+  const { register, handleSubmit, setValue } = useForm({
+    defaultValues: {},
+  });
+
+  const onSubmit = async (submittedData) => {
     try {
-      const response = await LabReportService.newLabReport({
+      const response = await LabReportService.updateLabReport({
+        reportId: data._id,
         data: {
+          ...submittedData,
           appointmentId: data._id,
           type: labReportType,
           doctorid: data.doctorid,
           labAssistantid: selectedLabAssistant,
           patientid: patient?._id,
           contactEmail: patient?.email,
-          LDL: "",
-          HDL: "",
-          TotalCholesterol: "",
-          Triglycerides: "",
-          VLDLlevels: "",
-          WBCcount: "",
-          RBCcount: "",
-          platelets: "",
-          hemoglobin: "",
-          hematocrit: "",
         },
       });
       console.log(response);
       setOpen(false);
-      showSystemAlert("Lab task assigned", "success");
+      showSystemAlert("Lab task completed", "success");
     } catch (error) {
       console.log(error);
       showSystemAlert("An error occured while assigning lab task", "error");
     }
-  }, [patient, data, labReportType, selectedLabAssistant, setOpen]);
+  };
 
   useEffect(() => {
-    fetchPatient();
     fetchLabAssistants();
-    if (data?.labReportid) {
-      fetchLabReport();
-    }
-  }, [fetchPatient, fetchLabAssistants, data, setValue, fetchLabReport]);
 
-  const handleLabAssistantChange = useCallback((e) => {
-    setSelectedLabAssistant(e.target.value);
-  }, []);
+    if (data._id) {
+      setPatient(data?.patient);
+      setLabReportType(data?.type);
+    }
+    if (data.status === "completed") {
+      setValue("LDL", data?.LDL ? data?.LDL : "");
+      setValue("HDL", data?.HDL ? data?.HDL : "");
+      setValue(
+        "TotalCholesterol",
+        data?.TotalCholesterol ? data?.TotalCholesterol : ""
+      );
+      setValue("Triglycerides", data?.Triglycerides ? data?.Triglycerides : "");
+      setValue("VLDLlevels", data?.VLDLlevels ? data?.VLDLlevels : "");
+      setValue("WBCcount", data?.WBCcount ? data?.WBCcount : "");
+      setValue("RBCcount", data?.RBCcount ? data?.RBCcount : "");
+      setValue("platelets", data?.platelets ? data?.platelets : "");
+      setValue("hemoglobin", data?.hemoglobin ? data?.hemoglobin : "");
+      setValue("hematocrit", data?.hematocrit ? data?.hematocrit : "");
+    } else {
+      setValue("LDL", "");
+      setValue("HDL", "");
+      setValue("TotalCholesterol", "");
+      setValue("Triglycerides", "");
+      setValue("VLDLlevels", "");
+      setValue("WBCcount", "");
+      setValue("RBCcount", "");
+      setValue("platelets", "");
+      setValue("hemoglobin", "");
+      setValue("hematocrit", "");
+    }
+  }, [fetchLabAssistants, data, setValue]);
 
   return (
     <CustomModal open={open}>
@@ -140,7 +106,7 @@ const LabReport = ({ open, setOpen, data }) => {
         <Grid item xs={12} sm={6}>
           <TextField
             variant="outlined"
-            value={data.doctorName ? data.doctorName : doctorName}
+            value={data?.doctor ? data?.doctor?.name : ""}
             fullWidth
             size="small"
             disabled
@@ -158,9 +124,8 @@ const LabReport = ({ open, setOpen, data }) => {
               value={
                 selectedLabAssistant ? selectedLabAssistant : "NO_SELECTION"
               }
-              disabled={data?.labReportid}
-              onChange={handleLabAssistantChange}
               size="small"
+              disabled
             >
               <MenuItem value={"NO_SELECTION"}>Please select</MenuItem>
               {labAssistants.map((labAssistant, index) => {
@@ -181,12 +146,7 @@ const LabReport = ({ open, setOpen, data }) => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth sx={{ textAlign: "start" }}>
-            <Select
-              value={labReportType}
-              onChange={handleLabReportTypeChange}
-              size="small"
-              disabled={data?.labReportid}
-            >
+            <Select value={labReportType} size="small" disabled>
               <MenuItem value={"Full Blood Count report"}>
                 Full Blood Count report
               </MenuItem>
@@ -207,7 +167,11 @@ const LabReport = ({ open, setOpen, data }) => {
             variant="outlined"
             fullWidth
             size="small"
-            value={patient?.firstname + " " + patient?.lastname}
+            value={
+              patient?.firstname
+                ? patient?.firstname + " " + patient?.lastname
+                : ""
+            }
             disabled
           />
         </Grid>
@@ -222,7 +186,7 @@ const LabReport = ({ open, setOpen, data }) => {
             variant="outlined"
             fullWidth
             size="small"
-            value={patient?.email}
+            value={patient?.email ? patient?.email : ""}
             disabled
           />
         </Grid>
@@ -244,7 +208,6 @@ const LabReport = ({ open, setOpen, data }) => {
                   //   message: "*Name is required",
                   // },
                 })}
-                disabled
               />
             </Grid>
           </Grid>
@@ -264,7 +227,6 @@ const LabReport = ({ open, setOpen, data }) => {
                   //   message: "*Name is required",
                   // },
                 })}
-                disabled
               />
             </Grid>
           </Grid>
@@ -284,7 +246,6 @@ const LabReport = ({ open, setOpen, data }) => {
                   //   message: "*Name is required",
                   // },
                 })}
-                disabled
               />
             </Grid>
           </Grid>
@@ -304,7 +265,6 @@ const LabReport = ({ open, setOpen, data }) => {
                   //   message: "*Name is required",
                   // },
                 })}
-                disabled
               />
             </Grid>
           </Grid>
@@ -324,7 +284,6 @@ const LabReport = ({ open, setOpen, data }) => {
                   //   message: "*Name is required",
                   // },
                 })}
-                disabled
               />
             </Grid>
           </Grid>
@@ -346,7 +305,6 @@ const LabReport = ({ open, setOpen, data }) => {
                   //   message: "*Name is required",
                   // },
                 })}
-                disabled
               />
             </Grid>
           </Grid>
@@ -365,7 +323,6 @@ const LabReport = ({ open, setOpen, data }) => {
                   //   message: "*Name is required",
                   // },
                 })}
-                disabled
               />
             </Grid>
           </Grid>
@@ -384,7 +341,6 @@ const LabReport = ({ open, setOpen, data }) => {
                   //   message: "*Name is required",
                   // },
                 })}
-                disabled
               />
             </Grid>
           </Grid>
@@ -403,7 +359,6 @@ const LabReport = ({ open, setOpen, data }) => {
                   //   message: "*Name is required",
                   // },
                 })}
-                disabled
               />
             </Grid>
           </Grid>
@@ -422,7 +377,6 @@ const LabReport = ({ open, setOpen, data }) => {
                   //   message: "*Name is required",
                   // },
                 })}
-                disabled
               />
             </Grid>
           </Grid>
@@ -439,8 +393,8 @@ const LabReport = ({ open, setOpen, data }) => {
           sx={{
             boxShadow: "none",
           }}
-          onClick={saveLabReport}
-          disabled={data?.labReportid}
+          disabled={data.status === "completed"}
+          onClick={handleSubmit(onSubmit)}
         >
           Save
         </Button>
@@ -449,9 +403,9 @@ const LabReport = ({ open, setOpen, data }) => {
   );
 };
 
-export default LabReport;
+export default LabAssistantReport;
 
-LabReport.propTypes = {
+LabAssistantReport.propTypes = {
   data: PropTypes.object.isRequired,
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,

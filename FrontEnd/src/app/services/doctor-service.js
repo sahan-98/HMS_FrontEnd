@@ -2,7 +2,7 @@ import { del, get, post, put } from "../api-manager";
 
 class DoctorService {
   static async getDoctorById({ doctorId }) {
-    return await get({ path: `/doctor/${doctorId}` });
+    return await get({ path: `/doctor/singleDoctors/${doctorId}` });
   }
 
   static async getAllDoctors() {
@@ -42,6 +42,12 @@ class DoctorService {
   static async getAvailableDoctors() {
     return await get({
       path: `/doctor/availableDoctors`,
+    });
+  }
+
+  static async getDoctorCount() {
+    return await get({
+      path: `/doctor/allDoctorsCount`,
     });
   }
 }

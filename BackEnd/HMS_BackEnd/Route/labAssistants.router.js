@@ -14,10 +14,19 @@ let ErrorLog = require("../Models/errorlog.model");
 // add LabAssistant
 
 LabAssistantRoutes.post("/add", async (req, res) => {
-  const { mobile, userName, password, email, address, dateOfBirth, firstname, lastname, conpass } = req.body;
+  const {
+    mobile,
+    userName,
+    password,
+    email,
+    address,
+    dateOfBirth,
+    firstname,
+    lastname,
+    conpass,
+  } = req.body;
 
-  const salt = await bcrypt.genSalt();
-  const passwordHash = await bcrypt.hash(password, salt);
+  const passwordHash = await bcrypt.hash("lasith", 10);
 
   if (
     mobile == "" ||
@@ -55,8 +64,8 @@ LabAssistantRoutes.post("/add", async (req, res) => {
     userName,
     password: passwordHash,
     email,
-    address, 
-    dateOfBirth, 
+    address,
+    dateOfBirth,
     firstname,
     lastname,
     status: "New",
@@ -72,7 +81,6 @@ LabAssistantRoutes.post("/add", async (req, res) => {
       console.log("error mail:", err);
     });
 });
-
 
 // update LabAssistant
 LabAssistantRoutes.post("/update/:id", async (req, res) => {

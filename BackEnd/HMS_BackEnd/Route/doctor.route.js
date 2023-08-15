@@ -109,7 +109,8 @@ DoctorRoutes.get("/allDoctors", async (req, res) => {
 
 // get single doctor details
 DoctorRoutes.get("/singleDoctors/:id", async (req, res) => {
-  await Doctor.findById(req.params.id)
+  const doctorid = req.params.id;
+  await Doctor.findOne({ doctorid })
     .then((data) => {
       res.status(200).send({ data: data });
     })

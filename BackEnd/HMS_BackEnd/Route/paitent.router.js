@@ -175,7 +175,7 @@ PaitentRoutes.post("/login", async (req, res) => {
 
 //logout
 PaitentRoutes.post("/logout", async (req, res) => {
-  let id = req.params.id;
+  let id = req.body.id;
 
   try {
     // Find the paitent by their ID
@@ -225,7 +225,5 @@ PaitentRoutes.get("/", async (req, res) => {
     return res.status(500).json({ message: "Server Error" });
   }
 });
-
-
 
 module.exports = PaitentRoutes;

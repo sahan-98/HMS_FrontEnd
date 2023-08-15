@@ -1,12 +1,16 @@
 import { del, get, post, put } from "../api-manager";
 
 class PatientService {
-  static async gePatientsById({ patientId }) {
+  static async gePatientById({ patientId }) {
     return await get({ path: `/patient/${patientId}` });
   }
 
   static async getAllPatients() {
     return await get({ path: `/patient` });
+  }
+
+  static async getPatientCount() {
+    return await get({ path: `/patient/getAllCountPatient` });
   }
 
   static async newPatient({ patient }) {
@@ -26,6 +30,12 @@ class PatientService {
 
   static async login({ userName, password }) {
     return await post({ path: `/patient/login`, data: { userName, password } });
+  }
+  static async logout({ patientId }) {
+    return await post({
+      path: `/patient/logout`,
+      data: { id: patientId },
+    });
   }
 }
 

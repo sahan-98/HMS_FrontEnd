@@ -27,19 +27,22 @@ export const AddLabAssistant = () => {
     const formData = {
       ...data,
       dateOfBirth: new Date(date).toLocaleDateString(),
-      age: calculateAge(new Date(date)),
+      age: "25",
     };
     console.log(formData);
+    let response = null;
 
     try {
-      const response = await LabAssistantService.newLabAssistant({
+      response = await LabAssistantService.newLabAssistant({
         labAssistant: formData,
       });
       console.log(response);
       showSystemAlert("Lab assistant profile created", "success");
     } catch (error) {
       showSystemAlert(
-        "An error occurred while creating lab assistant profile",
+        response?.warn
+          ? response?.warn
+          : "An error occurred while creating lab assistant profile",
         "error"
       );
     }

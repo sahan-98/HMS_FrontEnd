@@ -72,7 +72,7 @@ TableRow.propTypes = {
 };
 
 const Step01 = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [specialization, setSpecialization] = useState("");
   const [specializationList, setSpecializationList] = useState([]);

@@ -93,19 +93,21 @@ const dayNames = {
 };
 
 const StyledButton = styled(Button)(
-  ({ btnColor }) => `
+  `
 border-radius: 7px;
 border: 1px solid #DEDEDE;
-background:${btnColor ? btnColor : "#59C169"}; 
 color: #fff;
 min-width: 30px;
 font-size: 10px;
 font-weight: 600;
 padding: 5px 10px;
-:hover {
-  background: ${btnColor ? btnColor : "#59C169"}; ;
-}
-`
+`,
+  ({ btnColor }) => ({
+    background: btnColor ? btnColor : "#59C169",
+    "&:hover": {
+      background: btnColor ? btnColor : "#59C169",
+    },
+  })
 );
 
 const ViewAppointments = () => {
@@ -145,14 +147,20 @@ const ViewAppointments = () => {
       headerAlign: "center",
       disableClickEventBubbling: true,
       renderCell: (params) => {
+        const { appointment } = params.row;
         const onClick = () => {
-          const { appointment } = params.row;
           setLabReportToShow(appointment);
           setLabReportOpen(true);
         };
         return (
           <>
-            <StyledButton onClick={onClick}>Assign Lab task</StyledButton>
+            {appointment.labReportid ? (
+              <StyledButton onClick={onClick} btnColor={"#3E84E3"}>
+                View Lab Report
+              </StyledButton>
+            ) : (
+              <StyledButton onClick={onClick}>Assign Lab task</StyledButton>
+            )}
           </>
         );
       },
@@ -182,14 +190,14 @@ const ViewAppointments = () => {
     console.log("logout");
     try {
       const logoutResponse = await DoctorService.logout({
-        doctorId: doctor.doctorid,
+        doctorid: doctor._id,
       });
       console.log(logoutResponse);
       const { message } = logoutResponse;
       if (message === "Logout successful") {
         dispatch(logout());
         showSystemAlert("You have successfully logged out", "success");
-        navigate("/login");
+        navigate("/doctor-login");
       }
     } catch (error) {
       console.log(error);
@@ -198,8 +206,10 @@ const ViewAppointments = () => {
   }, [doctor, dispatch, navigate]);
 
   useEffect(() => {
-    loadAppointments();
-  }, [loadAppointments]);
+    if (!labReportOpen) {
+      loadAppointments();
+    }
+  }, [loadAppointments, labReportOpen]);
 
   let filteredAppointments = [...appointments];
   if (searchText.length > 0) {
@@ -224,7 +234,7 @@ const ViewAppointments = () => {
       <LabReport
         open={labReportOpen}
         setOpen={setLabReportOpen}
-        data={labReportToShow}
+        data={{ ...labReportToShow, doctorName: doctor.name }}
       />
       <div
         style={{

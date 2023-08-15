@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   InputAdornment,
   TextField,
   ToggleButton,
@@ -11,7 +12,10 @@ import { DataGrid } from "@mui/x-data-grid";
 import Header from "../../components/Header/Header";
 import Layout from "../../components/PortalLayout/Layout";
 import { Search } from "@mui/icons-material";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import LabReportService from "../../app/services/lab-report-service";
+import { useSelector } from "react-redux";
+import LabAssistantReport from "./LabAssistantReport";
 
 const StyledDiv = styled("div")(
   `
@@ -72,38 +76,109 @@ const StyledTextField = styled(TextField)({
   },
 });
 
+const StyledButton = styled(Button)(
+  `
+border-radius: 7px;
+border: 1px solid #DEDEDE;
+color: #fff;
+min-width: 30px;
+font-size: 10px;
+font-weight: 600;
+padding: 5px 10px;
+`,
+  ({ btnColor }) => ({
+    background: btnColor ? btnColor : "#59C169",
+    "&:hover": {
+      background: btnColor ? btnColor : "#59C169",
+    },
+  })
+);
+
 const ViewAssignments = () => {
+  const [labTasks, setLabTasks] = useState([]);
+  const [labReportToShow, setLabReportToShow] = useState({});
+  const [labReportOpen, setLabReportOpen] = useState(false);
+
   const columns = [
-    { field: "id", headerName: "Id", width: 150 },
-    { field: "firstName", headerName: "First name", width: 150 },
-    { field: "lastName", headerName: "Last name", width: 150 },
+    { field: "id", headerName: "#", width: 50 },
+    { field: "patientName", headerName: "Patient Name", width: 150 },
+    { field: "date", headerName: "Date", width: 150 },
     {
-      field: "age",
-      headerName: "Age",
+      field: "doctor",
+      headerName: "Doctor",
       width: 150,
     },
     {
-      field: "fullName",
-      headerName: "Full name",
-      width: 150,
+      field: "status",
+      headerName: "Status",
+      width: 100,
+    },
+
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 180,
+      align: "center",
+      headerAlign: "center",
+      disableClickEventBubbling: true,
+      renderCell: (params) => {
+        const { labReport } = params.row;
+        const onClick = () => {
+          setLabReportToShow(labReport);
+          setLabReportOpen(true);
+        };
+        return (
+          <>
+            {labReport.status === "completed" ? (
+              <StyledButton onClick={onClick} btnColor={"#3E84E3"}>
+                View Lab Report
+              </StyledButton>
+            ) : (
+              <StyledButton onClick={onClick}>View Lab task</StyledButton>
+            )}
+          </>
+        );
+      },
     },
   ];
 
-  const rows = [
-    { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-    { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-    { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-    { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-  ];
+  const labAssistant = useSelector((state) => state.labAssistant);
+
+  const loadLabTasks = useCallback(async () => {
+    try {
+      let labTasks = await LabReportService.getLabReportByLabAssistantId({
+        labAssistantId: labAssistant._id,
+      });
+      labTasks = labTasks?.data.map((labTask, index) => ({
+        id: index + 1,
+        patientName: labTask?.patient?.firstname,
+        date: new Date(labTask?.updatedAt).toISOString().split("T")[0],
+        doctor: labTask?.doctor?.name,
+        status: labTask.status,
+        labReport: labTask,
+      }));
+      setLabTasks(labTasks);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [labAssistant]);
+
   const [selectedType, setSelectedType] = useState("pending");
+
+  useEffect(() => {
+    if (!labReportOpen) {
+      loadLabTasks();
+    }
+  }, [loadLabTasks, labReportOpen]);
+
   return (
     <Layout>
       <Header />
+      <LabAssistantReport
+        open={labReportOpen}
+        setOpen={setLabReportOpen}
+        data={labReportToShow}
+      />
       <div
         style={{
           height: "70vh",
@@ -171,7 +246,7 @@ const ViewAssignments = () => {
 
           <div style={{ height: "55vh", width: "100%", padding: "1rem 0" }}>
             <DataGrid
-              rows={rows}
+              rows={labTasks}
               columns={columns}
               initialState={{
                 pagination: {
