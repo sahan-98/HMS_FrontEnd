@@ -21,6 +21,7 @@ const prediction = require("./Route/detection.router.js");
 const appoiment = require("./Route/appointment.router.js");
 const labReportBills = require("./Route/labReportsBill.router.js");
 const bedBills = require("./Route/bedbill.router.js");
+const userRoutes = require("./Route/admin.router.js");
 
 mongoose.Promise = global.Promise;
 mongoose
@@ -55,6 +56,7 @@ app.use("/detection", prediction);
 app.use("/appoinment", appoiment);
 app.use("/labReportBill", labReportBills);
 app.use("/bedBill", bedBills);
+app.use("/user", userRoutes);
 
 app.listen(PORT, function () {
   console.log("Server is running on Port:", PORT);

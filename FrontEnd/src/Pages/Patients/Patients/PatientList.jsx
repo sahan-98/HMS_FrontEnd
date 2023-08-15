@@ -12,6 +12,7 @@ import { Delete, Edit } from "@mui/icons-material";
 import { showSystemAlert } from "../../../app/services/alertServices";
 import PatientService from "../../../app/services/patient-service";
 import { useNavigate } from "react-router-dom";
+import calculateAge from "../../../utils/calculate-age";
 
 export default function PatientList() {
   const navigate = useNavigate();
@@ -81,7 +82,9 @@ export default function PatientList() {
               <TableCell align="center">{patientData?.lastname}</TableCell>
               <TableCell align="center">{patientData?.mobile}</TableCell>
               <TableCell align="center">{patientData?.gender}</TableCell>
-              <TableCell align="center">{patientData?.age}</TableCell>
+              <TableCell align="center">
+                {calculateAge(new Date(patientData?.dateOfBirth))}
+              </TableCell>
               <TableCell align="center">
                 <IconButton
                   title="Edit patient"

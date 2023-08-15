@@ -6,17 +6,28 @@ import { GiCherish } from "react-icons/gi";
 import DoctorService from "../../../app/services/doctor-service";
 import LabReportService from "../../../app/services/lab-report-service";
 import PatientService from "../../../app/services/patient-service";
+import BedService from "../../../app/services/bed-service";
 
 const Banner = () => {
   const [doctors, setDoctors] = useState("");
   const [patients, setPatients] = useState("");
   const [labReports, setLabReports] = useState("");
   const [pendingLabReports, setPendingLabReports] = useState("");
+  const [bedCount, setBedCount] = useState("");
 
   const getDoctorCount = useCallback(async () => {
     try {
       const reponse = await DoctorService.getDoctorCount();
       setDoctors(reponse.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const getBedCount = useCallback(async () => {
+    try {
+      const reponse = await BedService.getAvailableBedCount();
+      setBedCount(reponse.count);
     } catch (error) {
       console.log(error);
     }
@@ -54,11 +65,13 @@ const Banner = () => {
     getPatientCount();
     getLabReportCount();
     getPendingLabReportCount();
+    getBedCount();
   }, [
     getDoctorCount,
     getPatientCount,
     getLabReportCount,
     getPendingLabReportCount,
+    getBedCount,
   ]);
 
   return (
@@ -74,7 +87,7 @@ const Banner = () => {
             xl: "center",
           },
           alignItems: "center",
-          gap: "1rem 2.6rem",
+          gap: "1rem 1rem",
           flexWrap: "wrap",
           width: "100%",
           fontFamily: "monospace",
@@ -152,6 +165,31 @@ const Banner = () => {
             <div>
               <Typography sx={{ fontWeight: "800" }}>{labReports}</Typography>
               <p> Lab reports({pendingLabReports})</p>
+            </div>
+          </Box>
+        </Paper>
+        <Paper elevation={2} sx={{ padding: "1rem", width: "14rem" }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <div>
+              <FiUsers
+                style={{
+                  fontSize: "3rem",
+                  color: "#1572A1",
+                  border: "2px solid #1572A1",
+                  borderRadius: "20%",
+                  padding: "5px",
+                }}
+              />
+            </div>
+            <div>
+              <Typography sx={{ fontWeight: "800" }}>{bedCount}</Typography>
+              <p> Available beds</p>
             </div>
           </Box>
         </Paper>
