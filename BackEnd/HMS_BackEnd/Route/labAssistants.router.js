@@ -113,6 +113,21 @@ LabAssistantRoutes.post("/update/:id", async (req, res) => {
   }
 });
 
+// Delete LabAssistant details
+LabAssistantRoutes.delete("/deleteLabAssistant/:id", async (req, res) => {
+  try {
+    const labAssistant = await LabAssistant.findOne({ _id: req.params.id });
+    if (!labAssistant) {
+      return res.status(422).json({ error: "Lab Assistant not found" });
+    }
+
+    await LabAssistant.deleteOne({ _id: req.params.id });
+    res.json({ message: "Lab Assistant deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 //Lab Assistant login
 LabAssistantRoutes.post("/login", async (req, res) => {
   const { userName, password } = req.body;
@@ -133,6 +148,24 @@ LabAssistantRoutes.post("/login", async (req, res) => {
     return res
       .status(200)
       .json({ message: "Login successful", labAssistant: labAssistant });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+//logout
+LabAssistantRoutes.post("/logout", async (req, res) => {
+  let id = req.params.id;
+
+  try {
+    // Find the labAssistant by their ID
+    const labAssistant = await LabAssistant.findById(id);
+    // Check if the labAssistant exists
+    if (!labAssistant) {
+      return res.status(404).json({ message: "Lab Assistant not found" });
+    }
+    // Send a success response
+    return res.status(200).json({ message: "Logout successful" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -172,7 +205,5 @@ LabAssistantRoutes.get("/", async (req, res) => {
     return res.status(500).json({ message: "Server Error" });
   }
 });
-
-//update product by id
 
 module.exports = LabAssistantRoutes;

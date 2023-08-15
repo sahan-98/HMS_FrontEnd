@@ -134,6 +134,21 @@ PaitentRoutes.get("/getAllCountPatient", async (req, res) => {
   }
 });
 
+// Delete Patient details
+PaitentRoutes.delete("/deleteLabAssistant/:id", async (req, res) => {
+  try {
+    const paitent = await Paitent.findOne({ _id: req.params.id });
+    if (!paitent) {
+      return res.status(422).json({ error: "Lab Assistant not found" });
+    }
+
+    await Paitent.deleteOne({ _id: req.params.id });
+    res.json({ message: "Lab Assistant deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 PaitentRoutes.post("/login", async (req, res) => {
   const { userName, password } = req.body;
 
@@ -153,6 +168,24 @@ PaitentRoutes.post("/login", async (req, res) => {
     return res
       .status(200)
       .json({ message: "Login successful", patient: patient });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+//logout
+PaitentRoutes.post("/logout", async (req, res) => {
+  let id = req.params.id;
+
+  try {
+    // Find the paitent by their ID
+    const paitent = await Paitent.findById(id);
+    // Check if the paitent exists
+    if (!paitent) {
+      return res.status(404).json({ message: "Paitent not found" });
+    }
+    // Send a success response
+    return res.status(200).json({ message: "Logout successful" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -192,5 +225,7 @@ PaitentRoutes.get("/", async (req, res) => {
     return res.status(500).json({ message: "Server Error" });
   }
 });
+
+
 
 module.exports = PaitentRoutes;
