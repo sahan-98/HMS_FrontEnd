@@ -69,6 +69,7 @@ detectionRoutes.post("/add", async (req, res) => {
     });
 });
 
+
 // get events list by a host
 detectionRoutes.get("/patient/:key", async (req, res) => {
   try {
