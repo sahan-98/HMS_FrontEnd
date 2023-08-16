@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   IconButton,
-  TextField,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
@@ -19,7 +18,6 @@ import PatientService from "../../app/services/patient-service";
 import { logout } from "../../reducers/loginSlice";
 import { useNavigate } from "react-router";
 import { showSystemAlert } from "../../app/services/alertServices";
-import LabReport from "../LabReport/LabReport";
 import BedService from "../../app/services/bed-service";
 import LabReportService from "../../app/services/lab-report-service";
 
@@ -100,8 +98,6 @@ const ViewBills = () => {
   const patient = useSelector((state) => state.patient);
   const [selectedType, setSelectedType] = useState("appointment");
   const patientId = useSelector((state) => state.patient._id);
-  const [labReportOpen, setLabReportOpen] = useState(false);
-  const [labReportToShow, setLabReportToShow] = useState({});
 
   const loadAppointmentBills = useCallback(async () => {
     try {
@@ -216,12 +212,9 @@ const ViewBills = () => {
       align: "center",
       headerAlign: "center",
       disableClickEventBubbling: true,
-      renderCell: (params) => {
-        const { billObj } = params.row;
-        const onClick = () => {
-          setLabReportToShow(billObj);
-          setLabReportOpen(true);
-        };
+      renderCell: () => {
+        // const { billObj } = params.row;
+        const onClick = () => {};
         return (
           <>
             <StyledButton onClick={onClick}>Pay bill</StyledButton>
