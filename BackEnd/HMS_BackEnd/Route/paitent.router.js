@@ -95,7 +95,6 @@ PaitentRoutes.post("/update/:id", async (req, res) => {
         paitentObj.firstname = req.body.firstname;
         paitentObj.lastname = req.body.lastname;
         paitentObj.userName = req.body.userName;
-        paitentObj.password = req.body.password;
         paitentObj.email = req.body.email;
         paitentObj.mobile = req.body.mobile;
         paitentObj.address = req.body.address;

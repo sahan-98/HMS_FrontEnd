@@ -12,7 +12,7 @@ import HeadingText from "../../../components/HeadingText/HeadingText";
 import Header from "../Header";
 import Layout from "../Layout";
 import "./table.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import DoctorService from "../../../app/services/doctor-service";
 import { useDispatch, useSelector } from "react-redux";
 import { placeAppointment } from "../../../reducers/placeAppointmentSlice";
@@ -51,7 +51,8 @@ const TableRow = ({ doctor, dateName, timeKeyName }) => {
                 doctorid: doctor?.doctorid,
                 patientid: patient?._id,
                 bookingDate: new Date().toISOString().split("T")[0],
-                type: "Urgent",
+                type: "Normal",
+                fee: doctor?.fee,
                 doctorAvailability: timeKeyName,
               })
             );
@@ -73,7 +74,8 @@ TableRow.propTypes = {
 
 const Step01 = () => {
   // const navigate = useNavigate();
-
+  const [searchParams] = useSearchParams();
+  const speciality = searchParams.get("speciality");
   const [specialization, setSpecialization] = useState("");
   const [specializationList, setSpecializationList] = useState([]);
   const [doctorList, setDoctorList] = useState([]);
@@ -103,14 +105,19 @@ const Step01 = () => {
   }, []);
 
   const loadSpecializations = useCallback(async () => {
-    const availableDoctors = await DoctorService.getAvailableDoctors();
+    let availableDoctors = await DoctorService.getAllDoctors();
+    availableDoctors = availableDoctors.data;
     setDoctorList(availableDoctors);
     const specializations = new Set();
     availableDoctors.forEach((doctor) => {
       specializations.add(doctor.speciality);
     });
     setSpecializationList(Array.from(specializations));
-  }, []);
+    if (speciality) {
+      setSpecialization(speciality);
+      onSelectSpecialization(speciality);
+    }
+  }, [speciality, onSelectSpecialization]);
 
   useEffect(() => {
     loadSpecializations();

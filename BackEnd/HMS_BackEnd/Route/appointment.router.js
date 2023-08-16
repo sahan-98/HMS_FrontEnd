@@ -15,46 +15,63 @@ let Doctor = require("../Models/doctor.models");
 
 // add a appoiment
 AppointmentRoutes.post("/add", async (req, res) => {
-  const { doctorid, patientid, bookingDate, type, doctorAvailability } =
-    req.body;
+  try {
+    const { doctorid, patientid, bookingDate, type, doctorAvailability } =
+      req.body;
 
-  const doc = await Doctor.findOne({ doctorid: doctorid });
+    const doc = await Doctor.findOne({ doctorid: doctorid });
 
-  let fee = doc.fee;
+    let fee = doc.fee;
 
-  console.log(doc);
-  console.log(fee);
+    console.log(doc);
+    console.log(fee);
 
-  const QueAppintments = await Appointment.find({
-    doctorid: doctorid,
-    doctorAvailability: doctorAvailability,
-  });
-
-  const newAppointment = new Appointment({
-    doctorid,
-    patientid,
-    bookingDate,
-    doctorAvailability,
-    type,
-    queueNumber: QueAppintments.length + 1,
-    totalPrice: fee,
-    visitStatus: "pending",
-  });
-
-  await newAppointment
-    .save()
-    .then(async (respond) => {
-      return res.status(200).json({ message: "Successfull" });
-    })
-    .catch((err) => {
-      res.status(400).json({ message: "Error!" });
-      console.log("error mail:", err);
+    const QueAppintments = await Appointment.find({
+      doctorid: doctorid,
+      doctorAvailability: doctorAvailability,
     });
+
+    const newAppointment = new Appointment({
+      doctorid,
+      patientid,
+      bookingDate,
+      doctorAvailability,
+      type,
+      queueNumber: QueAppintments.length + 1,
+      totalPrice: fee,
+      visitStatus: "pending",
+    });
+
+    await newAppointment
+      .save()
+      .then(async (respond) => {
+        return res.status(200).json({ message: "Successfull" });
+      })
+      .catch((err) => {
+        res.status(400).json({ message: "Error!" });
+        console.log("error mail:", err);
+      });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Server Error" });
+  }
 });
 
 // get all appoinment details
 AppointmentRoutes.get("/", async (req, res) => {
   await Appointment.find()
+    .then((data) => {
+      res.status(200).send({ data: data });
+    })
+    .catch((error) => {
+      res.status(500).send({ error: error.message });
+    });
+});
+
+// get all appoinment details
+AppointmentRoutes.get("/bill-by-patient/:id", async (req, res) => {
+  await Appointment.find({ patientid: req.params.id })
+    .sort({ bookingDate: -1, queueNumber: -1 })
     .then((data) => {
       res.status(200).send({ data: data });
     })
@@ -87,6 +104,12 @@ AppointmentRoutes.get("/patient/:patientId", async (req, res, next) => {
           "doctor.password": 0,
         },
       },
+      {
+        $sort: {
+          bookingDate: -1,
+          queueNumber: -1,
+        },
+      },
     ]);
     res.status(200).json({ data: appointments });
   } catch (err) {
@@ -99,13 +122,37 @@ AppointmentRoutes.get("/patient/:patientId", async (req, res, next) => {
 AppointmentRoutes.get("/doctor/:doctorId", async (req, res, next) => {
   try {
     console.log(req.params.doctorId);
-    const appointments = await Appointment.aggregate([
+    const appointmentsUrgent = await Appointment.aggregate([
       {
         $match: {
           doctorid: req.params.doctorId,
+          type: "urgent",
+        },
+      },
+      {
+        $sort: {
+          bookingDate: -1,
+          queueNumber: -1,
         },
       },
     ]);
+    const appointmentsNormal = await Appointment.aggregate([
+      {
+        $match: {
+          doctorid: req.params.doctorId,
+          type: {
+            $ne: "urgent",
+          },
+        },
+      },
+      {
+        $sort: {
+          bookingDate: -1,
+          queueNumber: -1,
+        },
+      },
+    ]);
+    const appointments = [...appointmentsUrgent, ...appointmentsNormal];
     res.status(200).json({ data: appointments });
   } catch (err) {
     console.log(err);

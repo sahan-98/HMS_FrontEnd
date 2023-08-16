@@ -154,7 +154,7 @@ LabAssistantRoutes.post("/login", async (req, res) => {
 });
 
 //logout
-LabAssistantRoutes.post("/logout", async (req, res) => {
+LabAssistantRoutes.post("/logout/:id", async (req, res) => {
   let id = req.params.id;
 
   try {

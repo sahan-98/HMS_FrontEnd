@@ -13,7 +13,7 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import Calender from "../../Shared/Calender/Calender";
 import { Controller, useForm } from "react-hook-form";
@@ -43,6 +43,7 @@ function getStyles(name, personName, theme) {
 
 const AddDoctor = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const [personName, setPersonName] = useState([]);
   const [date, setDate] = useState(new Date().toDateString());
   const location = useLocation();
@@ -58,14 +59,7 @@ const AddDoctor = () => {
     );
   };
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-    setValue,
-    control,
-  } = useForm({
+  const { register, handleSubmit, setValue, control } = useForm({
     defaultValues: {
       gender: "",
     },
@@ -79,11 +73,22 @@ const AddDoctor = () => {
     };
 
     try {
-      const response = await DoctorService.newDoctor({
-        doctor: formData,
-      });
-      console.log(response);
-      showSystemAlert("Doctor profile created", "success");
+      if (doctorToBeEdited) {
+        const response = await DoctorService.updateDoctor({
+          doctor: formData,
+          doctorId: doctorToBeEdited._id,
+        });
+        console.log(response);
+        showSystemAlert("Doctor profile updated", "success");
+        navigate("/doctors");
+      } else {
+        const response = await DoctorService.newDoctor({
+          doctor: formData,
+        });
+        console.log(response);
+        showSystemAlert("Doctor profile created", "success");
+        navigate("/doctors");
+      }
     } catch (error) {
       showSystemAlert("An error occured while creating doctor", "error");
     }
@@ -196,45 +201,52 @@ const AddDoctor = () => {
             })}
           />
         </Grid>
-        {/* Password */}
-        <Grid item xs={12} md={4}>
-          <Typography variant="OVERLINE TEXT">Password</Typography>
-        </Grid>
+        {doctorToBeEdited ? null : (
+          <>
+            {/* Password */}
+            <Grid item xs={12} md={4}>
+              <Typography variant="OVERLINE TEXT">Password</Typography>
+            </Grid>
 
-        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
-          <TextField
-            id="standard-basic"
-            placeholder="Enter password"
-            name="password"
-            required
-            fullWidth
-            {...register("password", {
-              // required: {
-              //   value: true,
-              //   message: "*Email is required",
-              // },
-            })}
-          />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Typography variant="OVERLINE TEXT">Confirm Password</Typography>
-        </Grid>
+            <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
+              <TextField
+                id="standard-basic"
+                placeholder="Enter password"
+                name="password"
+                required
+                fullWidth
+                {...register("password", {
+                  // required: {
+                  //   value: true,
+                  //   message: "*Email is required",
+                  // },
+                })}
+                disabled={doctorToBeEdited ? true : false}
+              />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Typography variant="OVERLINE TEXT">Confirm Password</Typography>
+            </Grid>
 
-        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
-          <TextField
-            id="standard-basic"
-            placeholder="Enter password"
-            name="conpass"
-            required
-            fullWidth
-            {...register("conpass", {
-              // required: {
-              //   value: true,
-              //   message: "*Email is required",
-              // },
-            })}
-          />
-        </Grid>
+            <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
+              <TextField
+                id="standard-basic"
+                placeholder="Enter password"
+                name="conpass"
+                required
+                fullWidth
+                {...register("conpass", {
+                  // required: {
+                  //   value: true,
+                  //   message: "*Email is required",
+                  // },
+                })}
+                disabled={doctorToBeEdited ? true : false}
+              />
+            </Grid>
+          </>
+        )}
+
         {/* Phone */}
         <Grid item xs={12} md={4}>
           <Typography variant="OVERLINE TEXT">Phone</Typography>
@@ -273,25 +285,7 @@ const AddDoctor = () => {
             })}
           />
         </Grid>
-        {/* Age */}
-        <Grid item xs={12} md={4}>
-          <Typography variant="OVERLINE TEXT">Age</Typography>
-        </Grid>
-        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
-          <TextField
-            id="standard-basic"
-            placeholder="Set Age"
-            name="age"
-            required
-            fullWidth
-            {...register("age", {
-              // required: {
-              //   value: true,
-              //   message: "*Email is required",
-              // },
-            })}
-          />
-        </Grid>
+
         {/* Specialist */}
         <Grid item xs={12} md={4}>
           <Typography variant="OVERLINE TEXT">Specialist</Typography>

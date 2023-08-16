@@ -1,16 +1,15 @@
+import { Box, Button, styled } from "@mui/material";
+import { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import HeartDiseasePredictionService from "../../../app/services/heart-disease-prediction-service";
+import done from "../../../assets/images/done.png";
+import processingData from "../../../assets/images/processing-data.png";
 import BlueAcentCard from "../../../components/BlueAcentCard/BlueAcentCard";
 import HeadingText from "../../../components/HeadingText/HeadingText";
 import Header from "../Header";
 import Layout from "../Layout";
-import done from "../../../assets/images/done.png";
-import warning from "../../../assets/images/warning.png";
-import { Box, Button, styled } from "@mui/material";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import HeartDiseasePredictionService from "../../../app/services/heart-disease-prediction-service";
-import { useSelector } from "react-redux";
-import processingData from "../../../assets/images/processing-data.png";
 import PositiveResult from "./PositiveResult";
-import { useNavigate } from "react-router-dom";
 
 const StyledText = styled("span")(
   `

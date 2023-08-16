@@ -4,7 +4,6 @@ const labRepBillsRoutes = express.Router();
 
 let labRepBill = require("../Models/labrepbill.model");
 
-
 // Update lab report bill
 labRepBillsRoutes.post("/updatePayment/:id", async (req, res) => {
   try {
@@ -137,5 +136,22 @@ labRepBillsRoutes.get("/", async (req, res) => {
   }
 });
 
+labRepBillsRoutes.get("/bils-by-patient/:id", async (req, res) => {
+  try {
+    let labRepBilldata = await labRepBill
+      .find({ patientid: req.params.id })
+      .sort({ createdAt: -1 });
+    if (!labRepBilldata) {
+      console.log("err");
+      return res.status(400).json({ message: "Details not available" });
+    } else {
+      res.status(200).json({ success: true, data: labRepBilldata });
+    }
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({ message: "Server Error" });
+  }
+});
 
 module.exports = labRepBillsRoutes;

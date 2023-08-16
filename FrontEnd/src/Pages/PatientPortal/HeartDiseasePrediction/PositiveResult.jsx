@@ -8,7 +8,8 @@ import BedService from "../../../app/services/bed-service";
 import DoctorService from "../../../app/services/doctor-service";
 import PropTypes from "prop-types";
 import Swal from "sweetalert2";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { placeAppointment } from "../../../reducers/placeAppointmentSlice";
 
 const StyledText = styled("span")(
   `
@@ -23,8 +24,19 @@ font-weight: 400;
   })
 );
 
+const doctorDays = [
+  "sunAvailbleTime",
+  "monAvailbleTime",
+  "tueAvailbleTime",
+  "wensAvailbleTime",
+  "thusAvailbleTime",
+  "friAvailbleTime",
+  "satAvailbleTime",
+];
+
 const PositiveResult = ({ urgentStatus }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [doctor, setDoctor] = useState(null);
   const [bed, setBed] = useState(null);
   const patient = useSelector((state) => state.patient);
@@ -38,6 +50,7 @@ const PositiveResult = ({ urgentStatus }) => {
       });
       const { allocated_doc } = responseBody;
       setDoctor(allocated_doc);
+      return allocated_doc;
     } catch (error) {
       setDoctor({ name: "No doctors available" });
       Swal.fire({
@@ -46,6 +59,8 @@ const PositiveResult = ({ urgentStatus }) => {
         icon: "error",
         allowOutsideClick: false,
         allowEscapeKey: false,
+      }).then(function () {
+        navigate("/patient-portal/landing");
       });
       return;
     }
@@ -68,17 +83,50 @@ const PositiveResult = ({ urgentStatus }) => {
         icon: "error",
         allowOutsideClick: false,
         allowEscapeKey: false,
+      }).then(function () {
+        navigate("/patient-portal/landing");
       });
       return;
     }
   }, [patient]);
 
+  const makeAllocation = useCallback(async () => {
+    const allocatedDoctor = await allocateDoctor();
+    if (allocatedDoctor.doctorid) {
+      const allocatedBed = await allocateBed();
+      if (allocatedBed) {
+        return true;
+      }
+    }
+  }, [allocateBed, allocateDoctor]);
+
   useEffect(() => {
     if (urgentStatus) {
-      allocateBed();
-      allocateDoctor();
+      makeAllocation();
     }
-  }, [urgentStatus, allocateBed, allocateDoctor]);
+  }, [urgentStatus, makeAllocation]);
+
+  const onClickContinue = useCallback(() => {
+    //find first date of doctor availability
+    const firstAvailableDay = doctorDays.find((day) => {
+      console.log(doctor);
+      return doctor[day]?.length > 0;
+    });
+
+    console.log(firstAvailableDay);
+
+    dispatch(
+      placeAppointment({
+        doctorid: doctor?.doctorid,
+        patientid: patient._id,
+        bookingDate: new Date().toISOString().split("T")[0],
+        type: "urgent",
+        fee: doctor?.fee,
+        doctorAvailability: firstAvailableDay,
+      })
+    );
+    navigate("/patient-portal/heart-disease-prediction/payment");
+  }, [navigate, dispatch, doctor, patient]);
 
   if (urgentStatus) {
     return (
@@ -114,7 +162,9 @@ const PositiveResult = ({ urgentStatus }) => {
           </StyledText>
         </Box>
         {bed?.bedNo === "No bed available" ||
-        doctor?.name === "No doctors available" ? null : (
+        doctor?.name === "No doctors available" ? (
+          <Box mt={4}></Box>
+        ) : (
           <Box display={"flex"} justifyContent={"space-between"} mt={2}>
             <Button
               variant="outlined"
@@ -138,11 +188,9 @@ const PositiveResult = ({ urgentStatus }) => {
                 bed?.bedNo === "No bed available" ||
                 doctor?.name === "No doctors available"
               }
-              onClick={() => {
-                navigate("/patient-portal/heart-disease-prediction/payment");
-              }}
+              onClick={onClickContinue}
             >
-              Coninue
+              Cotinue
             </Button>
           </Box>
         )}
@@ -167,7 +215,11 @@ const PositiveResult = ({ urgentStatus }) => {
             mb: 2,
             fontWeight: "bold",
           }}
-          onClick={() => navigate("/patient-portal/channel-doctor/step-01")}
+          onClick={() =>
+            navigate(
+              "/patient-portal/channel-doctor/step-01?speciality=Cardiologist"
+            )
+          }
         >
           Channel Doctor
         </Button>

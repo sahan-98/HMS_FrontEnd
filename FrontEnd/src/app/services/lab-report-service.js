@@ -30,6 +30,10 @@ class LabReportService {
   static async getAllLabReports() {
     return await get({ path: `/report` });
   }
+
+  static async getLabReportBillByPatient({ patientId }) {
+    return await get({ path: `/labReportBill/bils-by-patient/${patientId}` });
+  }
 }
 
 export default LabReportService;

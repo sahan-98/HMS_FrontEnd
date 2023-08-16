@@ -7,6 +7,7 @@ export const placeAppointmentSlice = createSlice({
     patientid: "",
     bookingDate: "",
     type: "",
+    fee: "",
     doctorAvailability: "",
   },
   reducers: {
@@ -15,6 +16,7 @@ export const placeAppointmentSlice = createSlice({
       state.patientid = action.payload.patientid;
       state.bookingDate = action.payload.bookingDate;
       state.type = action.payload.type;
+      state.fee = action.payload.fee;
       state.doctorAvailability = action.payload.doctorAvailability;
     },
     clearDetails: (state) => {
@@ -22,6 +24,7 @@ export const placeAppointmentSlice = createSlice({
       state.patientid = "";
       state.bookingDate = "";
       state.type = "";
+      state.fee = "";
       state.doctorAvailability = "";
     },
   },

@@ -10,12 +10,19 @@ import {
 } from "recharts";
 import GenderPieChart from "./GenderPieChart/GenderPieChart";
 
-const DetailsChart = () => {
+const DetailsChart = ({
+  doctors,
+  patients,
+  labReports,
+  pendingLabReports,
+  bedCount,
+  setBedCount,
+}) => {
   const data = [
-    { name: "Doctor", uv: 128, pv: 2400, amt: 2400 },
-    { name: "Patient", uv: 368, pv: 2400, amt: 2400 },
-    { name: "Bed", uv: 142, pv: 2400, amt: 2400 },
-    { name: "Lab reports", uv: 120, pv: 2400, amt: 2400 },
+    { name: "Doctor", Count: doctors, pv: 2400, amt: doctors },
+    { name: "Patient", Count: patients, pv: 2400, amt: 2400 },
+    { name: "Bed", Count: bedCount, pv: 2400, amt: 2400 },
+    { name: "Lab reports", Count: labReports, pv: 2400, amt: 2400 },
   ];
   return (
     <div
@@ -47,9 +54,15 @@ const DetailsChart = () => {
           }}
         />
         <CartesianGrid stroke="#ccc" strokeDasharray="2 2" />
-        <Bar dataKey="uv" fill="#8884d8" barSize={30} />
+        <Bar dataKey="Count" fill="#8884d8" barSize={30} />
       </BarChart>
-      <GenderPieChart></GenderPieChart>
+      <GenderPieChart
+        doctors={doctors}
+        patients={patients}
+        labReports={labReports}
+        pendingLabReports={pendingLabReports}
+        bedCount={bedCount}
+      ></GenderPieChart>
     </div>
   );
 };

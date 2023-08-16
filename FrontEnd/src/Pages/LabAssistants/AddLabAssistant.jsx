@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 import { showSystemAlert } from "../../app/services/alertServices.js";
 import LabAssistantService from "../../app/services/lab-assistant-service.js";
 import calculateAge from "../../utils/calculate-age.js";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const AddLabAssistant = () => {
   const [date, setDate] = useState(new Date().toDateString());
   const location = useLocation();
   const labAssistantToBeEdited = location.state?.labAssistant;
-
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -33,11 +33,21 @@ export const AddLabAssistant = () => {
     let response = null;
 
     try {
-      response = await LabAssistantService.newLabAssistant({
-        labAssistant: formData,
-      });
-      console.log(response);
-      showSystemAlert("Lab assistant profile created", "success");
+      if (labAssistantToBeEdited) {
+        response = await LabAssistantService.updateLabAssistant({
+          labAssistant: formData,
+        });
+        console.log(response);
+        showSystemAlert("Lab assistant profile updated", "success");
+        navigate("/all-lab-assistants");
+      } else {
+        response = await LabAssistantService.newLabAssistant({
+          labAssistant: formData,
+        });
+        console.log(response);
+        showSystemAlert("Lab assistant profile created", "success");
+        navigate("/all-lab-assistants");
+      }
     } catch (error) {
       showSystemAlert(
         response?.warn
@@ -215,44 +225,49 @@ export const AddLabAssistant = () => {
             })}
           />
         </Grid>
-        {/* Password */}
-        <Grid item xs={12} md={4}>
-          <Typography variant="OVERLINE TEXT">Password</Typography>
-        </Grid>
-        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
-          <TextField
-            id="standard-basic"
-            placeholder="Enter password"
-            name="password"
-            required
-            fullWidth
-            {...register("password", {
-              // required: {
-              //   value: true,
-              //   message: "*Email is required",
-              // },
-            })}
-          />
-        </Grid>
-        {/* Confirm Password */}
-        <Grid item xs={12} md={4}>
-          <Typography variant="OVERLINE TEXT">Confirm Password</Typography>
-        </Grid>
-        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
-          <TextField
-            id="standard-basic"
-            placeholder="Enter confirm password"
-            name="conpass"
-            required
-            fullWidth
-            {...register("conpass", {
-              // required: {
-              //   value: true,
-              //   message: "*Email is required",
-              // },
-            })}
-          />
-        </Grid>
+        {labAssistantToBeEdited ? null : (
+          <>
+            {/* Password */}
+            <Grid item xs={12} md={4}>
+              <Typography variant="OVERLINE TEXT">Password</Typography>
+            </Grid>
+            <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
+              <TextField
+                id="standard-basic"
+                placeholder="Enter password"
+                name="password"
+                required
+                fullWidth
+                {...register("password", {
+                  // required: {
+                  //   value: true,
+                  //   message: "*Email is required",
+                  // },
+                })}
+              />
+            </Grid>
+            {/* Confirm Password */}
+            <Grid item xs={12} md={4}>
+              <Typography variant="OVERLINE TEXT">Confirm Password</Typography>
+            </Grid>
+            <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
+              <TextField
+                id="standard-basic"
+                placeholder="Enter confirm password"
+                name="conpass"
+                required
+                fullWidth
+                {...register("conpass", {
+                  // required: {
+                  //   value: true,
+                  //   message: "*Email is required",
+                  // },
+                })}
+              />
+            </Grid>
+          </>
+        )}
+
         <Grid item xs={12} md={4}>
           <Typography variant="OVERLINE TEXT">Decision</Typography>
         </Grid>

@@ -16,13 +16,13 @@ import { showSystemAlert } from "../../../app/services/alertServices";
 import PatientService from "../../../app/services/patient-service.js";
 import calculateAge from "../../../utils/calculate-age.js";
 import { Controller } from "react-hook-form";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const AddPatient = () => {
   const [date, setDate] = useState(new Date().toDateString());
   const location = useLocation();
   const patientToBeEdited = location.state?.patient;
-
+  const navigate = useNavigate();
   const { register, handleSubmit, setValue, control } = useForm({
     defaultValues: {
       gender: "",
@@ -38,12 +38,23 @@ const AddPatient = () => {
     console.log(formData);
 
     try {
-      const response = await PatientService.newPatient({
-        patient: formData,
-      });
-      console.log(response);
-      showSystemAlert("Patient profile created", "success");
+      if (patientToBeEdited) {
+        const response = await PatientService.updatePatient({
+          patient: formData,
+          patientId: patientToBeEdited._id,
+        });
+        showSystemAlert("Patient profile updated", "success");
+        navigate("/patients");
+      } else {
+        const response = await PatientService.newPatient({
+          patient: formData,
+        });
+        console.log(response);
+        showSystemAlert("Patient profile created", "success");
+        navigate("/patients");
+      }
     } catch (error) {
+      console.log(error);
       showSystemAlert(
         "An error occurred while creating patient profile",
         "error"
@@ -242,45 +253,48 @@ const AddPatient = () => {
             })}
           />
         </Grid>
-        {/* Password */}
-        <Grid item xs={12} md={4}>
-          <Typography variant="OVERLINE TEXT">Password</Typography>
-        </Grid>
+        {patientToBeEdited ? null : (
+          <>
+            {/* Password */}
+            <Grid item xs={12} md={4}>
+              <Typography variant="OVERLINE TEXT">Password</Typography>
+            </Grid>
+            <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
+              <TextField
+                id="standard-basic"
+                placeholder="Enter password"
+                name="password"
+                required
+                fullWidth
+                {...register("password", {
+                  // required: {
+                  //   value: true,
+                  //   message: "*Email is required",
+                  // },
+                })}
+              />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Typography variant="OVERLINE TEXT">Confirm Password</Typography>
+            </Grid>
+            <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
+              <TextField
+                id="standard-basic"
+                placeholder="Enter password"
+                name="conpass"
+                required
+                fullWidth
+                {...register("conpass", {
+                  // required: {
+                  //   value: true,
+                  //   message: "*Email is required",
+                  // },
+                })}
+              />
+            </Grid>{" "}
+          </>
+        )}
 
-        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
-          <TextField
-            id="standard-basic"
-            placeholder="Enter password"
-            name="password"
-            required
-            fullWidth
-            {...register("password", {
-              // required: {
-              //   value: true,
-              //   message: "*Email is required",
-              // },
-            })}
-          />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Typography variant="OVERLINE TEXT">Confirm Password</Typography>
-        </Grid>
-
-        <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
-          <TextField
-            id="standard-basic"
-            placeholder="Enter password"
-            name="conpass"
-            required
-            fullWidth
-            {...register("conpass", {
-              // required: {
-              //   value: true,
-              //   message: "*Email is required",
-              // },
-            })}
-          />
-        </Grid>
         <Grid item xs={12} md={4}>
           <Typography variant="OVERLINE TEXT">Decision</Typography>
         </Grid>

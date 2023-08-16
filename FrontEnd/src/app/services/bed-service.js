@@ -13,6 +13,12 @@ class BedService {
       path: `/bed/availableBedCount`,
     });
   }
+
+  static async getBedBillsByPatientId({ patientId }) {
+    return await get({
+      path: `/bedBill/by-patient/${patientId}`,
+    });
+  }
 }
 
 export default BedService;

@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  IconButton,
   InputAdornment,
   TextField,
   ToggleButton,
@@ -14,8 +15,13 @@ import Layout from "../../components/PortalLayout/Layout";
 import { Search } from "@mui/icons-material";
 import { useCallback, useEffect, useState } from "react";
 import LabReportService from "../../app/services/lab-report-service";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LabAssistantReport from "./LabAssistantReport";
+import { GiPowerButton } from "react-icons/gi";
+import LabAssistantService from "../../app/services/lab-assistant-service";
+import { logout } from "../../reducers/loginSlice";
+import { showSystemAlert } from "../../app/services/alertServices";
+import { useNavigate } from "react-router-dom";
 
 const StyledDiv = styled("div")(
   `
@@ -98,6 +104,9 @@ const ViewAssignments = () => {
   const [labTasks, setLabTasks] = useState([]);
   const [labReportToShow, setLabReportToShow] = useState({});
   const [labReportOpen, setLabReportOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const columns = [
     { field: "id", headerName: "#", width: 50 },
@@ -163,13 +172,47 @@ const ViewAssignments = () => {
     }
   }, [labAssistant]);
 
-  const [selectedType, setSelectedType] = useState("pending");
+  const [selectedType, setSelectedType] = useState("Pending");
 
   useEffect(() => {
     if (!labReportOpen) {
       loadLabTasks();
     }
   }, [loadLabTasks, labReportOpen]);
+
+  const handleLogoutClick = useCallback(async () => {
+    console.log("logout");
+    try {
+      const logoutResponse = await LabAssistantService.logout({
+        labAssistantId: labAssistant._id,
+      });
+      console.log(logoutResponse);
+      const { message } = logoutResponse;
+      if (message === "Logout successful") {
+        dispatch(logout());
+        showSystemAlert("You have successfully logged out", "success");
+        navigate("/lab-assistant-login");
+      }
+    } catch (error) {
+      console.log(error);
+      showSystemAlert("An error occured while loggin out", "error");
+    }
+  }, [labAssistant, dispatch, navigate]);
+
+  let filteredAssignments = [...labTasks];
+  if (searchText.length > 0) {
+    filteredAssignments = labTasks.filter(
+      (labTask) =>
+        labTask?.status.toLowerCase().includes(searchText.toLowerCase()) ||
+        labTask?.date.toLowerCase().includes(searchText.toLowerCase())
+    );
+  }
+
+  filteredAssignments = filteredAssignments.filter((labTask) =>
+    selectedType === "Pending"
+      ? labTask?.status === "Pending"
+      : labTask?.status === "completed"
+  );
 
   return (
     <Layout>
@@ -217,6 +260,10 @@ const ViewAssignments = () => {
                 sx={{
                   width: "230px",
                 }}
+                onChange={(event) => {
+                  setSearchText(event.target.value);
+                }}
+                value={searchText}
               />
               <StyledToggleButtonGroup
                 color="primary"
@@ -234,19 +281,23 @@ const ViewAssignments = () => {
                   ml: "1rem",
                 }}
               >
-                <StyledToggleButton value="pending" sx={{ px: 2.2 }}>
+                <StyledToggleButton value="Pending" sx={{ px: 2.2 }}>
                   Pending
                 </StyledToggleButton>
                 <StyledToggleButton value="completed">
                   Completed
                 </StyledToggleButton>
               </StyledToggleButtonGroup>
+
+              <IconButton title="Logout" onClick={handleLogoutClick}>
+                <GiPowerButton />
+              </IconButton>
             </Box>
           </Box>
 
           <div style={{ height: "55vh", width: "100%", padding: "1rem 0" }}>
             <DataGrid
-              rows={labTasks}
+              rows={filteredAssignments}
               columns={columns}
               initialState={{
                 pagination: {

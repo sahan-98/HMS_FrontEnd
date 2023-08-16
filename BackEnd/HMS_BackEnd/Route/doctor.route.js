@@ -127,9 +127,13 @@ DoctorRoutes.put("/updateDoctors/:id", async (req, res) => {
       message: "Data to update can not be empty!",
     });
   }
-  await Doctor.findByIdAndUpdate(req.params.id, req.body, {
-    useFindAndModify: false,
-  })
+  await Doctor.findByIdAndUpdate(
+    req.params.id,
+    { ...req.body, password: undefined },
+    {
+      useFindAndModify: false,
+    }
+  )
     .then((data) => {
       if (!data) {
         res.status(400).send({ message: "cannot update doctor details" });

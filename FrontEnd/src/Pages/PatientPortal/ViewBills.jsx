@@ -2,8 +2,6 @@ import {
   Box,
   Button,
   IconButton,
-  InputAdornment,
-  TextField,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
@@ -12,7 +10,6 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import Header from "./Header";
 import Layout from "./Layout";
-import { Search } from "@mui/icons-material";
 import { useCallback, useEffect, useState } from "react";
 import AppointmentService from "../../app/services/appointment-service";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,7 +18,8 @@ import PatientService from "../../app/services/patient-service";
 import { logout } from "../../reducers/loginSlice";
 import { useNavigate } from "react-router";
 import { showSystemAlert } from "../../app/services/alertServices";
-import LabReport from "../LabReport/LabReport";
+import BedService from "../../app/services/bed-service";
+import LabReportService from "../../app/services/lab-report-service";
 
 const StyledDiv = styled("div")(
   `
@@ -90,126 +88,141 @@ const StyledToggleButton = styled(ToggleButton)({
   },
 });
 
-const StyledTextField = styled(TextField)({
-  "& .MuiOutlinedInput-root": {
-    borderRadius: 30,
-    height: "38px",
-    fontSize: "14px",
-  },
-});
-const dayNames = {
-  sunAvailbleTime: "Sunday",
-  monAvailbleTime: "Monday",
-  tueAvailbleTime: "Tuesday",
-  wensAvailbleTime: "Wednesday",
-  thusAvailbleTime: "Thursday",
-  friAvailbleTime: "Friday",
-  satAvailbleTime: "Saturday",
-};
-
-const ViewAppointments = () => {
-  const [appointments, setAppointments] = useState([]);
+const ViewBills = () => {
+  const [appointmentBills, setAppointmentBills] = useState([]);
+  const [labReportBills, setLabReportBills] = useState([]);
+  const [bedBills, setBedBills] = useState([]);
+  const [showing, setShowing] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const patient = useSelector((state) => state.patient);
-  const [selectedType, setSelectedType] = useState("pending");
-  const [searchText, setSearchText] = useState("");
+  const [selectedType, setSelectedType] = useState("appointment");
   const patientId = useSelector((state) => state.patient._id);
-  const [labReportOpen, setLabReportOpen] = useState(false);
-  const [labReportToShow, setLabReportToShow] = useState({});
 
-  const loadAppointments = useCallback(async () => {
+  const loadAppointmentBills = useCallback(async () => {
     try {
-      let appointments = await AppointmentService.getAppointmentsByPatientId({
+      let appointmentBills =
+        await AppointmentService.getAppointmentBillsByPatientId({
+          patientId: patient._id,
+        });
+      appointmentBills = appointmentBills?.data.map(
+        (appointmentBill, index) => ({
+          id: index + 1,
+          date: new Date(appointmentBill?.bookingDate)
+            .toISOString()
+            .split("T")[0],
+          status: appointmentBill?.visitStatus,
+          amount: appointmentBill?.totalPrice,
+          billObj: appointmentBill,
+        })
+      );
+      setAppointmentBills(appointmentBills);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [patient]);
+
+  const loadBedBills = useCallback(async () => {
+    try {
+      let bedBills = await BedService.getBedBillsByPatientId({
         patientId: patient._id,
       });
-      appointments = appointments?.data.map((appointment, index) => ({
+      bedBills = bedBills?.data.map((bedBill, index) => ({
         id: index + 1,
-        doctorName: appointment?.doctor?.name,
-        date: dayNames[appointment?.doctorAvailability],
-        time: appointment?.doctor[appointment?.doctorAvailability],
-        visitStatus: appointment?.visitStatus,
-        queueNumber: appointment?.queueNumber,
-        appointment,
+        date: new Date(bedBill?.allocationDate).toISOString().split("T")[0],
+        status: bedBill?.payStatus,
+        amount: bedBill?.totalPrice,
+        billObj: bedBill,
       }));
-      setAppointments(appointments);
+      setBedBills(bedBills);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [patient]);
+
+  const loadLabReportBills = useCallback(async () => {
+    try {
+      let labReportBills = await LabReportService.getLabReportBillByPatient({
+        patientId: patient._id,
+      });
+      labReportBills = labReportBills?.data.map((labReportBill, index) => ({
+        id: index + 1,
+        date: labReportBill?.createdAt
+          ? new Date(labReportBill?.createdAt).toISOString().split("T")[0]
+          : "",
+        status: labReportBill?.payStatus,
+        amount: labReportBill?.totalPrice,
+        billObj: labReportBill,
+      }));
+      setLabReportBills(labReportBills);
     } catch (error) {
       console.log(error);
     }
   }, [patient]);
 
   useEffect(() => {
-    loadAppointments();
-  }, [loadAppointments]);
+    loadAppointmentBills();
+    loadBedBills();
+    loadLabReportBills();
+  }, [loadAppointmentBills, loadBedBills, loadLabReportBills]);
+
+  useEffect(() => {
+    if (selectedType === "appointment") {
+      setShowing(appointmentBills);
+      return;
+    }
+    if (selectedType === "labreport") {
+      setShowing(labReportBills);
+      return;
+    }
+    if (selectedType === "bedbill") {
+      setShowing(bedBills);
+      return;
+    }
+  }, [selectedType, appointmentBills, labReportBills, bedBills]);
 
   const columns = [
-    { field: "id", headerName: "#", width: 50 },
+    { field: "id", headerName: "#", width: 150 },
     {
-      field: "doctorName",
-      headerName: "Doctor name",
+      field: "date",
+      headerName: "Date",
       width: 180,
       align: "center",
       headerAlign: "center",
     },
-    { field: "date", headerName: "Date", width: 100 },
-    { field: "time", headerName: "Time", width: 100 },
     {
-      field: "visitStatus",
-      headerName: "Appointment status",
+      field: "status",
+      headerName: "Status",
       width: 150,
       align: "center",
       headerAlign: "center",
     },
     {
-      field: "queueNumber",
-      headerName: "Appointment Number",
-      width: 70,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "actions",
-      headerName: "Actions",
+      field: "amount",
+      headerName: "Bill Amount",
       width: 180,
       align: "center",
       headerAlign: "center",
+    },
+
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 150,
+      align: "center",
+      headerAlign: "center",
       disableClickEventBubbling: true,
-      renderCell: (params) => {
-        const { appointment } = params.row;
-        const onClick = () => {
-          setLabReportToShow(appointment);
-          setLabReportOpen(true);
-        };
+      renderCell: () => {
+        // const { billObj } = params.row;
+        const onClick = () => {};
         return (
           <>
-            <StyledButton
-              onClick={onClick}
-              disabled={appointment.labReportid ? false : true}
-            >
-              Lab Report
-            </StyledButton>
+            <StyledButton onClick={onClick}>Pay bill</StyledButton>
           </>
         );
       },
     },
   ];
-
-  let filteredAppointments = [...appointments];
-  if (searchText.length > 0) {
-    filteredAppointments = appointments.filter(
-      (appointment) =>
-        appointment?.doctorName
-          .toLowerCase()
-          .includes(searchText.toLowerCase()) ||
-        appointment?.date.toLowerCase().includes(searchText.toLowerCase())
-    );
-  }
-
-  filteredAppointments = filteredAppointments.filter((appointment) =>
-    selectedType === "pending"
-      ? appointment?.visitStatus === "pending"
-      : appointment?.visitStatus === "completed"
-  );
 
   const handleLogoutClick = useCallback(async () => {
     console.log("logout");
@@ -230,13 +243,7 @@ const ViewAppointments = () => {
   return (
     <Layout>
       <Header />
-      {labReportOpen && (
-        <LabReport
-          open={labReportOpen}
-          setOpen={setLabReportOpen}
-          data={{ ...labReportToShow }}
-        />
-      )}
+
       <div
         style={{
           height: "70vh",
@@ -254,7 +261,7 @@ const ViewAppointments = () => {
               mt: "0.5rem",
             }}
           >
-            <StyledText>Appointments</StyledText>
+            <StyledText>View Bills</StyledText>
             <Box
               sx={{
                 display: "flex",
@@ -262,24 +269,6 @@ const ViewAppointments = () => {
                 alignItems: "center",
               }}
             >
-              <StyledTextField
-                placeholder="Search Appointments"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search />
-                    </InputAdornment>
-                  ),
-                }}
-                size="small"
-                sx={{
-                  width: "230px",
-                }}
-                value={searchText}
-                onChange={(event) => {
-                  setSearchText(event.target.value);
-                }}
-              />
               <StyledToggleButtonGroup
                 color="primary"
                 exclusive
@@ -294,13 +283,17 @@ const ViewAppointments = () => {
                 sx={{
                   height: "2.3rem",
                   ml: "1rem",
+                  mr: "0.5rem",
                 }}
               >
-                <StyledToggleButton value="pending" sx={{ px: 2.2 }}>
-                  Pending
+                <StyledToggleButton value="appointment" sx={{ px: 2.2 }}>
+                  Appointment Bills
                 </StyledToggleButton>
-                <StyledToggleButton value="completed">
-                  Completed
+                <StyledToggleButton value="labreport">
+                  Lab report Bills
+                </StyledToggleButton>
+                <StyledToggleButton value="bedbill">
+                  Bed Bills
                 </StyledToggleButton>
               </StyledToggleButtonGroup>
               <IconButton title="Logout" onClick={handleLogoutClick}>
@@ -311,7 +304,7 @@ const ViewAppointments = () => {
 
           <div style={{ height: "55vh", width: "100%", padding: "1rem 0" }}>
             <DataGrid
-              rows={filteredAppointments}
+              rows={showing}
               columns={columns}
               initialState={{
                 pagination: {
@@ -327,4 +320,4 @@ const ViewAppointments = () => {
   );
 };
 
-export default ViewAppointments;
+export default ViewBills;

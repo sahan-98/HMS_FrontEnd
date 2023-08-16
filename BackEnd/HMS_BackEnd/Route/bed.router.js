@@ -60,17 +60,14 @@ bedRoutes.post("/add", async (req, res) => {
 bedRoutes.post("/allocateBed/:id", async (req, res) => {
   console.log(req.body);
   try {
-
-    const {
-      patientid,
-    } = req.body;
+    const { patientid } = req.body;
 
     const exist = await Bed.findOne({ patientid: patientid });
-  if (exist) {
-    return res
-      .status(202)
-      .json({ warn: "A bed is Exist with this patientId" });
-  }
+    if (exist) {
+      return res
+        .status(202)
+        .json({ warn: "A bed is Exist with this patientId" });
+    }
     Bed.findById(req.params.id)
       .then((bedObj) => {
         bedObj.patientid = req.body.patientid;
@@ -152,8 +149,7 @@ bedRoutes.route("/releaseBed/:id").post(async function (req, res) {
               payStatus: "pending",
             });
 
-            await newBedBill
-            .save();
+            await newBedBill.save();
 
             return res.status(200).json({ bill: newBedBill });
           })
@@ -167,6 +163,50 @@ bedRoutes.route("/releaseBed/:id").post(async function (req, res) {
   }
 });
 
+bedRoutes.route("/release-all-beds").post(async function (req, res) {
+  let nowDate = moment(req.body.releaseDate);
+  try {
+    const beds = await Bed.find({ availability: false });
+    for (let i = 0; i < beds.length; i++) {
+      const bedObj = beds[i];
+      let patient = bedObj.patientid;
+
+      let allocatedDate = bedObj.allocatedDate;
+      // calculate number of dates from allocatedDate to todayDate
+      const numberOfDates = nowDate.diff(allocatedDate, "days");
+
+      let totalPrice = numberOfDates * bedObj.bedFee;
+
+      bedObj.patientid = null;
+      bedObj.availability = true;
+      bedObj.allocatedDate = null;
+      bedObj.releaseDate = req.body.releaseDate;
+      bedObj.estimation = null;
+
+      await bedObj.save().then(async (respond) => {
+        const newBedBill = new BedBill({
+          bedNo: respond.bedNo,
+          patientid: patient,
+          availability: true,
+          wardNo: respond.wardNo,
+          allocationDate: allocatedDate,
+          totalPrice,
+          dayStayed: numberOfDates,
+          payStatus: "pending",
+        });
+
+        await newBedBill.save();
+      });
+    }
+    return res
+      .status(200)
+      .json({ message: "success", data: `released ${beds.length} beds` });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({ message: "Server Error" });
+  }
+});
 
 // get patient for bed details
 bedRoutes.get("/allocateBed/:id", async (req, res) => {
@@ -183,14 +223,14 @@ bedRoutes.get("/allocateBed/:id", async (req, res) => {
 bedRoutes.get("/availableBedCount", async (req, res) => {
   try {
     const availbleBedCount = await Bed.find({ availability: "true" });
-    return res.status(200).json({ success: true, count: availbleBedCount.length });
+    return res
+      .status(200)
+      .json({ success: true, count: availbleBedCount.length });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Server Error" });
   }
 });
-
-
 
 bedRoutes.get("/", async (req, res) => {
   try {
