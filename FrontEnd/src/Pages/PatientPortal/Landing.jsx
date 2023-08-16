@@ -23,6 +23,10 @@ const Landing = () => {
     navigate("/patient-portal/view-appointments");
   }, [navigate]);
 
+  const handleBillClick = useCallback(() => {
+    navigate("/patient-portal/view-bills");
+  }, [navigate]);
+
   return (
     <Layout>
       <Header />
@@ -53,7 +57,7 @@ const Landing = () => {
           />
           <h4>View Appointments</h4>
         </PatientChoiseCard>
-        <PatientChoiseCard onClick={handleAppointmentsClick}>
+        <PatientChoiseCard onClick={handleBillClick}>
           <img
             src={bill}
             alt="appointments"

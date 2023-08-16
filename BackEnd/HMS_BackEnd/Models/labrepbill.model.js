@@ -18,19 +18,14 @@ let labRepBill = new Schema(
     totalPrice: {
       type: Number,
     },
-
-    //
-
     payStatus: {
       required: true,
       type: String,
     },
   },
   {
-    collection: "labRepBill",
-  },
-  {
     timestamps: true,
+    collection: "labRepBill",
   }
 );
 

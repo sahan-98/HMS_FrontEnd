@@ -19,6 +19,12 @@ class AppointmentService {
       path: `/appoinment/doctor/${doctorId}`,
     });
   }
+
+  static async getAppointmentBillsByPatientId({ patientId }) {
+    return await get({
+      path: `/appoinment/bill-by-patient/${patientId}`,
+    });
+  }
 }
 
 export default AppointmentService;

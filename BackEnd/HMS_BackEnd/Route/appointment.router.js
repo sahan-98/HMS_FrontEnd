@@ -63,6 +63,17 @@ AppointmentRoutes.get("/", async (req, res) => {
     });
 });
 
+// get all appoinment details
+AppointmentRoutes.get("/bill-by-patient/:id", async (req, res) => {
+  await Appointment.find({ patientid: req.params.id })
+    .then((data) => {
+      res.status(200).send({ data: data });
+    })
+    .catch((error) => {
+      res.status(500).send({ error: error.message });
+    });
+});
+
 AppointmentRoutes.get("/patient/:patientId", async (req, res, next) => {
   try {
     const appointments = await Appointment.aggregate([
