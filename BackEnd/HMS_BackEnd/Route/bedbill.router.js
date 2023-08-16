@@ -73,6 +73,7 @@ bedRoutes.get("/pending/:id", async (req, res) => {
 bedRoutes.get("/by-patient/:id", async (req, res) => {
   try {
     BedBill.find({ patientid: req.params.id })
+      .sort({ createdAt: -1 })
       .then((bedObj) => {
         return res.status(200).json({ data: bedObj });
       })

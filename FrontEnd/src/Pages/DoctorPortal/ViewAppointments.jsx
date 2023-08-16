@@ -1,4 +1,4 @@
-import { Search } from "@mui/icons-material";
+import { CheckCircleOutline, Done, Search } from "@mui/icons-material";
 import {
   Box,
   IconButton,
@@ -116,6 +116,7 @@ const ViewAppointments = () => {
   const navigate = useNavigate();
   const [selectedType, setSelectedType] = useState("pending");
   const [searchText, setSearchText] = useState("");
+  const [refresh, setRefresh] = useState(false);
   const [labReportOpen, setLabReportOpen] = useState(false);
   const [labReportToShow, setLabReportToShow] = useState({});
   const doctor = useSelector((state) => state.doctor);
@@ -138,6 +139,19 @@ const ViewAppointments = () => {
       width: 140,
       align: "center",
       headerAlign: "center",
+      renderCell: (params) => {
+        const { appointment } = params.row;
+
+        return (
+          <>
+            {appointment.type === "urgent" ? (
+              <StyledButton btnColor={"#E93232"}>Urgent</StyledButton>
+            ) : (
+              appointment?.queueNumber
+            )}
+          </>
+        );
+      },
     },
     {
       field: "actions",
@@ -152,14 +166,28 @@ const ViewAppointments = () => {
           setLabReportToShow(appointment);
           setLabReportOpen(true);
         };
+        const completeAppointment = async () => {
+          await AppointmentService.updateVisitStatus({
+            appointmentId: appointment._id,
+          });
+          showSystemAlert("Appointment completed successfully", "success");
+          setRefresh(!refresh);
+        };
         return (
           <>
             {appointment.labReportid ? (
-              <StyledButton onClick={onClick} btnColor={"#3E84E3"}>
-                View Lab Report
-              </StyledButton>
+              <>
+                <StyledButton onClick={onClick} btnColor={"#3E84E3"}>
+                  View Lab Report
+                </StyledButton>
+              </>
             ) : (
               <StyledButton onClick={onClick}>Assign Lab task</StyledButton>
+            )}
+            {appointment?.visitStatus === "pending" && (
+              <IconButton onClick={completeAppointment}>
+                <CheckCircleOutline />
+              </IconButton>
             )}
           </>
         );
@@ -209,7 +237,7 @@ const ViewAppointments = () => {
     if (!labReportOpen) {
       loadAppointments();
     }
-  }, [loadAppointments, labReportOpen]);
+  }, [loadAppointments, labReportOpen, refresh]);
 
   let filteredAppointments = [...appointments];
   if (searchText.length > 0) {

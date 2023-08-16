@@ -18,8 +18,8 @@ class PatientService {
   }
 
   static async updatePatient({ patientId, patient }) {
-    return await put({
-      path: `patient/update/${patientId}`,
+    return await post({
+      path: `/patient/update/${patientId}`,
       data: patient,
     });
   }

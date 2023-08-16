@@ -8,6 +8,13 @@ class AppointmentService {
     });
   }
 
+  static async updateVisitStatus({ appointmentId }) {
+    return await post({
+      path: `/appoinment/updateVisitStatus/${appointmentId}`,
+      data: {},
+    });
+  }
+
   static async getAppointmentsByPatientId({ patientId }) {
     return await get({
       path: `/appoinment/patient/${patientId}`,

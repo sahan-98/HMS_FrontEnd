@@ -1,10 +1,12 @@
-import { Box, Button, TextField, styled } from "@mui/material";
+import { Box, Button, TextField, Typography, styled } from "@mui/material";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import BlueAcentCard from "../../../components/BlueAcentCard/BlueAcentCard";
 import HeadingText from "../../../components/HeadingText/HeadingText";
 import Header from "../Header";
 import Layout from "../Layout";
+import paymentOptions from "../../../assets/images/payment-options.png";
+import { useSelector } from "react-redux";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
@@ -18,6 +20,7 @@ color: #fff;
 
 const Payment = () => {
   const navigate = useNavigate();
+  const appointmentDetails = useSelector((state) => state.placeAppointment);
 
   const handleNextClick = useCallback(() => {
     navigate("/patient-portal/channel-doctor/completed");
@@ -37,11 +40,25 @@ const Payment = () => {
       >
         <BlueAcentCard width="450px">
           <HeadingText text="Channel Doctor" />
+          <Typography
+            sx={{
+              fontSize: "1.5rem",
+              color: "#636363",
+            }}
+          >
+            Channeling Fee : € {appointmentDetails.fee}
+          </Typography>
+
           <TextField
             label="Card number"
             variant="outlined"
             fullWidth
             sx={{ mt: 2 }}
+            InputProps={{
+              endAdornment: (
+                <img src={paymentOptions} alt="visa" width="120px" />
+              ),
+            }}
           />
           <TextField
             label="Expiry date"

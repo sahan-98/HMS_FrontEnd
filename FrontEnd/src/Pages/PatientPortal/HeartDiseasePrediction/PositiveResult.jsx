@@ -59,6 +59,8 @@ const PositiveResult = ({ urgentStatus }) => {
         icon: "error",
         allowOutsideClick: false,
         allowEscapeKey: false,
+      }).then(function () {
+        navigate("/patient-portal/landing");
       });
       return;
     }
@@ -81,6 +83,8 @@ const PositiveResult = ({ urgentStatus }) => {
         icon: "error",
         allowOutsideClick: false,
         allowEscapeKey: false,
+      }).then(function () {
+        navigate("/patient-portal/landing");
       });
       return;
     }
@@ -117,6 +121,7 @@ const PositiveResult = ({ urgentStatus }) => {
         patientid: patient._id,
         bookingDate: new Date().toISOString().split("T")[0],
         type: "urgent",
+        fee: doctor?.fee,
         doctorAvailability: firstAvailableDay,
       })
     );
@@ -185,7 +190,7 @@ const PositiveResult = ({ urgentStatus }) => {
               }
               onClick={onClickContinue}
             >
-              Coninue
+              Cotinue
             </Button>
           </Box>
         )}
@@ -210,7 +215,11 @@ const PositiveResult = ({ urgentStatus }) => {
             mb: 2,
             fontWeight: "bold",
           }}
-          onClick={() => navigate("/patient-portal/channel-doctor/step-01")}
+          onClick={() =>
+            navigate(
+              "/patient-portal/channel-doctor/step-01?speciality=Cardiologist"
+            )
+          }
         >
           Channel Doctor
         </Button>

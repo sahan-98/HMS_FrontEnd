@@ -21,6 +21,13 @@ class LabAssistantService {
     });
   }
 
+  static async logout({ labAssistantId }) {
+    return await post({
+      path: `/labAssistant/logout/${labAssistantId}`,
+      data: {},
+    });
+  }
+
   static async updateLabAssistant(id, labAssistant) {
     return await post({
       path: "/labAssistant/update/" + id,

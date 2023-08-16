@@ -8,13 +8,18 @@ import LabReportService from "../../../app/services/lab-report-service";
 import PatientService from "../../../app/services/patient-service";
 import BedService from "../../../app/services/bed-service";
 
-const Banner = () => {
-  const [doctors, setDoctors] = useState("");
-  const [patients, setPatients] = useState("");
-  const [labReports, setLabReports] = useState("");
-  const [pendingLabReports, setPendingLabReports] = useState("");
-  const [bedCount, setBedCount] = useState("");
-
+const Banner = ({
+  doctors,
+  setDoctors,
+  patients,
+  setPatients,
+  labReports,
+  setLabReports,
+  pendingLabReports,
+  setPendingLabReports,
+  bedCount,
+  setBedCount,
+}) => {
   const getDoctorCount = useCallback(async () => {
     try {
       const reponse = await DoctorService.getDoctorCount();

@@ -230,11 +230,13 @@ const ViewAppointments = () => {
   return (
     <Layout>
       <Header />
-      <LabReport
-        open={labReportOpen}
-        setOpen={setLabReportOpen}
-        data={{ ...labReportToShow }}
-      />
+      {labReportOpen && (
+        <LabReport
+          open={labReportOpen}
+          setOpen={setLabReportOpen}
+          data={{ ...labReportToShow }}
+        />
+      )}
       <div
         style={{
           height: "70vh",
