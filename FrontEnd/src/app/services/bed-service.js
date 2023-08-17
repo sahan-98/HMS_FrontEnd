@@ -20,7 +20,7 @@ class BedService {
     });
   }
 
-  static async payLabReportBill({ bedBillId }) {
+  static async payBedBill({ bedBillId }) {
     return await post({
       path: `/bedBill/pay/${bedBillId}`,
       data: {},

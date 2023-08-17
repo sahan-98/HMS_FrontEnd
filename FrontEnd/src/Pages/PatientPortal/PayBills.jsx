@@ -1,12 +1,14 @@
 import { Box, Button, TextField, Typography, styled } from "@mui/material";
 import { useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { showSystemAlert } from "../../app/services/alertServices";
+import BedService from "../../app/services/bed-service";
+import LabReportService from "../../app/services/lab-report-service";
+import paymentOptions from "../../assets/images/payment-options.png";
 import BlueAcentCard from "../../components/BlueAcentCard/BlueAcentCard";
 import HeadingText from "../../components/HeadingText/HeadingText";
 import Header from "./Header";
 import Layout from "./Layout";
-import paymentOptions from "../../assets/images/payment-options.png";
-import { useSelector } from "react-redux";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
@@ -24,14 +26,30 @@ const PayBill = () => {
   const billType = searchParams.get("billtype");
   const amount = searchParams.get("amount");
   const billId = searchParams.get("billid");
-  const appointmentDetails = useSelector((state) => state.placeAppointment);
 
-  const handleNextClick = useCallback(() => {
-    navigate("/patient-portal/channel-doctor/completed");
-  }, [navigate]);
+  const handleNextClick = useCallback(async () => {
+    try {
+      if (billType === "labReportBill") {
+        await LabReportService.payLabReportBill({
+          labBillId: billId,
+        });
+        showSystemAlert("Payment Successful", "success");
+        navigate("/patient-portal/view-bills");
+      }
+      if (billType === "bedBill") {
+        await BedService.payBedBill({
+          bedBillId: billId,
+        });
+        showSystemAlert("Payment Successful", "success");
+        navigate("/patient-portal/view-bills");
+      }
+    } catch (error) {
+      showSystemAlert("Failed to make the payment", "error");
+    }
+  }, [navigate, billId, billType]);
 
   const handleBackClick = useCallback(() => {
-    navigate("/patient-portal/channel-doctor/step-02");
+    navigate("/patient-portal/view-bills");
   }, [navigate]);
 
   return (
