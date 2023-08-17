@@ -113,6 +113,7 @@ const ViewBills = () => {
             .split("T")[0],
           status: appointmentBill?.visitStatus,
           amount: appointmentBill?.totalPrice,
+          billType: "appointmentBill",
           billObj: appointmentBill,
         })
       );
@@ -132,6 +133,7 @@ const ViewBills = () => {
         date: new Date(bedBill?.allocationDate).toISOString().split("T")[0],
         status: bedBill?.payStatus,
         amount: bedBill?.totalPrice,
+        billType: "bedBill",
         billObj: bedBill,
       }));
       setBedBills(bedBills);
@@ -152,6 +154,7 @@ const ViewBills = () => {
           : "",
         status: labReportBill?.payStatus,
         amount: labReportBill?.totalPrice,
+        billType: "labReportBill",
         billObj: labReportBill,
       }));
       setLabReportBills(labReportBills);
@@ -212,9 +215,13 @@ const ViewBills = () => {
       align: "center",
       headerAlign: "center",
       disableClickEventBubbling: true,
-      renderCell: () => {
-        // const { billObj } = params.row;
-        const onClick = () => {};
+      renderCell: (params) => {
+        const { billObj, billType } = params.row;
+        const onClick = () => {
+          navigate(
+            `/patient-portal/pay-bill?billtype=${billType}&amount=${billObj?.totalPrice}&billid=${billObj?._id}`
+          );
+        };
         return (
           <>
             <StyledButton onClick={onClick}>Pay bill</StyledButton>
