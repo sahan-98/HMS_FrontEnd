@@ -113,6 +113,8 @@ const ViewBills = () => {
             .split("T")[0],
           status: appointmentBill?.visitStatus,
           amount: appointmentBill?.totalPrice,
+          billType: "appointmentBill",
+          paymentStatus: "paid",
           billObj: appointmentBill,
         })
       );
@@ -132,6 +134,8 @@ const ViewBills = () => {
         date: new Date(bedBill?.allocationDate).toISOString().split("T")[0],
         status: bedBill?.payStatus,
         amount: bedBill?.totalPrice,
+        billType: "bedBill",
+        paymentStatus: bedBill?.payStatus === "completed" ? "paid" : "pending",
         billObj: bedBill,
       }));
       setBedBills(bedBills);
@@ -152,6 +156,10 @@ const ViewBills = () => {
           : "",
         status: labReportBill?.payStatus,
         amount: labReportBill?.totalPrice,
+        billType: "labReportBill",
+
+        paymentStatus:
+          labReportBill?.payStatus === "completed" ? "paid" : "pending",
         billObj: labReportBill,
       }));
       setLabReportBills(labReportBills);
@@ -212,12 +220,31 @@ const ViewBills = () => {
       align: "center",
       headerAlign: "center",
       disableClickEventBubbling: true,
-      renderCell: () => {
-        // const { billObj } = params.row;
-        const onClick = () => {};
+      renderCell: (params) => {
+        const { billObj, billType, paymentStatus } = params.row;
+        const onClick = () => {
+          navigate(
+            `/patient-portal/pay-bill?billtype=${billType}&amount=${billObj?.totalPrice}&billid=${billObj?._id}`
+          );
+        };
         return (
           <>
-            <StyledButton onClick={onClick}>Pay bill</StyledButton>
+            <StyledButton
+              onClick={onClick}
+              disabled={
+                paymentStatus
+                  ? paymentStatus === "paid"
+                    ? true
+                    : false
+                  : false
+              }
+            >
+              {paymentStatus
+                ? paymentStatus === "paid"
+                  ? "Paid"
+                  : "Pay bill"
+                : "Pay bill"}
+            </StyledButton>
           </>
         );
       },
