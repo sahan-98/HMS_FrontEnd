@@ -134,15 +134,15 @@ PaitentRoutes.get("/getAllCountPatient", async (req, res) => {
 });
 
 // Delete Patient details
-PaitentRoutes.delete("/deleteLabAssistant/:id", async (req, res) => {
+PaitentRoutes.delete("/patient/:id", async (req, res) => {
   try {
     const paitent = await Paitent.findOne({ _id: req.params.id });
     if (!paitent) {
-      return res.status(422).json({ error: "Lab Assistant not found" });
+      return res.status(422).json({ error: "Patient not found" });
     }
 
     await Paitent.deleteOne({ _id: req.params.id });
-    res.json({ message: "Lab Assistant deleted successfully" });
+    res.json({ message: "Patient deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
