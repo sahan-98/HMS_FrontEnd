@@ -10,7 +10,9 @@ import {
   Button,
   Fade,
   IconButton,
+  MenuItem,
   Modal,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -18,6 +20,7 @@ import useRequest from "../../../hooks/use-request";
 import { useCallback, useState } from "react";
 import {
   AirlineSeatFlat,
+  AirlineSeatFlatAngled,
   AvTimer,
   Backspace,
   Delete,
@@ -27,16 +30,25 @@ import { showSystemAlert } from "../../../app/services/alertServices";
 import PatientService from "../../../app/services/patient-service";
 import { useNavigate } from "react-router-dom";
 import calculateAge from "../../../utils/calculate-age";
+import BedService from "../../../app/services/bed-service";
 
 export default function PatientList() {
   const navigate = useNavigate();
   const [showBedModal, setShowBedModal] = useState(false);
-  const [showPredictModal, setShowPredictModal] = useState(false);
+  const [predctTimeModal, setPredctTimeModal] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState({});
+
+  const [allocateBedObj, setAllocateBedObj] = useState({});
+  const [predictionData, setPredictionData] = useState({});
 
   const getAllPatients = useCallback(async () => {
     const response = await PatientService.getAllPatients();
     return response.data;
   }, []);
+
+  const { loading, error, data, setRefresh } = useRequest({
+    requestFn: getAllPatients,
+  });
 
   const handleEditPatientClick = useCallback(
     (patient) => {
@@ -45,9 +57,64 @@ export default function PatientList() {
     [navigate]
   );
 
-  const { loading, error, data, setRefresh } = useRequest({
-    requestFn: getAllPatients,
-  });
+  const handleAllocateBedClick = useCallback((patient) => {
+    setSelectedPatient(patient);
+    setShowBedModal(true);
+  }, []);
+
+  const allocateBedToPatient = useCallback(async () => {
+    try {
+      const response = await BedService.allocateBed({
+        patientid: selectedPatient?._id,
+        ...allocateBedObj,
+      });
+      console.log(response);
+      showSystemAlert("bed allocated", "success");
+      setRefresh((prev) => !prev);
+      setShowBedModal(false);
+    } catch (error) {
+      showSystemAlert("Unable to allocate bed", "error");
+      console.log(error);
+    }
+  }, [allocateBedObj, selectedPatient, setRefresh]);
+
+  const handleReleaseBedClick = useCallback(
+    async (bedId) => {
+      try {
+        const response = await BedService.releaseBed({ bedId });
+        console.log(response);
+        showSystemAlert("bed released", "success");
+        setRefresh((prev) => !prev);
+      } catch (error) {
+        showSystemAlert("Unable to release bed", "error");
+        console.log(error);
+      }
+    },
+    [setRefresh]
+  );
+
+  const handlePredictTimeClick = useCallback((patient) => {
+    setSelectedPatient(patient);
+    setPredctTimeModal(true);
+  }, []);
+
+  const handlePredictClick = useCallback(async () => {
+    try {
+      const response = await BedService.predictTime({
+        patientId: selectedPatient?._id,
+        wardNo: selectedPatient?.bed[0]?.wardNo,
+        age: calculateAge(new Date(selectedPatient?.dateOfBirth)),
+        gender: selectedPatient?.gender,
+        ...predictionData,
+      });
+      console.log(response);
+      setRefresh((prev) => !prev);
+      setPredctTimeModal(false);
+    } catch (error) {
+      showSystemAlert("Unable to predict time", "error");
+      console.log(error);
+    }
+  }, [predictionData, selectedPatient, setRefresh]);
 
   if (loading) {
     return <span>Loading patients</span>;
@@ -57,20 +124,21 @@ export default function PatientList() {
     return <span>Failed to load data. Internal server error</span>;
   }
 
-  const deleteDoctor = async (patientId) => {
+  const deletePatient = async (patientId) => {
     try {
       const response = await PatientService.deletePatient({ patientId });
       console.log(response);
       showSystemAlert("patient deleted", "success");
       setRefresh((prev) => !prev);
     } catch (error) {
+      showSystemAlert("Unable to delete patient", "error");
       console.log(error);
     }
   };
 
   return (
     <TableContainer component={Paper}>
-      <Modal open={showBedModal} closeAfterTransition disableAutoFocus={true}>
+      <Modal open={showBedModal} closeAfterTransition>
         <Fade in={showBedModal}>
           <Box
             sx={{
@@ -90,20 +158,32 @@ export default function PatientList() {
             <TextField
               id="standard-basic"
               placeholder="Enter bed number"
-              name="firstname"
+              name="bedNo"
               required
               fullWidth
               size="small"
               sx={{ mb: 2 }}
+              onChange={(e) => {
+                setAllocateBedObj({
+                  ...allocateBedObj,
+                  bedNo: e.target.value,
+                });
+              }}
             />
             <TextField
               id="standard-basic"
               placeholder="Enter ward number"
-              name="firstname"
+              name="wardNo"
               required
               fullWidth
               size="small"
               sx={{ mb: 2 }}
+              onChange={(e) => {
+                setAllocateBedObj({
+                  ...allocateBedObj,
+                  wardNo: e.target.value,
+                });
+              }}
             />
 
             <Box
@@ -115,7 +195,14 @@ export default function PatientList() {
                 gap: 2,
               }}
             >
-              <Button variant="outlined" size="small">
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => {
+                  setSelectedPatient({});
+                  setShowBedModal(false);
+                }}
+              >
                 Cancel
               </Button>
               <Button
@@ -124,6 +211,7 @@ export default function PatientList() {
                 sx={{
                   boxShadow: 0,
                 }}
+                onClick={allocateBedToPatient}
               >
                 Allocate
               </Button>
@@ -131,8 +219,12 @@ export default function PatientList() {
           </Box>
         </Fade>
       </Modal>
-      <Modal open={showBedModal} closeAfterTransition disableAutoFocus={true}>
-        <Fade in={showBedModal}>
+      <Modal
+        open={predctTimeModal}
+        closeAfterTransition
+        disableAutoFocus={true}
+      >
+        <Fade in={predctTimeModal}>
           <Box
             sx={{
               position: "absolute",
@@ -147,25 +239,120 @@ export default function PatientList() {
               px: 2,
             }}
           >
-            <h3>Allocate Bed</h3>
+            <h3>Predict time to release</h3>
             <TextField
-              id="standard-basic"
-              placeholder="Enter bed number"
-              name="firstname"
+              placeholder="Enter extra rooms "
               required
               fullWidth
               size="small"
               sx={{ mb: 2 }}
+              value={predictionData?.extraRooms}
+              onChange={(e) => {
+                setPredictionData({
+                  ...predictionData,
+                  extraRooms: e.target.value,
+                });
+              }}
             />
             <TextField
-              id="standard-basic"
-              placeholder="Enter ward number"
-              name="firstname"
+              placeholder="Enter staff available"
               required
               fullWidth
               size="small"
               sx={{ mb: 2 }}
+              value={predictionData?.staffAvailable}
+              onChange={(e) => {
+                setPredictionData({
+                  ...predictionData,
+                  staffAvailable: e.target.value,
+                });
+              }}
             />
+            <TextField
+              placeholder="Enter no of visitors"
+              required
+              fullWidth
+              size="small"
+              sx={{ mb: 2 }}
+              value={predictionData?.visitors}
+              onChange={(e) => {
+                setPredictionData({
+                  ...predictionData,
+                  visitors: e.target.value,
+                });
+              }}
+            />
+
+            <Select
+              placeholder="Select admission type"
+              variant="outlined"
+              fullWidth
+              size="small"
+              sx={{ mb: 2 }}
+              value={
+                predictionData?.admissionType
+                  ? predictionData?.admissionType
+                  : "NO_SELECTION"
+              }
+              onChange={(e) => {
+                setPredictionData({
+                  ...predictionData,
+                  admissionType: e.target.value,
+                });
+              }}
+            >
+              <MenuItem value={"NO_SELECTION"}>Select admission type</MenuItem>
+              <MenuItem value={"TRAUMA"}>Trauma</MenuItem>
+              <MenuItem value={"URGENT"}>Urgent</MenuItem>
+            </Select>
+
+            <Select
+              placeholder="Select illness severity"
+              variant="outlined"
+              fullWidth
+              size="small"
+              sx={{ mb: 2 }}
+              value={
+                predictionData?.illnessSeverity
+                  ? predictionData?.illnessSeverity
+                  : "NO_SELECTION"
+              }
+              onChange={(e) => {
+                setPredictionData({
+                  ...predictionData,
+                  illnessSeverity: e.target.value,
+                });
+              }}
+            >
+              <MenuItem value={"NO_SELECTION"}>
+                Select illness severity
+              </MenuItem>
+              <MenuItem value={"MINOR"}>Minor</MenuItem>
+              <MenuItem value={"MODERATE"}>Moderate</MenuItem>
+            </Select>
+
+            <Select
+              placeholder="Select insurance type"
+              variant="outlined"
+              fullWidth
+              size="small"
+              sx={{ mb: 2 }}
+              value={
+                predictionData?.insurance
+                  ? predictionData?.insurance
+                  : "NO_SELECTION"
+              }
+              onChange={(e) => {
+                setPredictionData({
+                  ...predictionData,
+                  insurance: e.target.value,
+                });
+              }}
+            >
+              <MenuItem value={"NO_SELECTION"}>Select insurance type</MenuItem>
+              <MenuItem value={"YES"}>Has insurance</MenuItem>
+              <MenuItem value={"NO"}>No insurance</MenuItem>
+            </Select>
 
             <Box
               sx={{
@@ -176,7 +363,15 @@ export default function PatientList() {
                 gap: 2,
               }}
             >
-              <Button variant="outlined" size="small">
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => {
+                  setSelectedPatient({});
+                  setPredctTimeModal(false);
+                  setPredictionData({});
+                }}
+              >
                 Cancel
               </Button>
               <Button
@@ -185,8 +380,9 @@ export default function PatientList() {
                 sx={{
                   boxShadow: 0,
                 }}
+                onClick={handlePredictClick}
               >
-                Allocate
+                Predict
               </Button>
             </Box>
           </Box>
@@ -224,26 +420,30 @@ export default function PatientList() {
                 {calculateAge(new Date(patientData?.dateOfBirth))}
               </TableCell>
               <TableCell align="center">
-                <IconButton
-                  title="Assign bed"
-                  onClick={() => {
-                    handleEditPatientClick(patientData);
-                  }}
-                >
-                  <AirlineSeatFlat />
-                </IconButton>
-                <IconButton
-                  title="Releasse bed"
-                  onClick={() => {
-                    handleEditPatientClick(patientData);
-                  }}
-                >
-                  <Backspace />
-                </IconButton>
+                {patientData?.bed?.length === 0 ? (
+                  <IconButton
+                    title="Assign bed"
+                    onClick={() => {
+                      handleAllocateBedClick(patientData);
+                    }}
+                  >
+                    <AirlineSeatFlat />
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    title="Releasse bed"
+                    onClick={() => {
+                      handleReleaseBedClick(patientData?.bed[0]?._id);
+                    }}
+                  >
+                    <AirlineSeatFlatAngled />
+                  </IconButton>
+                )}
+
                 <IconButton
                   title="Predict time"
                   onClick={() => {
-                    handleEditPatientClick(patientData);
+                    handlePredictTimeClick(patientData);
                   }}
                 >
                   <AvTimer />
@@ -259,7 +459,7 @@ export default function PatientList() {
                 <IconButton
                   title="Delete patient"
                   onClick={() => {
-                    deleteDoctor(patientData?._id);
+                    deletePatient(patientData?._id);
                   }}
                 >
                   <Delete />

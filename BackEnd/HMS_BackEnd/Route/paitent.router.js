@@ -134,7 +134,7 @@ PaitentRoutes.get("/getAllCountPatient", async (req, res) => {
 });
 
 // Delete Patient details
-PaitentRoutes.delete("/patient/:id", async (req, res) => {
+PaitentRoutes.delete("/:id", async (req, res) => {
   try {
     const paitent = await Paitent.findOne({ _id: req.params.id });
     if (!paitent) {

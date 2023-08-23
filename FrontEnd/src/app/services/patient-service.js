@@ -25,7 +25,7 @@ class PatientService {
   }
 
   static async deletePatient({ patientId }) {
-    return await del({ path: `/patient/deletepatients/${patientId}` });
+    return await del({ path: `/patient/${patientId}` });
   }
 
   static async login({ userName, password }) {
