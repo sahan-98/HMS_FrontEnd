@@ -57,10 +57,9 @@ bedRoutes.post("/add", async (req, res) => {
 });
 
 // bed manual allocate
-bedRoutes.post("/allocateBed/:id", async (req, res) => {
-  console.log(req.body);
+bedRoutes.post("/allocateBed", async (req, res) => {
   try {
-    const { patientid } = req.body;
+    const { patientid, bedNo, wardNo } = req.body;
 
     const exist = await Bed.findOne({ patientid: patientid });
     if (exist) {
@@ -68,8 +67,12 @@ bedRoutes.post("/allocateBed/:id", async (req, res) => {
         .status(202)
         .json({ warn: "A bed is Exist with this patientId" });
     }
-    Bed.findById(req.params.id)
-      .then((bedObj) => {
+    Bed.find({ bedNo: bedNo, wardNo: wardNo, availability: true })
+      .then((bedObjs) => {
+        if (bedObjs.length === 0) {
+          return res.status(202).json({ warn: "No bed available" });
+        }
+        const bedObj = bedObjs[0];
         bedObj.patientid = req.body.patientid;
         bedObj.availability = false;
         bedObj.allocatedDate = req.body.allocatedDate;
@@ -79,7 +82,10 @@ bedRoutes.post("/allocateBed/:id", async (req, res) => {
           .then(() => {
             return res.status(200).json("allocated");
           })
-          .catch((err) => res.status(400).json({ message: err }));
+          .catch((err) => {
+            console.log(err);
+            res.status(400).json({ message: err });
+          });
       })
       .catch((err) => res.status(400).json({ message: err }));
   } catch (error) {

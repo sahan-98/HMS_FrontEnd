@@ -30,7 +30,8 @@ import calculateAge from "../../../utils/calculate-age";
 
 export default function PatientList() {
   const navigate = useNavigate();
-  const [showBedModal, setShowBedModal] = useState(true);
+  const [showBedModal, setShowBedModal] = useState(false);
+  const [showPredictModal, setShowPredictModal] = useState(false);
 
   const getAllPatients = useCallback(async () => {
     const response = await PatientService.getAllPatients();
@@ -88,7 +89,7 @@ export default function PatientList() {
             <h3>Allocate Bed</h3>
             <TextField
               id="standard-basic"
-              placeholder="Enter first name"
+              placeholder="Enter bed number"
               name="firstname"
               required
               fullWidth
@@ -97,7 +98,59 @@ export default function PatientList() {
             />
             <TextField
               id="standard-basic"
-              placeholder="Enter first name"
+              placeholder="Enter ward number"
+              name="firstname"
+              required
+              fullWidth
+              size="small"
+              sx={{ mb: 2 }}
+            />
+
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "end",
+                alignItems: "center",
+                mb: 2,
+                gap: 2,
+              }}
+            >
+              <Button variant="outlined" size="small">
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                size="small"
+                sx={{
+                  boxShadow: 0,
+                }}
+              >
+                Allocate
+              </Button>
+            </Box>
+          </Box>
+        </Fade>
+      </Modal>
+      <Modal open={showBedModal} closeAfterTransition disableAutoFocus={true}>
+        <Fade in={showBedModal}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: { xs: "90%", sm: 450, md: 350 },
+              bgcolor: "background.paper",
+              border: "none",
+              borderRadius: 2,
+              boxShadow: 24,
+              px: 2,
+            }}
+          >
+            <h3>Allocate Bed</h3>
+            <TextField
+              id="standard-basic"
+              placeholder="Enter bed number"
               name="firstname"
               required
               fullWidth
@@ -106,16 +159,7 @@ export default function PatientList() {
             />
             <TextField
               id="standard-basic"
-              placeholder="Enter first name"
-              name="firstname"
-              required
-              fullWidth
-              size="small"
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              id="standard-basic"
-              placeholder="Enter first name"
+              placeholder="Enter ward number"
               name="firstname"
               required
               fullWidth

@@ -7,6 +7,14 @@ import DoctorService from "../../../app/services/doctor-service";
 import LabReportService from "../../../app/services/lab-report-service";
 import PatientService from "../../../app/services/patient-service";
 import BedService from "../../../app/services/bed-service";
+import {
+  Bed,
+  BedOutlined,
+  DocumentScanner,
+  FilePresent,
+  InsertDriveFileOutlined,
+  Report,
+} from "@mui/icons-material";
 
 const Banner = ({
   doctors,
@@ -157,11 +165,11 @@ const Banner = ({
             }}
           >
             <div>
-              <FiUsers
+              <InsertDriveFileOutlined
                 style={{
                   fontSize: "3rem",
-                  color: "#1572A1",
-                  border: "2px solid #1572A1",
+                  color: "#8884d8",
+                  border: "2px solid #8884d8",
                   borderRadius: "20%",
                   padding: "5px",
                 }}
@@ -182,7 +190,7 @@ const Banner = ({
             }}
           >
             <div>
-              <FiUsers
+              <BedOutlined
                 style={{
                   fontSize: "3rem",
                   color: "#1572A1",

@@ -273,7 +273,25 @@ export const AddLabAssistant = () => {
         </Grid>
         <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
           <Box sx={{ display: "flex", margin: "1rem 0" }}>
-            <Button variant="outlined" color="error" type="reset">
+            <Button
+              variant="outlined"
+              color="error"
+              type="reset"
+              onClick={() => {
+                setValue("firstname", "");
+                setValue("lastname", "");
+                setValue("email", "");
+                setValue("userName", "");
+                setValue("password", "");
+                setValue("conpass", "");
+                setValue("gender", "");
+                setDate(new Date());
+                setValue("dateOfJoin", "");
+                setValue("speciality", "");
+                setValue("mobile", "");
+                setValue("address", "");
+              }}
+            >
               RESET
             </Button>
             <Chip
