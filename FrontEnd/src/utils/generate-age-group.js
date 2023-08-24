@@ -16,6 +16,6 @@ export default function generateAgeGroup(age) {
   } else if (age <= 90) {
     return { Age_81_90: [1] };
   } else {
-    return { Age_91100: [1] };
+    return { Age_91_100: [1] };
   }
 }

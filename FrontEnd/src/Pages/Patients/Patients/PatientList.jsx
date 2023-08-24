@@ -101,7 +101,7 @@ export default function PatientList() {
   const handlePredictClick = useCallback(async () => {
     try {
       const response = await BedService.predictTime({
-        patientId: selectedPatient?._id,
+        _id: selectedPatient?.bed[0]?._id,
         wardNo: selectedPatient?.bed[0]?.wardNo,
         age: calculateAge(new Date(selectedPatient?.dateOfBirth)),
         gender: selectedPatient?.gender,
@@ -403,6 +403,7 @@ export default function PatientList() {
             <TableCell align="center">Mobile</TableCell>
             <TableCell align="center">Gender</TableCell>
             <TableCell align="center">Age</TableCell>
+            <TableCell align="center">Bed Details</TableCell>
             <TableCell align="center">Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -419,6 +420,22 @@ export default function PatientList() {
               <TableCell align="center">
                 {calculateAge(new Date(patientData?.dateOfBirth))}
               </TableCell>
+              <TableCell align="center">
+                {patientData?.bed?.length === 0 ? (
+                  <span style={{ color: "#737373" }}> No bed allocated </span>
+                ) : (
+                  <div
+                    style={{
+                      textAlign: "start",
+                      paddingLeft: "20px",
+                      fontSize: "12px",
+                    }}
+                  >
+                    Bed no: 05<br></br>Ward no: 02<br></br>Estimation: 2 days
+                  </div>
+                )}
+              </TableCell>
+
               <TableCell align="center">
                 {patientData?.bed?.length === 0 ? (
                   <IconButton

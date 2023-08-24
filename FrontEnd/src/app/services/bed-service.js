@@ -30,6 +30,7 @@ class BedService {
   }
 
   static async predictTime({
+    _id,
     extraRooms,
     staffAvailable,
     visitors,
@@ -43,6 +44,7 @@ class BedService {
     return await post({
       path: `/bed/predict`,
       data: {
+        _id,
         Available_Extra_Rooms_in_Hospital: [extraRooms],
         staff_available: [staffAvailable],
         Visitors_with_Patient: [visitors],
@@ -61,7 +63,7 @@ class BedService {
         Age_61_70: [0],
         Age_71_80: [0],
         Age_81_90: [0],
-        Age_91100: [0],
+        Age_91_100: [0],
         ...generateAgeGroup(age),
         gender_Male: [gender === "MALE" ? 1 : 0],
         gender_Other: [gender !== "MALE" ? 1 : 0],
