@@ -445,6 +445,7 @@ export default function PatientList() {
                   onClick={() => {
                     handlePredictTimeClick(patientData);
                   }}
+                  disabled={patientData?.bed?.length === 0}
                 >
                   <AvTimer />
                 </IconButton>
