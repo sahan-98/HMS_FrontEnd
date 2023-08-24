@@ -19,12 +19,19 @@ import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { BsCardChecklist } from "react-icons/bs";
-import { FaUserNurse } from "react-icons/fa";
+import { FaBed, FaUserNurse } from "react-icons/fa";
 import { FcHome } from "react-icons/fc";
-import { MdOutlinePersonAddAlt } from "react-icons/md";
+import {
+  MdAirlineSeatFlat,
+  MdNightShelter,
+  MdOutlineAirlineSeatFlat,
+  MdOutlinePersonAddAlt,
+} from "react-icons/md";
 import { TbBed, TbTestPipe } from "react-icons/tb";
 import { NavLink, Outlet } from "react-router-dom";
 import logo from "../../assets/images/hms-logo.png";
+import { logout } from "../../reducers/loginSlice";
+import { useDispatch } from "react-redux";
 
 const drawerWidth = 240;
 
@@ -74,6 +81,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function NewHeader() {
+  const dispatch = useDispatch();
   const [open, setOpen] = React.useState(true);
   const [expandedNodeId, setExpandedNodeId] = React.useState("1");
 
@@ -451,9 +459,106 @@ export default function NewHeader() {
             </NavLink>
           </TreeView>
 
+          {/* Bed management for Admin view  */}
+          <ListItem
+            disablePadding
+            onClick={() => {
+              if (expandedNodeId === 4) {
+                setExpandedNodeId(-1);
+              } else {
+                setExpandedNodeId(4);
+              }
+            }}
+          >
+            <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
+              <ListItemIcon>
+                <MdOutlineAirlineSeatFlat
+                  style={{ color: "#000", fontSize: "1.5rem" }}
+                />
+              </ListItemIcon>
+              <ListItemText primary="Beds" />
+            </ListItemButton>
+          </ListItem>
+
+          <TreeView
+            style={{
+              color: "#000",
+              background: "#fff",
+              textAlign: "justify",
+              paddingLeft: "2.5rem",
+            }}
+            aria-label="file system navigator"
+            defaultExpanded={["1"]}
+            defaultCollapseIcon={
+              <div style={{ padding: ".3rem 0", visibility: "hidden" }}>
+                <FaUserNurse style={{ color: "#000", fontSize: "1.5rem" }} />
+              </div>
+            }
+            defaultExpandIcon={
+              <div style={{ padding: ".3rem 0", visibility: "hidden" }}>
+                <FaUserNurse style={{ color: "#000", fontSize: "1.5rem" }} />
+              </div>
+            }
+            sx={{
+              height: expandedNodeId === 4 ? 100 : 0,
+              flexGrow: 1,
+              maxWidth: 400,
+              overflowY: "hidden",
+              transition: "height 0.5s",
+            }}
+          >
+            <NavLink
+              to="/beds"
+              style={{
+                textDecoration: "none",
+                width: "100%",
+                color: "#000",
+              }}
+            >
+              <ListItem disablePadding>
+                <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
+                  <ListItemIcon>
+                    <BsCardChecklist
+                      style={{ color: "#000", fontSize: "1.3rem" }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="All Beds"
+                    style={{ marginLeft: "-1rem" }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </NavLink>
+            <NavLink
+              to="/add-bed"
+              style={{
+                textDecoration: "none",
+                width: "100%",
+                color: "#000",
+              }}
+            >
+              <ListItem disablePadding>
+                <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>
+                  <ListItemIcon>
+                    <MdOutlinePersonAddAlt
+                      style={{ color: "#000", fontSize: "1.4rem" }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Add Bed"
+                    style={{ marginLeft: "-1rem" }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </NavLink>
+          </TreeView>
+
           <NavLink
             to="/admin-login"
             style={{ textDecoration: "none", width: "100%", color: "#000" }}
+            onClick={() => {
+              dispatch(logout());
+            }}
           >
             <ListItem disablePadding>
               <ListItemButton style={{ borderRadius: "0 40px 40px 0" }}>

@@ -52,6 +52,15 @@ const PayBill = () => {
     navigate("/patient-portal/view-bills");
   }, [navigate]);
 
+  let billHeadingName = "";
+
+  if (billType === "labReportBill") {
+    billHeadingName = "Lab Report Bill";
+  }
+  if (billType === "bedBill") {
+    billHeadingName = "Bed Bill";
+  }
+
   return (
     <Layout>
       <Header />
@@ -65,7 +74,7 @@ const PayBill = () => {
         }}
       >
         <BlueAcentCard width="450px">
-          <HeadingText text="Channel Doctor" />
+          <HeadingText text={billHeadingName} />
 
           <Typography
             sx={{
@@ -73,7 +82,7 @@ const PayBill = () => {
               color: "#636363",
             }}
           >
-            Channeling Fee : € {amount}
+            Amount Payable : € {amount}
           </Typography>
 
           <TextField

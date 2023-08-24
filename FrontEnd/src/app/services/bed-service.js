@@ -2,6 +2,25 @@ import generateAgeGroup from "../../utils/generate-age-group";
 import { get, post } from "../api-manager";
 
 class BedService {
+  static async getAllBeds() {
+    return await get({
+      path: `/bed`,
+    });
+  }
+  static async newBed({ bedNo, availability, wardNo, bedFee }) {
+    return await post({
+      path: `/bed/add`,
+      data: {
+        bedNo,
+        availability,
+        wardNo,
+        allocatedDate: "",
+        releaseDate: "",
+        bedFee,
+      },
+    });
+  }
+
   static async autoAllocateBed({ patientid, allocatedDate }) {
     return await post({
       path: `/bed/autoAllocateBed`,

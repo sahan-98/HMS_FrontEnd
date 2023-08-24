@@ -26,12 +26,12 @@ bedRoutes.post("/add", async (req, res) => {
     bedFee,
   } = req.body;
 
-  const exist = await Bed.findOne({ patientid: patientid });
-  if (exist) {
-    return res
-      .status(202)
-      .json({ warn: "A bed is Exist with this patient Id" });
-  }
+  // const exist = await Bed.findOne({ patientid: patientid });
+  // if (exist) {
+  //   return res
+  //     .status(202)
+  //     .json({ warn: "A bed is Exist with this patient Id" });
+  // }
 
   if (bedNo == "" || wardNo == "" || bedFee == "")
     return res.status(202).json({ warn: "Important field(s) are empty" });
@@ -39,7 +39,7 @@ bedRoutes.post("/add", async (req, res) => {
   const newBed = new Bed({
     bedNo,
     patientid,
-    availability: true,
+    availability,
     wardNo,
     allocatedDate,
     releaseDate,

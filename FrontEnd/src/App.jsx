@@ -34,6 +34,9 @@ import LabAssistantLogin from "./Pages/LabAssistantPortal/LabAssistantLogin";
 import PatientRegistration from "./Pages/PatientPortal/PatientRegistration";
 import ViewBills from "./Pages/PatientPortal/ViewBills";
 import PayBill from "./Pages/PatientPortal/PayBills";
+import AllBeds from "./Pages/Beds/AllBeds";
+import { AddBed } from "./Pages/Beds/AddBed";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -55,27 +58,125 @@ function App() {
           <Route path="/doctor-login" element={<DoctorLogin />} />
 
           <Route path="/patient-portal">
-            <Route path="landing" index element={<Landing />} />
-            <Route path="pay-bill" index element={<PayBill />} />
+            <Route
+              path="landing"
+              index
+              element={
+                <ProtectedRoute loginPath={"/patient-login"}>
+                  <Landing />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="pay-bill"
+              index
+              element={
+                <ProtectedRoute loginPath={"/patient-login"}>
+                  <PayBill />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="view-appointments"
               index
-              element={<ViewAppointments />}
+              element={
+                <ProtectedRoute loginPath={"/patient-login"}>
+                  <ViewAppointments />
+                </ProtectedRoute>
+              }
             />
-            <Route path="view-bills" index element={<ViewBills />} />
+            <Route
+              path="view-bills"
+              index
+              element={
+                <ProtectedRoute loginPath={"/patient-login"}>
+                  <ViewBills />
+                </ProtectedRoute>
+              }
+            />
             <Route path="heart-disease-prediction">
-              <Route path="step-01" element={<HDPStep01 />} />
-              <Route path="step-02" element={<HDPStep02 />} />
-              <Route path="step-03" element={<HDPStep03 />} />
-              <Route path="step-04" element={<HDPStep04 />} />
-              <Route path="result" element={<HDPResult />} />
-              <Route path="payment" element={<HDPDoctorPayment />} />
+              <Route
+                path="step-01"
+                element={
+                  <ProtectedRoute loginPath={"/patient-login"}>
+                    <HDPStep01 />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="step-02"
+                element={
+                  <ProtectedRoute loginPath={"/patient-login"}>
+                    <HDPStep02 />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="step-03"
+                element={
+                  <ProtectedRoute loginPath={"/patient-login"}>
+                    <HDPStep03 />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="step-04"
+                element={
+                  <ProtectedRoute loginPath={"/patient-login"}>
+                    <HDPStep04 />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="result"
+                element={
+                  <ProtectedRoute loginPath={"/patient-login"}>
+                    <HDPResult />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="payment"
+                element={
+                  <ProtectedRoute loginPath={"/patient-login"}>
+                    <HDPDoctorPayment />
+                  </ProtectedRoute>
+                }
+              />
             </Route>
             <Route path="channel-doctor">
-              <Route path="step-01" element={<ChannelDoctorStep01 />} />
-              <Route path="step-02" element={<ChannelDoctorStep02 />} />
-              <Route path="payment" element={<ChannelDoctorPayment />} />
-              <Route path="completed" element={<ChannelDoctorResult />} />
+              <Route
+                path="step-01"
+                element={
+                  <ProtectedRoute loginPath={"/patient-login"}>
+                    <ChannelDoctorStep01 />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="step-02"
+                element={
+                  <ProtectedRoute loginPath={"/patient-login"}>
+                    <ChannelDoctorStep02 />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="payment"
+                element={
+                  <ProtectedRoute loginPath={"/patient-login"}>
+                    <ChannelDoctorPayment />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="completed"
+                element={
+                  <ProtectedRoute loginPath={"/patient-login"}>
+                    <ChannelDoctorResult />
+                  </ProtectedRoute>
+                }
+              />
 
               {/* <Route path="step-02" element={<HDPStep02 />} />
               <Route path="step-03" element={<HDPStep03 />} />
@@ -88,7 +189,11 @@ function App() {
             <Route
               path="view-appointments"
               index
-              element={<DoctorViewAppointments />}
+              element={
+                <ProtectedRoute loginPath={"/doctor-login"}>
+                  <DoctorViewAppointments />
+                </ProtectedRoute>
+              }
             />
           </Route>
 
@@ -96,18 +201,32 @@ function App() {
             <Route
               path="view-assignments"
               index
-              element={<ViewAssignments />}
+              element={
+                <ProtectedRoute loginPath={"/doctor-login"}>
+                  <ViewAssignments />
+                </ProtectedRoute>
+              }
             />
           </Route>
           {/* NESTED ROUTING APPLIED */}
-          <Route path="/" element={<Dashboard />}>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute loginPath={"/admin-login"}>
+                <Dashboard />{" "}
+              </ProtectedRoute>
+            }
+          >
             <Route index element={<Home></Home>} />
+
             <Route path="doctors" element={<PatientViewDoctor />} />
             <Route path="addDoctor" element={<AddDoctor />} />
             <Route path="patients" element={<Patients />} />
             <Route path="addPatient" element={<AddPatient />}>
               <Route path=":email" element={<AddPatient />} />
             </Route>
+            <Route path="beds" element={<AllBeds />} />
+            <Route path="add-bed" element={<AddBed />} />
             <Route path="viewDoctors" element={<ViewDoctors />} />
             <Route path="patientDetails/:id" element={<PatientDetails />} />
             <Route path="registration" element={<Registration />} />
