@@ -431,7 +431,14 @@ export default function PatientList() {
                       fontSize: "12px",
                     }}
                   >
-                    Bed no: 05<br></br>Ward no: 02<br></br>Estimation: 2 days
+                    Bed no: {patientData?.bed[0]?.bedNo}
+                    <br></br>Ward no: {patientData?.bed[0]?.wardNo}
+                    <br></br>
+                    {patientData?.bed[0]?.estimation
+                      ? `Estimation: ${
+                          patientData?.bed[0]?.estimation.split(".")[0]
+                        } days`
+                      : ""}
                   </div>
                 )}
               </TableCell>

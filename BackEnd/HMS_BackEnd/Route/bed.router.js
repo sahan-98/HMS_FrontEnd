@@ -217,10 +217,10 @@ bedRoutes.route("/release-all-beds").post(async function (req, res) {
 
 //estimate bed stay days
 bedRoutes.post("/stayDays", async (req, res) => {
-
   await axios
     .post(`http://127.0.0.1:5001/predict`, {
-      Available_Extra_Rooms_in_Hospital: req.body.Available_Extra_Rooms_in_Hospital,
+      Available_Extra_Rooms_in_Hospital:
+        req.body.Available_Extra_Rooms_in_Hospital,
       staff_available: req.body.staff_available,
       Visitors_with_Patient: req.body.Visitors_with_Patient,
       Admission_Deposit: req.body.Admission_Deposit,
@@ -248,18 +248,18 @@ bedRoutes.post("/stayDays", async (req, res) => {
     })
     .then(async (flaskRes) => {
       console.log("==========Flask Response is============");
-      console.log(flaskRes);
+      console.log(flaskRes.data);
       console.log("====================================");
 
       try {
         const estimateValue = flaskRes.data.predicted_stay.toString();
         const bedid = req.body._id;
         const bedObj = await Bed.findOne({ _id: bedid });
-      
+
         if (!bedObj) {
           return res.status(404).json({ message: "Bed not found" });
         }
-        
+
         bedObj.estimation = estimateValue;
 
         await bedObj.save();
@@ -268,7 +268,6 @@ bedRoutes.post("/stayDays", async (req, res) => {
         console.error(error);
         return res.status(500).json({ message: "Server Error" });
       }
-      
     })
     .catch((err) => {
       console.log(err);

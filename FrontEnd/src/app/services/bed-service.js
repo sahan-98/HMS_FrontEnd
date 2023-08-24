@@ -42,7 +42,7 @@ class BedService {
     insurance,
   }) {
     return await post({
-      path: `/bed/predict`,
+      path: `/bed/stayDays`,
       data: {
         _id,
         Available_Extra_Rooms_in_Hospital: [extraRooms],
