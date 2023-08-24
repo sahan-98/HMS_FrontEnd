@@ -3,12 +3,12 @@ const mongoose = require("mongoose"); // Erase if already required
 // Declare the Schema of the Mongo model
 var bedSchema = new mongoose.Schema({
   bedNo: {
-    required: true,
+    required: false,
     type: String,
   },
 
   wardNo: {
-    required: true,
+    required: false,
     type: String,
   },
 
@@ -18,7 +18,7 @@ var bedSchema = new mongoose.Schema({
   },
 
   availability: {
-    required: true,
+    required: false,
     type: Boolean,
   },
 
@@ -33,11 +33,12 @@ var bedSchema = new mongoose.Schema({
   },
 
   bedFee: {
-    required: true,
+    required: false,
     type: Number,
   },
+  
   estimation: {
-    type: Number,
+    type: String,
   },
 });
 
