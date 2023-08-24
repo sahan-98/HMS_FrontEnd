@@ -134,7 +134,7 @@ PaitentRoutes.get("/getAllCountPatient", async (req, res) => {
 });
 
 // Delete Patient details
-PaitentRoutes.delete("/patient/:id", async (req, res) => {
+PaitentRoutes.delete("/:id", async (req, res) => {
   try {
     const paitent = await Paitent.findOne({ _id: req.params.id });
     if (!paitent) {
@@ -211,7 +211,17 @@ PaitentRoutes.route("/:id").get(async function (req, res) {
 
 PaitentRoutes.get("/", async (req, res) => {
   try {
-    let paitents = await Paitent.find().sort({ createdAt: -1 });
+    let paitents = await Paitent.aggregate([
+      { $addFields: { patientId: { $toString: "$_id" } } },
+      {
+        $lookup: {
+          from: "beds",
+          localField: "patientId",
+          foreignField: "patientid",
+          as: "bed",
+        },
+      },
+    ]);
     if (!paitents) {
       console.log("err");
       return res.status(400).json({ message: "Details not available" });

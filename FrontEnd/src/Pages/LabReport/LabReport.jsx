@@ -131,7 +131,7 @@ const LabReport = ({ open, setOpen, data }) => {
 
   return (
     <CustomModal open={open}>
-      <h2>Assign Lab Task</h2>
+      <h2>{data?.labReportid ? "View" : "Assign"} Lab Task</h2>
 
       <Grid container my={1}>
         <Grid item xs={12} sm={4}>

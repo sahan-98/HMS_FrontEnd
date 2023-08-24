@@ -1,4 +1,4 @@
-import { get, post } from "../api-manager.js";
+import { del, get, post } from "../api-manager.js";
 
 class LabAssistantService {
   static async getAllLabAssistants() {
@@ -32,6 +32,12 @@ class LabAssistantService {
     return await post({
       path: "/labAssistant/update/" + id,
       data: labAssistant,
+    });
+  }
+
+  static async deleteLabAssistant({ labAssistantId }) {
+    return await del({
+      path: "/labAssistant/" + labAssistantId,
     });
   }
 }

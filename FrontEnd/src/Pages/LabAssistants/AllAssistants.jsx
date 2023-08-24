@@ -11,6 +11,7 @@ import LabAssistantService from "../../app/services/lab-assistant-service.js";
 import useRequest from "../../hooks/use-request.js";
 import { Delete, Edit } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { showSystemAlert } from "../../app/services/alertServices.js";
 
 export default function AllLabAssistants() {
   const navigate = useNavigate();
@@ -38,16 +39,20 @@ export default function AllLabAssistants() {
     return <span>Failed to load data. Internal server error</span>;
   }
 
-  // const deleteLabAssistant = async (labAssistantId) => {
-  //   try {
-  //     const response = await LabAssistantService.deleteLabAssistant({ labAssistantId });
-  //     console.log(response);
-  //     showSystemAlert("Lab assistant deleted", "success");
-  //     setRefresh((prev) => !prev);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const deleteLabAssistant = async (labAssistantId) => {
+    try {
+      const response = await LabAssistantService.deleteLabAssistant({
+        labAssistantId,
+      });
+      console.log(response);
+      showSystemAlert("Lab assistant deleted", "success");
+      setRefresh((prev) => !prev);
+    } catch (error) {
+      showSystemAlert("Unable to delete lab assistant", "error");
+
+      console.log(error);
+    }
+  };
 
   return (
     <TableContainer component={Paper}>
@@ -96,7 +101,7 @@ export default function AllLabAssistants() {
                 <IconButton
                   title="Delete lab assistant"
                   onClick={() => {
-                    // deleteLabAssistant(labAssistant?._id);
+                    deleteLabAssistant(labAssistant?._id);
                   }}
                 >
                   <Delete />

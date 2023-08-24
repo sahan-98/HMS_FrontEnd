@@ -114,7 +114,7 @@ LabAssistantRoutes.post("/update/:id", async (req, res) => {
 });
 
 // Delete LabAssistant details
-LabAssistantRoutes.delete("/deleteLabAssistant/:id", async (req, res) => {
+LabAssistantRoutes.delete("/:id", async (req, res) => {
   try {
     const labAssistant = await LabAssistant.findOne({ _id: req.params.id });
     if (!labAssistant) {

@@ -570,7 +570,34 @@ const AddDoctor = () => {
         </Grid>
         <Grid item xs={12} md={8} sx={{ marginLeft: { md: "-5rem" } }}>
           <Box sx={{ display: "flex", margin: "1rem 0" }}>
-            <Button variant="outlined" color="error" type="reset">
+            <Button
+              variant="outlined"
+              color="error"
+              type="reset"
+              onClick={() => {
+                setValue("name", "");
+                setValue("email", "");
+                setValue("userName", "");
+                setValue("password", "");
+                setValue("conpass", "");
+                setValue("gender", "");
+                setPersonName("");
+                setValue("speciality", "");
+                setValue("phone", "");
+                setDate(new Date());
+                setValue("address", "");
+                setValue("age", "");
+                setValue("fee", "");
+                setValue("salary", "");
+                setValue("sunAvailbleTime", "");
+                setValue("monAvailbleTime", "");
+                setValue("tueAvailbleTime", "");
+                setValue("wensAvailbleTime", "");
+                setValue("thusAvailbleTime", "");
+                setValue("friAvailbleTime", "");
+                setValue("satAvailbleTime", "");
+              }}
+            >
               RESET
             </Button>
             <Chip
