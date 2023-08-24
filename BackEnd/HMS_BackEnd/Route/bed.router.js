@@ -248,7 +248,7 @@ bedRoutes.post("/stayDays", async (req, res) => {
     })
     .then(async (flaskRes) => {
       console.log("==========Flask Response is============");
-      console.log(flaskRes.data);
+      console.log(flaskRes.data.predicted_stay);
       console.log("====================================");
 
       try {

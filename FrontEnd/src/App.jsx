@@ -83,6 +83,7 @@ function App() {
               <Route path="result" element={<HDPResult />} /> */}
             </Route>
           </Route>
+
           <Route path="/doctor-portal">
             <Route
               path="view-appointments"

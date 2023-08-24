@@ -112,6 +112,7 @@ export default function PatientList() {
       setPredctTimeModal(false);
     } catch (error) {
       showSystemAlert("Unable to predict time", "error");
+      setPredctTimeModal(false);
       console.log(error);
     }
   }, [predictionData, selectedPatient, setRefresh]);
@@ -250,7 +251,7 @@ export default function PatientList() {
               onChange={(e) => {
                 setPredictionData({
                   ...predictionData,
-                  extraRooms: e.target.value,
+                  extraRooms: Number(e.target.value),
                 });
               }}
             />
@@ -264,7 +265,7 @@ export default function PatientList() {
               onChange={(e) => {
                 setPredictionData({
                   ...predictionData,
-                  staffAvailable: e.target.value,
+                  staffAvailable: Number(e.target.value),
                 });
               }}
             />
@@ -278,7 +279,7 @@ export default function PatientList() {
               onChange={(e) => {
                 setPredictionData({
                   ...predictionData,
-                  visitors: e.target.value,
+                  visitors: Number(e.target.value),
                 });
               }}
             />
