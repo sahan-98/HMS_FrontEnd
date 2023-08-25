@@ -202,7 +202,7 @@ function App() {
               path="view-assignments"
               index
               element={
-                <ProtectedRoute loginPath={"/doctor-login"}>
+                <ProtectedRoute loginPath={"/lab-assistant-login"}>
                   <ViewAssignments />
                 </ProtectedRoute>
               }
