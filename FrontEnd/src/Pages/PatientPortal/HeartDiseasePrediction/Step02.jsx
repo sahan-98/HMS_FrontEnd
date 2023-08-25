@@ -18,6 +18,7 @@ import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setHeartDiseasePrediction } from "../../../reducers/heartDiseasePredictionSlice";
+import Actions from "../../../components/Actions/Actions";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
@@ -82,6 +83,7 @@ const Step02 = () => {
   return (
     <Layout>
       <Header />
+      <Actions />
       <div
         style={{
           height: "70vh",

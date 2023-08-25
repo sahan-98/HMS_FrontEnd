@@ -88,7 +88,7 @@ userRoutes.post("/login", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     // Compare the entered password with the hashed password in the database
-    const isPasswordValid = bcrypt.compare(password, userObj.password);
+    const isPasswordValid = await bcrypt.compare(password, userObj.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid credentials" });
     }

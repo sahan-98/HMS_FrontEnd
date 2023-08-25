@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 // Define collection and schema for Users
 let detection = new Schema(
   {
-    patientid: {
+    patientId: {
       required: true,
       type: String,
     },

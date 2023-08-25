@@ -132,7 +132,10 @@ bedRoutes.route("/releaseBed/:id").post(async function (req, res) {
 
         let allocatedDate = bedObj.allocatedDate;
         // calculate number of dates from allocatedDate to todayDate
-        const numberOfDates = nowDate.diff(allocatedDate, "days");
+        let numberOfDates = nowDate.diff(allocatedDate, "days");
+        if(numberOfDates === 0){
+          numberOfDates = 1;
+        }
 
         let totalPrice = numberOfDates * bedObj.bedFee;
 

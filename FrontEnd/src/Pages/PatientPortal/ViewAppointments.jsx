@@ -1,27 +1,22 @@
+import { Search } from "@mui/icons-material";
 import {
   Box,
   Button,
-  IconButton,
   InputAdornment,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
-  styled,
+  styled
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import AppointmentService from "../../app/services/appointment-service";
+import Actions from "../../components/Actions/Actions";
+import LabReport from "../LabReport/LabReport";
 import Header from "./Header";
 import Layout from "./Layout";
-import { Search } from "@mui/icons-material";
-import { useCallback, useEffect, useState } from "react";
-import AppointmentService from "../../app/services/appointment-service";
-import { useDispatch, useSelector } from "react-redux";
-import { GiPowerButton } from "react-icons/gi";
-import PatientService from "../../app/services/patient-service";
-import { logout } from "../../reducers/loginSlice";
-import { useNavigate } from "react-router";
-import { showSystemAlert } from "../../app/services/alertServices";
-import LabReport from "../LabReport/LabReport";
 
 const StyledDiv = styled("div")(
   `
@@ -109,12 +104,10 @@ const dayNames = {
 
 const ViewAppointments = () => {
   const [appointments, setAppointments] = useState([]);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+ 
   const patient = useSelector((state) => state.patient);
   const [selectedType, setSelectedType] = useState("pending");
   const [searchText, setSearchText] = useState("");
-  const patientId = useSelector((state) => state.patient._id);
   const [labReportOpen, setLabReportOpen] = useState(false);
   const [labReportToShow, setLabReportToShow] = useState({});
 
@@ -211,25 +204,13 @@ const ViewAppointments = () => {
       : appointment?.visitStatus === "completed"
   );
 
-  const handleLogoutClick = useCallback(async () => {
-    console.log("logout");
-    try {
-      const logoutResponse = await PatientService.logout({ patientId });
-      const { message } = logoutResponse;
-      if (message === "Logout successful") {
-        dispatch(logout());
-        showSystemAlert("You have successfully logged out", "success");
-        navigate("/patient-login");
-      }
-    } catch (error) {
-      console.log(error);
-      showSystemAlert("An error occured while loggin out", "error");
-    }
-  }, [patientId, dispatch, navigate]);
+
+
 
   return (
     <Layout>
       <Header />
+      <Actions />
       {labReportOpen && (
         <LabReport
           open={labReportOpen}
@@ -303,9 +284,7 @@ const ViewAppointments = () => {
                   Completed
                 </StyledToggleButton>
               </StyledToggleButtonGroup>
-              <IconButton title="Logout" onClick={handleLogoutClick}>
-                <GiPowerButton />
-              </IconButton>
+             
             </Box>
           </Box>
 

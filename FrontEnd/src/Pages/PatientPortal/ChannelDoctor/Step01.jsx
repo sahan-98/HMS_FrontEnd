@@ -17,6 +17,7 @@ import DoctorService from "../../../app/services/doctor-service";
 import { useDispatch, useSelector } from "react-redux";
 import { placeAppointment } from "../../../reducers/placeAppointmentSlice";
 import PropTypes from "prop-types";
+import Actions from "../../../components/Actions/Actions";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
@@ -126,6 +127,7 @@ const Step01 = () => {
   return (
     <Layout>
       <Header />
+      <Actions />
       <div
         style={{
           height: "70vh",

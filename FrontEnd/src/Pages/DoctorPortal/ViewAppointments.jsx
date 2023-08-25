@@ -259,11 +259,11 @@ const ViewAppointments = () => {
   return (
     <Layout>
       <Header />
-      <LabReport
+      {labReportToShow?._id && <LabReport
         open={labReportOpen}
         setOpen={setLabReportOpen}
         data={{ ...labReportToShow, doctorName: doctor.name }}
-      />
+      />}
       <div
         style={{
           height: "70vh",

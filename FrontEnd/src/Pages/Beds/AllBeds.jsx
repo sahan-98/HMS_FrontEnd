@@ -68,7 +68,7 @@ export default function AllBeds() {
               </TableCell>
               <TableCell align="center">
                 {bed?.estimation?.split(".")[0]
-                  ? `${bed?.estimation?.split(".")[0]} days`
+                  ? `approx. ${bed?.estimation?.split(".")[0]} days`
                   : "N/A"}
               </TableCell>
               <TableCell align="center">{bed?.bedFee}</TableCell>

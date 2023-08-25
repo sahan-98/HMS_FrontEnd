@@ -10,6 +10,7 @@ import HeadingText from "../../../components/HeadingText/HeadingText";
 import Header from "../Header";
 import Layout from "../Layout";
 import PositiveResult from "./PositiveResult";
+import Actions from "../../../components/Actions/Actions";
 
 const StyledText = styled("span")(
   `
@@ -117,6 +118,7 @@ const Result = () => {
   return (
     <Layout>
       <Header />
+      <Actions />
       <div
         style={{
           height: "70vh",

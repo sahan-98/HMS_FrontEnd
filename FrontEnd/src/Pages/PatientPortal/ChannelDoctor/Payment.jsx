@@ -7,6 +7,7 @@ import Header from "../Header";
 import Layout from "../Layout";
 import paymentOptions from "../../../assets/images/payment-options.png";
 import { useSelector } from "react-redux";
+import Actions from "../../../components/Actions/Actions";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
@@ -33,6 +34,7 @@ const Payment = () => {
   return (
     <Layout>
       <Header />
+      <Actions />
       <div
         style={{
           height: "70vh",
