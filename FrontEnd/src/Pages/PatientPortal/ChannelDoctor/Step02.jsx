@@ -6,6 +6,7 @@ import HeadingText from "../../../components/HeadingText/HeadingText";
 import Header from "../Header";
 import Layout from "../Layout";
 import { useSelector } from "react-redux";
+import Actions from "../../../components/Actions/Actions";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
@@ -32,6 +33,7 @@ const Step02 = () => {
   return (
     <Layout>
       <Header />
+      <Actions />
       <div
         style={{
           height: "70vh",

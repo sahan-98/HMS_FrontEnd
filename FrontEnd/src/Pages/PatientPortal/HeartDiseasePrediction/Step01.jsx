@@ -1,6 +1,3 @@
-import BlueAcentCard from "../../../components/BlueAcentCard/BlueAcentCard";
-import Header from "../Header";
-import Layout from "../Layout";
 import {
   Button,
   FormControl,
@@ -8,15 +5,19 @@ import {
   MenuItem,
   Select,
   TextField,
-  styled,
+  styled
 } from "@mui/material";
-import Progress from "./Progress";
 import { useCallback, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import HeadingText from "../../../components/HeadingText/HeadingText";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import Actions from "../../../components/Actions/Actions";
+import BlueAcentCard from "../../../components/BlueAcentCard/BlueAcentCard";
+import HeadingText from "../../../components/HeadingText/HeadingText";
 import { setHeartDiseasePrediction } from "../../../reducers/heartDiseasePredictionSlice";
 import calculateAge from "../../../utils/calculate-age";
+import Header from "../Header";
+import Layout from "../Layout";
+import Progress from "./Progress";
 
 const StyledButton = styled(Button)(`
 border-radius: 7px;
@@ -69,9 +70,13 @@ const Step01 = () => {
     [setAge]
   );
 
+
+
+
   return (
     <Layout>
       <Header />
+      <Actions />
       <div
         style={{
           height: "70vh",

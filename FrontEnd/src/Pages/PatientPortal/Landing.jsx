@@ -7,9 +7,18 @@ import appointment from "../../assets/images/appointment.png";
 import Header from "./Header";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { IconButton } from "@mui/material";
+import PatientService from "../../app/services/patient-service";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../reducers/loginSlice";
+import { showSystemAlert } from "../../app/services/alertServices";
+import { GiPowerButton } from "react-icons/gi";
 
 const Landing = () => {
   const navigate = useNavigate();
+
+  const patientId = useSelector((state) => state.patient._id);
+  const dispatch = useDispatch();
 
   const handleCDClick = useCallback(() => {
     navigate("/patient-portal/channel-doctor/step-01");
@@ -27,9 +36,33 @@ const Landing = () => {
     navigate("/patient-portal/view-bills");
   }, [navigate]);
 
+  const handleLogoutClick = useCallback(async () => {
+    console.log("logout");
+    try {
+      const logoutResponse = await PatientService.logout({ patientId });
+      const { message } = logoutResponse;
+      if (message === "Logout successful") {
+        dispatch(logout());
+        showSystemAlert("You have successfully logged out", "success");
+        navigate("/patient-login");
+      }
+    } catch (error) {
+      console.log(error);
+      showSystemAlert("An error occured while loggin out", "error");
+    }
+  }, [patientId, dispatch, navigate]);
+
+
   return (
     <Layout>
       <Header />
+      <IconButton sx={{
+        position: "absolute",
+        top: 20,
+        right: 20
+      }} title="Logout" onClick={handleLogoutClick}>
+            <GiPowerButton />
+      </IconButton>
       <div
         style={{
           height: "50vh",

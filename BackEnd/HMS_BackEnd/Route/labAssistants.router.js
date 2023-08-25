@@ -140,7 +140,7 @@ LabAssistantRoutes.post("/login", async (req, res) => {
       return res.status(404).json({ message: "Lab Assistant not found" });
     }
     // Compare the entered password with the hashed password in the database
-    const isPasswordValid = bcrypt.compare(password, labAssistant.password);
+    const isPasswordValid = await bcrypt.compare(password, labAssistant.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid credentials" });
     }

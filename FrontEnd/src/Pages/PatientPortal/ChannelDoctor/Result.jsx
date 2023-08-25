@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import AppointmentService from "../../../app/services/appointment-service";
 import processingData from "../../../assets/images/processing-data.png";
 import { useNavigate } from "react-router";
+import Actions from "../../../components/Actions/Actions";
 
 const StyledText = styled("span")(
   `
@@ -119,6 +120,7 @@ const Result = () => {
   return (
     <Layout>
       <Header />
+      <Actions />
       <div
         style={{
           height: "70vh",

@@ -39,7 +39,7 @@ detectionRoutes.post("/add", async (req, res) => {
       console.log("====================================");
 
       const newdetection = new detection({
-        patientid: req.body.patientid,
+        patientId: req.body.patientId,
         label: flaskRes.data.prediction,
       });
 
@@ -75,7 +75,7 @@ detectionRoutes.get("/patient/:key", async (req, res) => {
   try {
     let key = req.params.key;
     console.log(key);
-    let detectionData = await detection.find({ patientid: key }).sort({
+    let detectionData = await detection.find({ patientId: key }).sort({
       updatedAt: -1,
     });
     if (!detectionData) {

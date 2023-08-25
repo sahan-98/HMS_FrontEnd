@@ -20,6 +20,7 @@ import { useNavigate } from "react-router";
 import { showSystemAlert } from "../../app/services/alertServices";
 import BedService from "../../app/services/bed-service";
 import LabReportService from "../../app/services/lab-report-service";
+import Actions from "../../components/Actions/Actions";
 
 const StyledDiv = styled("div")(
   `
@@ -270,7 +271,7 @@ const ViewBills = () => {
   return (
     <Layout>
       <Header />
-
+      <Actions />
       <div
         style={{
           height: "70vh",
@@ -323,9 +324,7 @@ const ViewBills = () => {
                   Bed Bills
                 </StyledToggleButton>
               </StyledToggleButtonGroup>
-              <IconButton title="Logout" onClick={handleLogoutClick}>
-                <GiPowerButton />
-              </IconButton>
+            
             </Box>
           </Box>
 
