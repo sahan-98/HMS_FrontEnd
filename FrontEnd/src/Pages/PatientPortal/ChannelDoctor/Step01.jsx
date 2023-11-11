@@ -33,7 +33,7 @@ padding: 3px 10px;
 }
 `);
 
-const TableRow = ({ doctor, dateName, timeKeyName }) => {
+const TableRow = ({ doctor, dateName, timeKeyName, appointmentType }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const patient = useSelector((state) => state.patient);
@@ -52,6 +52,7 @@ const TableRow = ({ doctor, dateName, timeKeyName }) => {
                 doctorid: doctor?.doctorid,
                 patientid: patient?._id,
                 bookingDate: new Date().toISOString().split("T")[0],
+                appointmentType: appointmentType,
                 type: "Normal",
                 fee: doctor?.fee,
                 doctorAvailability: timeKeyName,
@@ -71,6 +72,7 @@ TableRow.propTypes = {
   doctor: PropTypes.object,
   dateName: PropTypes.string,
   timeKeyName: PropTypes.string,
+  appointmentType: PropTypes.string,
 };
 
 const Step01 = () => {
@@ -82,6 +84,7 @@ const Step01 = () => {
   const [doctorList, setDoctorList] = useState([]);
   const [filteredDoctorList, setFilteredDoctorList] = useState([]);
   const [doctor, setDoctor] = useState("");
+  const [appointmentType, setAppointmentType] = useState("");
 
   const onSelectSpecialization = useCallback(
     (selectedSpecialization) => {
@@ -101,6 +104,10 @@ const Step01 = () => {
     },
     [onSelectSpecialization]
   );
+  const handleAppointmentTypeChange = useCallback((event) => {
+    setAppointmentType(event.target.value);
+  }, []);
+
   const handleDoctorChange = useCallback((event) => {
     setDoctor(event.target.value);
   }, []);
@@ -118,7 +125,7 @@ const Step01 = () => {
       setSpecialization(speciality);
       onSelectSpecialization(speciality);
     }
-  }, [speciality, onSelectSpecialization]);
+  }, [speciality]);
 
   useEffect(() => {
     loadSpecializations();
@@ -176,6 +183,24 @@ const Step01 = () => {
               })}
             </Select>
           </FormControl>
+
+          <FormControl fullWidth sx={{ mt: 2, textAlign: "start" }}>
+            <InputLabel id="demo-simple-select-label">Select Type</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              value={appointmentType}
+              label="Select Type"
+              onChange={handleAppointmentTypeChange}
+            >
+              {["Urgent", "Normal"].map((type, index) => {
+                return (
+                  <MenuItem value={type} key={index}>
+                    {type}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
           <div
             style={{
               overflow: "auto",
@@ -207,6 +232,8 @@ const Step01 = () => {
                     doctor={doctor}
                     dateName="Sunday"
                     timeKeyName="sunAvailbleTime"
+                    appointmentType={appointmentType}
+
                   />
                 ) : null}
 
@@ -215,6 +242,7 @@ const Step01 = () => {
                     doctor={doctor}
                     dateName="Monday"
                     timeKeyName="monAvailbleTime"
+                    appointmentType={appointmentType}
                   />
                 ) : null}
 
@@ -223,6 +251,7 @@ const Step01 = () => {
                     doctor={doctor}
                     dateName="Tuesday"
                     timeKeyName="tueAvailbleTime"
+                    appointmentType={appointmentType}
                   />
                 ) : null}
 
@@ -231,6 +260,7 @@ const Step01 = () => {
                     doctor={doctor}
                     dateName="Wednesday"
                     timeKeyName="wensAvailbleTime"
+                    appointmentType={appointmentType}
                   />
                 ) : null}
 
@@ -239,6 +269,7 @@ const Step01 = () => {
                     doctor={doctor}
                     dateName="Thursday"
                     timeKeyName="thusAvailbleTime"
+                    appointmentType={appointmentType}
                   />
                 ) : null}
 
@@ -247,6 +278,7 @@ const Step01 = () => {
                     doctor={doctor}
                     dateName="Friday"
                     timeKeyName="friAvailbleTime"
+                    appointmentType={appointmentType}
                   />
                 ) : null}
 
@@ -255,6 +287,7 @@ const Step01 = () => {
                     doctor={doctor}
                     dateName="Saturday"
                     timeKeyName="satAvailbleTime"
+                    appointmentType={appointmentType}
                   />
                 ) : null}
               </tbody>
