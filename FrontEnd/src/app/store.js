@@ -3,6 +3,7 @@ import heartDiseasePredictionReducer from "../reducers/heartDiseasePredictionSli
 import loginReducer from "../reducers/loginSlice";
 import patientReducer from "../reducers/patientSlice";
 import doctorReducer from "../reducers/doctorSlice";
+import medicalOfficerReducer from "../reducers/medicalOfficerSlice";
 import placeAppointmentReducer from "../reducers/placeAppointmentSlice";
 import labAssistantReducer from "../reducers/labAssistantSlice";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   doctor: doctorReducer,
   placeAppointment: placeAppointmentReducer,
   labAssistant: labAssistantReducer,
+  medicalOfficer: medicalOfficerReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

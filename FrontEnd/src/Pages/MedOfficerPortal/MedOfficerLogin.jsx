@@ -3,12 +3,12 @@ import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { showSystemAlert } from "../../app/services/alertServices";
-import LabAssistantService from "../../app/services/lab-assistant-service";
+import MedOfficerService from "../../app/services/med-officer-service";
 import BlueAcentCard from "../../components/BlueAcentCard/BlueAcentCardLogin";
 import Header from "../../components/Header/Header";
 import HeadingText from "../../components/HeadingText/HeadingText";
-import { setLabAssistant } from "../../reducers/labAssistantSlice";
 import { login } from "../../reducers/loginSlice";
+import { setMedicalOfficer } from "../../reducers/medicalOfficerSlice";
 import Layout from "../PatientPortal/Layout";
 
 const StyledButton = styled(Button)(`
@@ -21,7 +21,7 @@ color: #fff;
 }
 `);
 
-const NurseLogin = () => {
+const MedOfficerLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [userName, setUserName] = useState("");
@@ -52,16 +52,16 @@ const NurseLogin = () => {
     }
 
     try {
-      const labAssistantLogin = await LabAssistantService.login({
+      const medicalOfficerLogin = await MedOfficerService.login({
         userName: userName,
         password: password,
       });
-      console.log(labAssistantLogin);
-      const labAssistantId = labAssistantLogin?.labAssistant?._id;
+      console.log(medicalOfficerLogin);
+      const labAssistantId = medicalOfficerLogin?.medOfficer?._id;
       if (labAssistantId) {
         showSystemAlert("You have successfully logged in", "success");
         dispatch(login({ userId: labAssistantId }));
-        dispatch(setLabAssistant({ ...labAssistantLogin.labAssistant }));
+        dispatch(setMedicalOfficer({ ...medicalOfficerLogin.labAssistant }));
         navigate("/lab-assistant-portal/view-assignments");
       }
     } catch (error) {
@@ -82,7 +82,7 @@ const NurseLogin = () => {
         }}
       >
         <BlueAcentCard>
-          <HeadingText text="Lab Assistant Login" />
+          <HeadingText text="Medical Officer Login" />
           <TextField
             label="User Name"
             variant="outlined"
@@ -112,4 +112,4 @@ const NurseLogin = () => {
   );
 };
 
-export default NurseLogin;
+export default MedOfficerLogin;

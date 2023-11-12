@@ -100,7 +100,7 @@ padding: 5px 10px;
   })
 );
 
-const ViewAppointments = () => {
+const MedOfficerViewAppointments = () => {
   const [labTasks, setLabTasks] = useState([]);
   const [labReportToShow, setLabReportToShow] = useState({});
   const [labReportOpen, setLabReportOpen] = useState(false);
@@ -313,4 +313,4 @@ const ViewAppointments = () => {
   );
 };
 
-export default ViewAppointments;
+export default MedOfficerViewAppointments;
