@@ -42,4 +42,4 @@ class MedOfficerService {
   }
 }
 
-export default LabAssistantService;
+export default MedOfficerService;

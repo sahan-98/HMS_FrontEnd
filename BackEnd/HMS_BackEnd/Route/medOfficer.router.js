@@ -140,7 +140,6 @@ MedOfficerRoutes.get("/", async (req, res) => {
 //Med officer login
 MedOfficerRoutes.post("/login", async (req, res) => {
   const { userName, password } = req.body;
-
   try {
     // Find the Med officer by their username
     const medOfficer = await MedOfficer.findOne({ userName });
@@ -161,7 +160,5 @@ MedOfficerRoutes.post("/login", async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 });
-
-//update product by id
 
 module.exports = MedOfficerRoutes;
