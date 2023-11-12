@@ -32,6 +32,10 @@ let appoinmentBill = new Schema(
       required: true,
       type: String,
     },
+    appointmentType:{
+      required: false,
+      type: String,
+    },
     queueNumber: {
       type: Number,
     },

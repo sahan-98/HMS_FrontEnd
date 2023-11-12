@@ -16,8 +16,14 @@ let Doctor = require("../Models/doctor.models");
 // add a appoiment
 AppointmentRoutes.post("/add", async (req, res) => {
   try {
-    const { doctorid, patientid, bookingDate, type, doctorAvailability } =
-      req.body;
+    const {
+      doctorid,
+      patientid,
+      bookingDate,
+      type,
+      appointmentType,
+      doctorAvailability,
+    } = req.body;
 
     const doc = await Doctor.findOne({ doctorid: doctorid });
 
@@ -36,6 +42,7 @@ AppointmentRoutes.post("/add", async (req, res) => {
       patientid,
       bookingDate,
       doctorAvailability,
+      appointmentType,
       type,
       queueNumber: QueAppintments.length + 1,
       totalPrice: fee,
@@ -59,7 +66,35 @@ AppointmentRoutes.post("/add", async (req, res) => {
 
 // get all appoinment details
 AppointmentRoutes.get("/", async (req, res) => {
-  await Appointment.find()
+  Appointment.aggregate([
+    {
+      $match: {
+        appointmentType: { $eq: "Urgent" }
+      },
+    },
+    {
+      $lookup: {
+        from: "doctors",
+        localField: "doctorid",
+        foreignField: "doctorid",
+        as: "doctor",
+      },
+    },
+    {
+      $unwind: "$doctor",
+    },
+    {
+      $project: {
+        "doctor.password": 0,
+      },
+    },
+    {
+      $sort: {
+        bookingDate: -1,
+        queueNumber: -1,
+      },
+    },
+  ])
     .then((data) => {
       res.status(200).send({ data: data });
     })

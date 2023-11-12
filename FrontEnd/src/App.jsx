@@ -38,6 +38,7 @@ import AllBeds from "./Pages/Beds/AllBeds";
 import { AddBed } from "./Pages/Beds/AddBed";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MedOfficerLogin from "./Pages/MedOfficerPortal/MedOfficerLogin.jsx";
+import MedicalOfficerViewAppointments from "./Pages/MedOfficerPortal/MedicalOfficerViewAppointments.jsx";
 
 function App() {
   return (
@@ -58,6 +59,8 @@ function App() {
           <Route path="/lab-assistant-login" element={<LabAssistantLogin />} />
           <Route path="/doctor-login" element={<DoctorLogin />} />
           <Route path="/medical-officer-login" element={<MedOfficerLogin />} />
+          <Route path="/medical-officer-portal/view-appointments" element={<MedicalOfficerViewAppointments />} />
+
 
           <Route path="/patient-portal">
             <Route

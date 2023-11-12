@@ -62,7 +62,7 @@ const MedOfficerLogin = () => {
         showSystemAlert("You have successfully logged in", "success");
         dispatch(login({ userId: labAssistantId }));
         dispatch(setMedicalOfficer({ ...medicalOfficerLogin.labAssistant }));
-        navigate("/lab-assistant-portal/view-assignments");
+        navigate("/medical-officer-portal/view-appointments");
       }
     } catch (error) {
       console.log(error);

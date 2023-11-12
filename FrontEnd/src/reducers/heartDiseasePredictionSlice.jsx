@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const heartDiseasePredictionSlice = createSlice({
   name: "heartDiseasePrediction",
   initialState: {
+    appointmentId: "",
     name: "",
     age: 0,
     gender: "",
@@ -31,8 +32,12 @@ export const heartDiseasePredictionSlice = createSlice({
       state.oldPeak = action.payload.oldPeak;
       state.exerciseAngina = action.payload.exerciseAngina;
     },
+    setAppointmentId: (state, action) => {
+      state.appointmentId = action.payload.appointmentId;
+    },
 
     clearHeartDiseasePrediction: (state) => {
+      state.appointmentId = "";
       state.name = "";
       state.age = 0;
       state.gender = "";
@@ -49,6 +54,9 @@ export const heartDiseasePredictionSlice = createSlice({
   },
 });
 
-export const { setHeartDiseasePrediction, clearHeartDiseasePrediction } =
-  heartDiseasePredictionSlice.actions;
+export const {
+  setHeartDiseasePrediction,
+  clearHeartDiseasePrediction,
+  setAppointmentId,
+} = heartDiseasePredictionSlice.actions;
 export default heartDiseasePredictionSlice.reducer;
