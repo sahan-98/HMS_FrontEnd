@@ -14,7 +14,7 @@ let ErrorLog = require("../Models/errorlog.model.js");
 // add MedOfficer
 
 MedOfficerRoutes.post("/add", async (req, res) => {
-  const { mobile, password, email, firstname, lastname, userName, address, gender } = req.body;
+  const { mobile, password, email, firstname, lastname, userName, address, gender, conpass } = req.body;
 
   const salt = await bcrypt.genSalt();
   const passwordHash = await bcrypt.hash(password, salt);
@@ -27,7 +27,8 @@ MedOfficerRoutes.post("/add", async (req, res) => {
     lastname == "" ||
     userName == "" ||
     address == "" ||
-    gender == ""
+    gender == "" ||
+    conpass == "" 
   )
     return res.status(202).json({ warn: "Important field(s) are empty" });
 
@@ -65,7 +66,7 @@ MedOfficerRoutes.post("/add", async (req, res) => {
   await newUser
     .save()
     .then(async (respond) => {
-      res.status(200).json({ message: "Successfull" });
+      res.status(200).json({ message: "Successfull", data:newUser });
     })
     .catch((err) => {
       res.status(400).json({ message: "Error!" });
@@ -108,7 +109,7 @@ MedOfficerRoutes.route("/:id").get(async function (req, res) {
     let medOfficer = await MedOfficer.findById(id);
     if (!medOfficer) {
       console.log("err");
-      return res.status(400).json({ message: err });
+      return res.status(400).json({ message: "Not found" });
     } else {
       // Return the organizer and associated events
       return res.status(200).json({ success: true, data: medOfficer });
@@ -133,6 +134,31 @@ MedOfficerRoutes.get("/", async (req, res) => {
     console.error(error);
 
     return res.status(500).json({ message: "Server Error" });
+  }
+});
+
+//Med officer login
+MedOfficerRoutes.post("/login", async (req, res) => {
+  const { userName, password } = req.body;
+
+  try {
+    // Find the Med officer by their username
+    const medOfficer = await MedOfficer.findOne({ userName });
+    // Check if the Med officer exists
+    if (!medOfficer) {
+      return res.status(404).json({ message: "Med officer not found" });
+    }
+    // Compare the entered password with the hashed password in the database
+    const isPasswordValid = await bcrypt.compare(password, medOfficer.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+    // Send a success response
+    return res
+      .status(200)
+      .json({ message: "Login successful", medOfficer: medOfficer });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
 });
 
