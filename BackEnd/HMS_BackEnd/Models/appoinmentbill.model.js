@@ -39,6 +39,9 @@ let appoinmentBill = new Schema(
       required: true,
       type: Number,
     },
+    detectionId: {
+      type: String,
+    }
   },
   {
     collection: "appoinmentBill",

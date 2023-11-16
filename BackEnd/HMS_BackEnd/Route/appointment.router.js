@@ -16,7 +16,7 @@ let Doctor = require("../Models/doctor.models");
 // add a appoiment
 AppointmentRoutes.post("/add", async (req, res) => {
   try {
-    const { doctorid, patientid, bookingDate, type, doctorAvailability } =
+    const { doctorid, patientid, bookingDate, type, doctorAvailability, detectionId } =
       req.body;
 
     const doc = await Doctor.findOne({ doctorid: doctorid });
@@ -40,6 +40,7 @@ AppointmentRoutes.post("/add", async (req, res) => {
       queueNumber: QueAppintments.length + 1,
       totalPrice: fee,
       visitStatus: "pending",
+      detectionId
     });
 
     await newAppointment
