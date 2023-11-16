@@ -1,14 +1,18 @@
 import pickle
+# import json
+import numpy as np
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
 # Load the trained CatBoost model from the pickle file
 model = pickle.load(open("modelV3.pkl", "rb"))
+model2 = pickle.load(open("model.pkl", "rb"))
 
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
+
         data = request.get_json(force=True)
         age = data['age']
         sex = data['sex']
@@ -21,6 +25,8 @@ def predict():
         exercise_angina = data['exercise_angina']
         oldpeak = data['oldpeak']
         st_slope = data['st_slope']
+
+        print(age)
 
         # Convert categorical features to numerical codes
 #         sex_mapping = {'male': 1, 'female': 0}
@@ -38,12 +44,19 @@ def predict():
         # Make the prediction using the model
         prediction = model.predict([[age, sex, chest_pain_type, resting_bp, cholesterol, fasting_bs,
                                      resting_ecg, max_hr, exercise_angina, oldpeak, st_slope]])
+        
+        
+        prediction_expblAI = model2.predict_and_contrib([[age, sex, chest_pain_type, resting_bp, cholesterol, fasting_bs,
+                                     resting_ecg, max_hr, exercise_angina, oldpeak, st_slope]], output='probabilities', init_score=None)
 
-        result = {'prediction': bool(prediction[0])}
+        prediction_expblAI_index = prediction_expblAI[1][0]
+        prediction_expblAI_index_list = prediction_expblAI_index.tolist()
+
+        result = {'prediction': bool(prediction[0]),'prediction_expblAI_index': prediction_expblAI_index_list}
         return jsonify(result)
 
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
 if __name__ == '__main__':
-    app.run(debug=True, host="localhost", port=5000)
+    app.run(debug=True, port=5000)
