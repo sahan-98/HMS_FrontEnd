@@ -15,7 +15,6 @@ let appoinmentBill = new Schema(
       type: String,
     },
     doctorid: {
-      required: true,
       type: String,
     },
     labReportid: {
@@ -40,7 +39,6 @@ let appoinmentBill = new Schema(
       type: Number,
     },
     totalPrice: {
-      required: true,
       type: Number,
     },
     detectionId: {

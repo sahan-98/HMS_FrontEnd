@@ -85,6 +85,9 @@ const Step01 = () => {
   const [filteredDoctorList, setFilteredDoctorList] = useState([]);
   const [doctor, setDoctor] = useState("");
   const [appointmentType, setAppointmentType] = useState("Normal");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const patient = useSelector((state) => state.patient);
 
   const onSelectSpecialization = useCallback(
     (selectedSpecialization) => {
@@ -297,13 +300,29 @@ const Step01 = () => {
                 </table>
               </div>
             </>
-          ):(
-            <StyledButton   fullWidth sx={{
-              mt:4,
-              mb:5,
-              p:1.5,
-              fontSize:12
-            }}> Make Appointment</StyledButton>
+          ) : (
+            <StyledButton
+              fullWidth
+              sx={{
+                mt: 4,
+                mb: 5,
+                p: 1.5,
+                fontSize: 12,
+              }}
+              onClick={() => {
+                dispatch(
+                  placeAppointment({
+                    patientid: patient?._id,
+                    bookingDate: new Date().toISOString().split("T")[0],
+                    type: appointmentType,
+                  })
+                );
+                navigate(`/patient-portal/channel-doctor/step-02`);
+              }}
+            >
+              {" "}
+              Make Appointment
+            </StyledButton>
           )}
         </BlueAcentCard>
       </div>

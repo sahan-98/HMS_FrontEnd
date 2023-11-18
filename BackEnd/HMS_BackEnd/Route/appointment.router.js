@@ -16,8 +16,14 @@ let Doctor = require("../Models/doctor.models");
 // add a appoiment
 AppointmentRoutes.post("/add", async (req, res) => {
   try {
-    const { doctorid, patientid, bookingDate, type, doctorAvailability, detectionId } =
-      req.body;
+    const {
+      doctorid,
+      patientid,
+      bookingDate,
+      type,
+      doctorAvailability,
+      detectionId,
+    } = req.body;
 
     const doc = await Doctor.findOne({ doctorid: doctorid });
 
@@ -36,12 +42,41 @@ AppointmentRoutes.post("/add", async (req, res) => {
       patientid,
       bookingDate,
       doctorAvailability,
-      appointmentType,
       type,
       queueNumber: QueAppintments.length + 1,
       totalPrice: fee,
       visitStatus: "pending",
-      detectionId
+      detectionId,
+    });
+
+    await newAppointment
+      .save()
+      .then(async (respond) => {
+        return res.status(200).json({ message: "Successfull" });
+      })
+      .catch((err) => {
+        res.status(400).json({ message: "Error!" });
+        console.log("error mail:", err);
+      });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Server Error" });
+  }
+});
+
+AppointmentRoutes.post("/add-urgent", async (req, res) => {
+  try {
+    const {
+      patientid,
+      bookingDate,
+      type,
+    } = req.body;
+
+    const newAppointment = new Appointment({
+      patientid,
+      bookingDate,
+      type,
+      visitStatus: "pending",
     });
 
     await newAppointment
@@ -64,7 +99,7 @@ AppointmentRoutes.get("/", async (req, res) => {
   Appointment.aggregate([
     {
       $match: {
-        appointmentType: { $eq: "Urgent" }
+        appointmentType: { $eq: "Urgent" },
       },
     },
     {

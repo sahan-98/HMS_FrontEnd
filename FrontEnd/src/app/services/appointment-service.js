@@ -8,6 +8,13 @@ class AppointmentService {
     });
   }
 
+  static async placeNewUrgentAppointment({ data }) {
+    return await post({
+      path: `/appoinment/add-urgent`,
+      data,
+    });
+  }
+
   static async updateVisitStatus({ appointmentId }) {
     return await post({
       path: `/appoinment/updateVisitStatus/${appointmentId}`,

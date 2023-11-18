@@ -35,17 +35,32 @@ const Result = () => {
 
   const placeAppointment = useCallback(async () => {
     try {
-      const newAppointment = await AppointmentService.placeNewAppointment({
-        data: {
-          ...appointmentDetails,
-        },
-      });
-      console.log(newAppointment);
-      const { message } = newAppointment;
-      if (message === "Successfull") {
-        setAppointmentPlaced(true);
+      if (appointmentDetails.type === "Urgent") {
+        const newAppointment = await AppointmentService.placeNewUrgentAppointment({
+          data: {
+            ...appointmentDetails,
+          },
+        });
+        console.log(newAppointment);
+        const { message } = newAppointment;
+        if (message === "Successfull") {
+          setAppointmentPlaced(true);
+        } else {
+          setAppointmentPlaced(false);
+        }
       } else {
-        setAppointmentPlaced(false);
+        const newAppointment = await AppointmentService.placeNewAppointment({
+          data: {
+            ...appointmentDetails,
+          },
+        });
+        console.log(newAppointment);
+        const { message } = newAppointment;
+        if (message === "Successfull") {
+          setAppointmentPlaced(true);
+        } else {
+          setAppointmentPlaced(false);
+        }
       }
     } catch (error) {
       setAppointmentPlaced(false);

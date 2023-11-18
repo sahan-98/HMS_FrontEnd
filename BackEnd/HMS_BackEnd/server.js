@@ -47,7 +47,9 @@ app.use(
     useTempFiles: true,
   })
 );
-
+app.get('/', (req, res)=>{
+  res.send('hello');
+})
 app.use("/report", labReportRoute);
 app.use("/patient", paitentRoute);
 app.use("/doctor", doctorRoute);
