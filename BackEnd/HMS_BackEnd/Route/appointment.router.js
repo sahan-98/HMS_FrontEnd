@@ -12,6 +12,7 @@ const moment = require("moment");
 
 let Appointment = require("../Models/appoinmentbill.model");
 let Doctor = require("../Models/doctor.models");
+let Paitent = require("../Models/paitents.model");
 
 // add a appoiment
 AppointmentRoutes.post("/add", async (req, res) => {
@@ -66,11 +67,7 @@ AppointmentRoutes.post("/add", async (req, res) => {
 
 AppointmentRoutes.post("/add-urgent", async (req, res) => {
   try {
-    const {
-      patientid,
-      bookingDate,
-      type,
-    } = req.body;
+    const { patientid, bookingDate, type } = req.body;
 
     const newAppointment = new Appointment({
       patientid,
@@ -127,6 +124,39 @@ AppointmentRoutes.get("/", async (req, res) => {
   ])
     .then((data) => {
       res.status(200).send({ data: data });
+    })
+    .catch((error) => {
+      res.status(500).send({ error: error.message });
+    });
+});
+
+AppointmentRoutes.get("/get-urgent", async (req, res) => {
+  Appointment.aggregate([
+    {
+      $match: {
+        type: { $eq: "Urgent" },
+      },
+    },
+    {
+      $sort: {
+        bookingDate: -1,
+        queueNumber: -1,
+      },
+    }, 
+  ])
+    .then(async (data) => {
+      //get patient details. the aggregation is not possible because it is stored as string.
+      const appoinmentList = [];
+      for (let i = 0; i < data.length; i++) {
+        const patient = await Paitent.findById(data[i].patientid);
+        console.log(patient);
+        appoinmentList.push({
+          ...data[i],
+          patient: patient,
+        });
+      }
+      res.status(200).send({ data: appoinmentList });
+      console.log("Response sent");
     })
     .catch((error) => {
       res.status(500).send({ error: error.message });
