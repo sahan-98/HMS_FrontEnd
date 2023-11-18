@@ -4,14 +4,12 @@ import {
   Button,
   InputAdornment,
   TextField,
-  ToggleButton,
-  ToggleButtonGroup,
   Typography,
   styled,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import AppointmentService from "../../app/services/appointment-service";
 import Actions from "../../components/Actions/Actions";
 import LabReport from "../LabReport/LabReport";
@@ -61,34 +59,8 @@ padding: 3px 10px;
 `
 );
 
-const StyledToggleButtonGroup = styled(ToggleButtonGroup)({
-  borderRadius: 30,
-  backgroundColor: "#fff",
-  border: `solid 1px #67aff1`,
-  "& .MuiToggleButton-root": {
-    margin: 4,
-    borderColor: "transparent !important",
-    borderRadius: 30,
-  },
-});
-const StyledToggleButton = styled(ToggleButton)({
-  borderRadius: 30,
-  backgroundColor: "#fff",
-  border: `solid 1px #67aff1`,
-  "&.Mui-selected": {
-    backgroundColor: "#1c77f2",
-    color: "#fff",
-    borderRadius: 30,
-  },
-  "&.Mui-selected:hover": {
-    backgroundColor: "#3E84E3",
-    color: "#fff",
-  },
-  "&.MuiToggleButton-root": {
-    fontSize: "11px",
-    borderRadius: 30,
-  },
-});
+
+
 
 const StyledTextField = styled(TextField)({
   "& .MuiOutlinedInput-root": {
@@ -112,10 +84,10 @@ const MedicalOfficerViewAppointments = () => {
   const navigate = useNavigate();
 
   const patient = useSelector((state) => state.patient);
-  const [selectedType, setSelectedType] = useState("pending");
+  const [selectedType, ] = useState("pending");
   const [searchText, setSearchText] = useState("");
   const [labReportOpen, setLabReportOpen] = useState(false);
-  const [labReportToShow, setLabReportToShow] = useState({});
+  const [labReportToShow, ] = useState({});
 
   const loadAppointments = useCallback(async () => {
     try {

@@ -84,7 +84,7 @@ const Step01 = () => {
   const [doctorList, setDoctorList] = useState([]);
   const [filteredDoctorList, setFilteredDoctorList] = useState([]);
   const [doctor, setDoctor] = useState("");
-  const [appointmentType, setAppointmentType] = useState("");
+  const [appointmentType, setAppointmentType] = useState("Normal");
 
   const onSelectSpecialization = useCallback(
     (selectedSpecialization) => {
@@ -147,44 +147,6 @@ const Step01 = () => {
         <BlueAcentCard width="450px">
           <HeadingText text="Channel Doctor" />
           <FormControl fullWidth sx={{ mt: 2, textAlign: "start" }}>
-            <InputLabel id="demo-simple-select-label">
-              Doctor Specialization
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              value={specialization}
-              label="Doctor Specialization"
-              onChange={handleSpecializationChange}
-            >
-              {specializationList.map((specialization, index) => {
-                return (
-                  <MenuItem value={specialization} key={index}>
-                    {specialization}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-
-          <FormControl fullWidth sx={{ mt: 2, textAlign: "start" }}>
-            <InputLabel id="demo-simple-select-label">Select Doctor</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              value={doctor}
-              label="Select Doctor"
-              onChange={handleDoctorChange}
-            >
-              {filteredDoctorList.map((doctor, index) => {
-                return (
-                  <MenuItem value={doctor} key={index}>
-                    {doctor?.name}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-
-          <FormControl fullWidth sx={{ mt: 2, textAlign: "start" }}>
             <InputLabel id="demo-simple-select-label">Select Type</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -201,98 +163,148 @@ const Step01 = () => {
               })}
             </Select>
           </FormControl>
-          <div
-            style={{
-              overflow: "auto",
-              height: "178px",
-              scrollbarWidth: "thin",
-              marginTop: "1rem",
-              marginBottom: "1rem",
-            }}
-          >
-            <table className="fixed_header">
-              <thead>
-                <tr>
-                  <th>Doctor</th>
-                  <th>Date</th>
-                  <th>Time</th>
-                  <th>No.of Appointments</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {doctor._id ? null : (
-                  <tr>
-                    <td colSpan={5}>Please select a doctor</td>
-                  </tr>
-                )}
+          {appointmentType === "Normal" ? (
+            <>
+              <FormControl fullWidth sx={{ mt: 2, textAlign: "start" }}>
+                <InputLabel id="demo-simple-select-label">
+                  Doctor Specialization
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  value={specialization}
+                  label="Doctor Specialization"
+                  onChange={handleSpecializationChange}
+                >
+                  {specializationList.map((specialization, index) => {
+                    return (
+                      <MenuItem value={specialization} key={index}>
+                        {specialization}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
 
-                {doctor.sunAvailbleTime ? (
-                  <TableRow
-                    doctor={doctor}
-                    dateName="Sunday"
-                    timeKeyName="sunAvailbleTime"
-                    appointmentType={appointmentType}
+              <FormControl fullWidth sx={{ mt: 2, textAlign: "start" }}>
+                <InputLabel id="demo-simple-select-label">
+                  Select Doctor
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  value={doctor}
+                  label="Select Doctor"
+                  onChange={handleDoctorChange}
+                >
+                  {filteredDoctorList.map((doctor, index) => {
+                    return (
+                      <MenuItem value={doctor} key={index}>
+                        {doctor?.name}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
 
-                  />
-                ) : null}
+              <div
+                style={{
+                  overflow: "auto",
+                  height: "178px",
+                  scrollbarWidth: "thin",
+                  marginTop: "1rem",
+                  marginBottom: "1rem",
+                }}
+              >
+                <table className="fixed_header">
+                  <thead>
+                    <tr>
+                      <th>Doctor</th>
+                      <th>Date</th>
+                      <th>Time</th>
+                      <th>No.of Appointments</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {doctor._id ? null : (
+                      <tr>
+                        <td colSpan={5}>Please select a doctor</td>
+                      </tr>
+                    )}
 
-                {doctor.monAvailbleTime ? (
-                  <TableRow
-                    doctor={doctor}
-                    dateName="Monday"
-                    timeKeyName="monAvailbleTime"
-                    appointmentType={appointmentType}
-                  />
-                ) : null}
+                    {doctor.sunAvailbleTime ? (
+                      <TableRow
+                        doctor={doctor}
+                        dateName="Sunday"
+                        timeKeyName="sunAvailbleTime"
+                        appointmentType={appointmentType}
+                      />
+                    ) : null}
 
-                {doctor.tueAvailbleTime ? (
-                  <TableRow
-                    doctor={doctor}
-                    dateName="Tuesday"
-                    timeKeyName="tueAvailbleTime"
-                    appointmentType={appointmentType}
-                  />
-                ) : null}
+                    {doctor.monAvailbleTime ? (
+                      <TableRow
+                        doctor={doctor}
+                        dateName="Monday"
+                        timeKeyName="monAvailbleTime"
+                        appointmentType={appointmentType}
+                      />
+                    ) : null}
 
-                {doctor.wensAvailbleTime ? (
-                  <TableRow
-                    doctor={doctor}
-                    dateName="Wednesday"
-                    timeKeyName="wensAvailbleTime"
-                    appointmentType={appointmentType}
-                  />
-                ) : null}
+                    {doctor.tueAvailbleTime ? (
+                      <TableRow
+                        doctor={doctor}
+                        dateName="Tuesday"
+                        timeKeyName="tueAvailbleTime"
+                        appointmentType={appointmentType}
+                      />
+                    ) : null}
 
-                {doctor.thusAvailbleTime ? (
-                  <TableRow
-                    doctor={doctor}
-                    dateName="Thursday"
-                    timeKeyName="thusAvailbleTime"
-                    appointmentType={appointmentType}
-                  />
-                ) : null}
+                    {doctor.wensAvailbleTime ? (
+                      <TableRow
+                        doctor={doctor}
+                        dateName="Wednesday"
+                        timeKeyName="wensAvailbleTime"
+                        appointmentType={appointmentType}
+                      />
+                    ) : null}
 
-                {doctor.friAvailbleTime ? (
-                  <TableRow
-                    doctor={doctor}
-                    dateName="Friday"
-                    timeKeyName="friAvailbleTime"
-                    appointmentType={appointmentType}
-                  />
-                ) : null}
+                    {doctor.thusAvailbleTime ? (
+                      <TableRow
+                        doctor={doctor}
+                        dateName="Thursday"
+                        timeKeyName="thusAvailbleTime"
+                        appointmentType={appointmentType}
+                      />
+                    ) : null}
 
-                {doctor.satAvailbleTime ? (
-                  <TableRow
-                    doctor={doctor}
-                    dateName="Saturday"
-                    timeKeyName="satAvailbleTime"
-                    appointmentType={appointmentType}
-                  />
-                ) : null}
-              </tbody>
-            </table>
-          </div>
+                    {doctor.friAvailbleTime ? (
+                      <TableRow
+                        doctor={doctor}
+                        dateName="Friday"
+                        timeKeyName="friAvailbleTime"
+                        appointmentType={appointmentType}
+                      />
+                    ) : null}
+
+                    {doctor.satAvailbleTime ? (
+                      <TableRow
+                        doctor={doctor}
+                        dateName="Saturday"
+                        timeKeyName="satAvailbleTime"
+                        appointmentType={appointmentType}
+                      />
+                    ) : null}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          ):(
+            <StyledButton   fullWidth sx={{
+              mt:4,
+              mb:5,
+              p:1.5,
+              fontSize:12
+            }}> Make Appointment</StyledButton>
+          )}
         </BlueAcentCard>
       </div>
     </Layout>
