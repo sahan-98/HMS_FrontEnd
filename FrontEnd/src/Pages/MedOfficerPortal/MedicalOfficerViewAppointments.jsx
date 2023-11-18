@@ -91,22 +91,21 @@ const MedicalOfficerViewAppointments = () => {
 
   const loadAppointments = useCallback(async () => {
     try {
-      let appointments = await AppointmentService.getAllAppointments();
+      let appointments = await AppointmentService.getUrgentAppointments();
+      console.log(appointments);
       appointments = appointments?.data.map((appointment, index) => ({
         id: index + 1,
-        doctorName: appointment?.doctor?.name,
-        date: dayNames[appointment?.doctorAvailability],
-        time: appointment?.doctor[appointment?.doctorAvailability],
-        visitStatus: appointment?.visitStatus,
-        queueNumber: appointment?.queueNumber,
+        patientName: `${appointment?.patient?.firstname} ${appointment?.patient?.lastname}`,
+        mobile: appointment?.patient?.mobile,
+        date: appointment?.bookingDate.split("T")[0],
         appointment,
-        appointmentType: appointment?.appointmentType,
+        appointmentType: appointment?.type,
       }));
       setAppointments(appointments);
     } catch (error) {
       console.log(error);
     }
-  }, [patient]);
+  }, []);
 
   useEffect(() => {
     loadAppointments();
@@ -115,25 +114,24 @@ const MedicalOfficerViewAppointments = () => {
   const columns = [
     { field: "id", headerName: "#", width: 50 },
     {
-      field: "doctorName",
-      headerName: "Doctor name",
+      field: "patientName",
+      headerName: "Patient name",
+      width: 180,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "mobile",
+      headerName: "Patient Mobile",
       width: 180,
       align: "center",
       headerAlign: "center",
     },
     { field: "date", headerName: "Date", width: 100 },
-    { field: "time", headerName: "Time", width: 100 },
     {
       field: "appointmentType",
       headerName: "Appointment type",
       width: 150,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "queueNumber",
-      headerName: "Appointment Number",
-      width: 70,
       align: "center",
       headerAlign: "center",
     },
@@ -176,11 +174,11 @@ const MedicalOfficerViewAppointments = () => {
     );
   }
 
-  filteredAppointments = filteredAppointments.filter((appointment) =>
-    selectedType === "pending"
-      ? appointment?.visitStatus === "pending"
-      : appointment?.visitStatus === "completed"
-  );
+  // filteredAppointments = filteredAppointments.filter((appointment) =>
+  //   selectedType === "pending"
+  //     ? appointment?.visitStatus === "pending"
+  //     : appointment?.visitStatus === "completed"
+  // );
 
   return (
     <Layout>

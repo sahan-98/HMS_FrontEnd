@@ -153,9 +153,9 @@ AppointmentRoutes.get("/get-urgent", async (req, res) => {
         appoinmentList.push({
           ...data[i],
           patient: patient,
-        });
+        }); 
       }
-      res.status(200).send({ data: appoinmentList });
+      res.status(200).send({ data: appoinmentList });  
       console.log("Response sent");
     })
     .catch((error) => {

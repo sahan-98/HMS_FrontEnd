@@ -34,6 +34,12 @@ class AppointmentService {
     });
   }
 
+  static async getUrgentAppointments() {
+    return await get({
+      path: `/appoinment/get-urgent`,
+    });
+  }
+
   static async getAppointmentsByDoctorId({ doctorId }) {
     return await get({
       path: `/appoinment/doctor/${doctorId}`,
