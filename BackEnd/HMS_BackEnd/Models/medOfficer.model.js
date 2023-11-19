@@ -40,12 +40,6 @@ let medOfficers = new Schema(
       required: true,
       type: String,
     },
-
-    gender: {
-      required: true,
-      type: String,
-    },
-
   },
   {
     collection: "MedOfficer",

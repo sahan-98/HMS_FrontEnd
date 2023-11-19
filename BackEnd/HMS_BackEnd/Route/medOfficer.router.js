@@ -27,7 +27,6 @@ MedOfficerRoutes.post("/add", async (req, res) => {
     lastname == "" ||
     userName == "" ||
     address == "" ||
-    gender == "" ||
     conpass == "" 
   )
     return res.status(202).json({ warn: "Important field(s) are empty" });
@@ -158,6 +157,20 @@ MedOfficerRoutes.post("/login", async (req, res) => {
       .json({ message: "Login successful", medOfficer: medOfficer });
   } catch (error) {
     return res.status(500).json({ error: error.message });
+  }
+});
+
+MedOfficerRoutes.delete("/:id", async (req, res) => {
+  try {
+    const medicalOfficer = await MedOfficer.findOne({ _id: req.params.id });
+    if (!medicalOfficer) {
+      return res.status(422).json({ error: "Medical officer not found" });
+    }
+
+    await MedOfficer.deleteOne({ _id: req.params.id });
+    res.json({ message: "Medical officer deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 

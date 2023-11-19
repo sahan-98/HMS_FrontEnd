@@ -7,22 +7,22 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { IconButton, Typography } from "@mui/material";
 import { useCallback } from "react";
-import LabAssistantService from "../../app/services/lab-assistant-service.js";
 import useRequest from "../../hooks/use-request.js";
 import { Delete, Edit } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { showSystemAlert } from "../../app/services/alertServices.js";
+import MedOfficerService from "../../app/services/med-officer-service.js";
 
 export default function AllMedOfficers() {
   const navigate = useNavigate();
   const getAllLabAssistants = useCallback(async () => {
-    const response = await LabAssistantService.getAllLabAssistants();
+    const response = await MedOfficerService.getAllMedOfficers();
     return response.data;
   }, []);
 
-  const handleEditLabAssistantClick = useCallback(
-    (labAssistant) => {
-      navigate("/add-lab-assistant", { state: { labAssistant: labAssistant } });
+  const handleEditMedOfficerClick = useCallback(
+    (medOfficer) => {
+      navigate("/add-med-officer", { state: { medOfficer: medOfficer } });
     },
     [navigate]
   );
@@ -32,24 +32,23 @@ export default function AllMedOfficers() {
   });
 
   if (loading) {
-    return <span>Loading Assistants</span>;
+    return <span>Loading Medical Officers</span>;
   }
 
   if (error) {
     return <span>Failed to load data. Internal server error</span>;
   }
 
-  const deleteLabAssistant = async (labAssistantId) => {
+  const deleteMedOfficer = async (medOfficerId) => {
     try {
-      const response = await LabAssistantService.deleteLabAssistant({
-        labAssistantId,
+      const response = await MedOfficerService.deleteMedOfficer({
+        medOfficerId,
       });
       console.log(response);
-      showSystemAlert("Lab assistant deleted", "success");
+      showSystemAlert("Med Officer deleted", "success");
       setRefresh((prev) => !prev);
     } catch (error) {
-      showSystemAlert("Unable to delete lab assistant", "error");
-
+      showSystemAlert("Unable to delete med Officer", "error");
       console.log(error);
     }
   };
@@ -57,7 +56,7 @@ export default function AllMedOfficers() {
   return (
     <TableContainer component={Paper}>
       <Typography variant="h6" sx={{ my: 3 }}>
-        Total available assistants: {data?.length}
+        Total Available Medical Officers: {data?.length}
       </Typography>
       <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
         <TableHead>
@@ -71,37 +70,35 @@ export default function AllMedOfficers() {
             </TableCell>
             <TableCell align="center">Address</TableCell>
             <TableCell align="center">Mobile No</TableCell>
-            <TableCell align="center">Date of Birth</TableCell>
             <TableCell align="center">Email</TableCell>
             <TableCell align="center">Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data?.map((labAssistant) => (
+          {data?.map((medOfficer) => (
             <TableRow
-              key={labAssistant?._id}
+              key={medOfficer?._id}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row" align="center">
-                {labAssistant?.firstname + " " + labAssistant?.lastname}
+                {medOfficer?.firstname + " " + medOfficer?.lastname}
               </TableCell>
-              <TableCell align="center">{labAssistant?.address}</TableCell>
-              <TableCell align="center">{labAssistant?.mobile}</TableCell>
-              <TableCell align="center">{labAssistant?.dateOfBirth}</TableCell>
-              <TableCell align="center">{labAssistant?.email}</TableCell>
+              <TableCell align="center">{medOfficer?.address}</TableCell>
+              <TableCell align="center">{medOfficer?.mobile}</TableCell>
+              <TableCell align="center">{medOfficer?.email}</TableCell>
               <TableCell align="center">
                 <IconButton
-                  title="Edit doctor"
+                  title="Edit med officer"
                   onClick={() => {
-                    handleEditLabAssistantClick(labAssistant);
+                    handleEditMedOfficerClick(medOfficer);
                   }}
                 >
                   <Edit />
                 </IconButton>
                 <IconButton
-                  title="Delete lab assistant"
+                  title="Delete med officer"
                   onClick={() => {
-                    deleteLabAssistant(labAssistant?._id);
+                    deleteMedOfficer(medOfficer?._id);
                   }}
                 >
                   <Delete />

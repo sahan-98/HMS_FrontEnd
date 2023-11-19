@@ -21,23 +21,23 @@ class MedOfficerService {
     });
   }
 
-  static async logout({ labAssistantId }) {
+  static async logout({ medOfficerId }) {
     return await post({
-      path: `/labAssistant/logout/${labAssistantId}`,
+      path: `/labAssistant/logout/${medOfficerId}`,
       data: {},
     });
   }
 
-  static async updateLabAssistant(id, labAssistant) {
+  static async updateMedOfficer({id, medOfficer}) {
     return await post({
-      path: "/labAssistant/update/" + id,
-      data: labAssistant,
+      path: "/medicalOfficer/update/" + id,
+      data: medOfficer,
     });
   }
 
-  static async deleteLabAssistant({ labAssistantId }) {
+  static async deleteMedOfficer({ medOfficerId }) {
     return await del({
-      path: "/labAssistant/" + labAssistantId,
+      path: "/medicalOfficer/" + medOfficerId,
     });
   }
 }

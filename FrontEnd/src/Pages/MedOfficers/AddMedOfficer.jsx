@@ -3,13 +3,13 @@ import Calender from "../Shared/Calender/Calender.jsx";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { showSystemAlert } from "../../app/services/alertServices.js";
-import LabAssistantService from "../../app/services/lab-assistant-service.js";
 import { useLocation, useNavigate } from "react-router-dom";
+import MedOfficerService from "../../app/services/med-officer-service.js";
 
 export const AddMedOfficer = () => {
   const [date, setDate] = useState(new Date().toDateString());
   const location = useLocation();
-  const labAssistantToBeEdited = location.state?.labAssistant;
+  const medOfficerToBeEdited = location.state?.medOfficer;
   const navigate = useNavigate();
   const {
     register,
@@ -32,48 +32,49 @@ export const AddMedOfficer = () => {
     let response = null;
 
     try {
-      if (labAssistantToBeEdited) {
-        response = await LabAssistantService.updateLabAssistant({
-          labAssistant: formData,
+      if (medOfficerToBeEdited) {
+        response = await MedOfficerService.updateMedOfficer({
+          id:medOfficerToBeEdited._id,
+          medOfficer: formData,
         });
         console.log(response);
-        showSystemAlert("Lab assistant profile updated", "success");
-        navigate("/all-lab-assistants");
+        showSystemAlert("Medical Officer profile updated", "success");
+        navigate("/all-med-officers");
       } else {
-        response = await LabAssistantService.newLabAssistant({
-          labAssistant: formData,
+        response = await MedOfficerService.newMedOfficer({
+          medOfficer: {...formData, dateOfBirth:'1998-08-22'},
         });
         console.log(response);
-        showSystemAlert("Lab assistant profile created", "success");
-        navigate("/all-lab-assistants");
+        showSystemAlert("Medical Officer profile created", "success");
+        navigate("/all-med-officers");
       }
     } catch (error) {
       showSystemAlert(
         response?.warn
           ? response?.warn
-          : "An error occurred while creating lab assistant profile",
+          : "An error occurred while creating medical Officer profile",
         "error"
       );
-    }
+    } 
   };
 
   useEffect(() => {
-    if (labAssistantToBeEdited) {
-      setValue("firstname", labAssistantToBeEdited.firstname);
-      setValue("lastname", labAssistantToBeEdited.lastname);
-      setValue("email", labAssistantToBeEdited.email);
-      setValue("userName", labAssistantToBeEdited.userName);
-      setValue("gender", labAssistantToBeEdited.gender);
-      setDate(labAssistantToBeEdited.dateOfBirth);
-      setValue("dateOfJoin", labAssistantToBeEdited.dateOfJoin);
-      setValue("speciality", labAssistantToBeEdited.speciality);
-      setValue("mobile", labAssistantToBeEdited.mobile);
-      setValue("address", labAssistantToBeEdited.address);
-      setValue("age", labAssistantToBeEdited.age);
-      setValue("fee", labAssistantToBeEdited.fee);
-      setValue("salary", labAssistantToBeEdited.salary);
+    if (medOfficerToBeEdited) {
+      setValue("firstname", medOfficerToBeEdited.firstname);
+      setValue("lastname", medOfficerToBeEdited.lastname);
+      setValue("email", medOfficerToBeEdited.email);
+      setValue("userName", medOfficerToBeEdited.userName);
+      setValue("gender", medOfficerToBeEdited.gender);
+      setDate(medOfficerToBeEdited.dateOfBirth);
+      setValue("dateOfJoin", medOfficerToBeEdited.dateOfJoin);
+      setValue("speciality", medOfficerToBeEdited.speciality);
+      setValue("mobile", medOfficerToBeEdited.mobile);
+      setValue("address", medOfficerToBeEdited.address);
+      setValue("age", medOfficerToBeEdited.age);
+      setValue("fee", medOfficerToBeEdited.fee);
+      setValue("salary", medOfficerToBeEdited.salary);
     }
-  }, [labAssistantToBeEdited, setValue]);
+  }, [medOfficerToBeEdited, setValue]);
 
   return (
     <Box
@@ -85,7 +86,7 @@ export const AddMedOfficer = () => {
     >
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-          {labAssistantToBeEdited ? "Edit Lab Assistant" : "Add Lab Assistant"}
+          {medOfficerToBeEdited ? "Edit Lab Assistant" : "Add Lab Assistant"}
         </Typography>
       </Box>
       <hr></hr>
@@ -224,7 +225,7 @@ export const AddMedOfficer = () => {
             })}
           />
         </Grid>
-        {labAssistantToBeEdited ? null : (
+        {medOfficerToBeEdited ? null : (
           <>
             {/* Password */}
             <Grid item xs={12} md={4}>
