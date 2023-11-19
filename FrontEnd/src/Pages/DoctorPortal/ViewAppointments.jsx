@@ -22,6 +22,7 @@ import { logout } from "../../reducers/loginSlice";
 import AppointmentService from "../../app/services/appointment-service";
 import { Button } from "@mui/base";
 import LabReport from "../LabReport/LabReport";
+import ViewStatGraph from "./ViewStatGraph";
 
 const StyledDiv = styled("div")(
   `
@@ -97,7 +98,7 @@ const StyledButton = styled(Button)(
 border-radius: 7px;
 border: 1px solid #DEDEDE;
 color: #fff;
-min-width: 30px;
+min-width: 80px;
 font-size: 10px;
 font-weight: 600;
 padding: 5px 10px;
@@ -120,6 +121,8 @@ const ViewAppointments = () => {
   const [labReportOpen, setLabReportOpen] = useState(false);
   const [labReportToShow, setLabReportToShow] = useState({});
   const doctor = useSelector((state) => state.doctor);
+  const [showPredictionGraph, setShowPredictionGraph] = useState(false);
+  const [predictionData, setPredictionData] = useState({});
 
   const columns = [
     { field: "id", headerName: "#", width: 50 },
@@ -135,8 +138,8 @@ const ViewAppointments = () => {
     },
     {
       field: "queueNumber",
-      headerName: "Appointment No",
-      width: 140,
+      headerName: "App. No",
+      width:90,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => {
@@ -156,8 +159,8 @@ const ViewAppointments = () => {
     {
       field: "actions",
       headerName: "Actions",
-      width: 180,
-      align: "center",
+      width: 245,
+      align: "right",
       headerAlign: "center",
       disableClickEventBubbling: true,
       renderCell: (params) => {
@@ -166,6 +169,11 @@ const ViewAppointments = () => {
           setLabReportToShow(appointment);
           setLabReportOpen(true);
         };
+        const onClickViewChart = ()=>{
+          setPredictionData(appointment?.detection);
+          setShowPredictionGraph(true);
+        }
+
         const completeAppointment = async () => {
           await AppointmentService.updateVisitStatus({
             appointmentId: appointment._id,
@@ -182,7 +190,12 @@ const ViewAppointments = () => {
                 </StyledButton>
               </>
             ) : (
-              <StyledButton onClick={onClick}>Assign Lab task</StyledButton>
+              <>
+                <StyledButton onClick={onClick}>Assign Lab task</StyledButton>
+                {appointment?.detection?._id && (
+                  <StyledButton onClick={onClickViewChart}>See Prediction</StyledButton>
+                )}
+              </>
             )}
             {appointment?.visitStatus === "pending" && (
               <IconButton onClick={completeAppointment}>
@@ -259,11 +272,18 @@ const ViewAppointments = () => {
   return (
     <Layout>
       <Header />
-      {labReportToShow?._id && <LabReport
-        open={labReportOpen}
-        setOpen={setLabReportOpen}
-        data={{ ...labReportToShow, doctorName: doctor.name }}
-      />}
+      {labReportToShow?._id && (
+        <LabReport
+          open={labReportOpen}
+          setOpen={setLabReportOpen}
+          data={{ ...labReportToShow, doctorName: doctor.name }}
+        />
+      )}
+      <ViewStatGraph
+        isOpen={showPredictionGraph}
+        setIsOpen={setShowPredictionGraph}
+        predictionData={predictionData}
+      />
       <div
         style={{
           height: "70vh",
