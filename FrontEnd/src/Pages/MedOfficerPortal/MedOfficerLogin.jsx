@@ -60,7 +60,7 @@ const MedOfficerLogin = () => {
       const labAssistantId = medicalOfficerLogin?.medOfficer?._id;
       if (labAssistantId) {
         showSystemAlert("You have successfully logged in", "success");
-        dispatch(login({ userId: labAssistantId }));
+        dispatch(login({ userId: labAssistantId, userType:"MedOfficer" }));
         dispatch(setMedicalOfficer({ ...medicalOfficerLogin.labAssistant }));
         navigate("/medical-officer-portal/view-appointments");
       }

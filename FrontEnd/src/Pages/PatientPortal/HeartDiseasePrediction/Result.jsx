@@ -42,12 +42,16 @@ const Result = () => {
   );
   const dispatch = useDispatch();
   
+  const patientId = useSelector(
+    (state) => state.patient._id
+  );
+  
 
   const getHeartDiseasePrediction = useCallback(async () => {
     try {
       setLoading(true);
       const response = await HeartDiseasePredictionService.predictHeartDisease({
-        patientId: 1,
+        patientId: patientId,
         age: heartDiseasePredictionState.age,
         sex: heartDiseasePredictionState.gender,
         chest_pain_type: heartDiseasePredictionState.chestPainType,

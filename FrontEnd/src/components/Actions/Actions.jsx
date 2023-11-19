@@ -12,6 +12,7 @@ const Actions = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const patientId = useSelector((state) => state.patient._id);
+    const userType = useSelector(state=>state.login.userType);
     const handleLogoutClick = useCallback(async () => {
         console.log("logout");
         try {
@@ -34,7 +35,12 @@ const Actions = () => {
         top: 20,
         right: 60
       }} title="Go to home" onClick={()=>{
-        navigate('/patient-portal/landing')
+        if(userType === "patient"){
+          navigate('/patient-portal/landing')
+        }else{
+          navigate("/medical-officer-portal/view-appointments");
+        }
+       
       }}>
             <Home />
       </IconButton>

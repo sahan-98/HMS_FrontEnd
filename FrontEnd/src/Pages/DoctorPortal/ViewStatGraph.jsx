@@ -89,7 +89,7 @@ const ViewStatGraph = ({ isOpen,setIsOpen, predictionData }) => {
         }}
       >
         <Box display={"flex"} justifyContent={"space-between"} width={"100%"} alignItems={"center"}>
-        <h1>Prediction Info</h1>
+        <h1>Descriptive Explanation</h1>
         <Box onClick={()=>{setIsOpen(false)}} p={2} sx={{
             "&:hover":{
                 cursor:"pointer"

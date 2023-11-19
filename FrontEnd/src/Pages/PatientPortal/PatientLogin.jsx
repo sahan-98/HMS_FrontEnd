@@ -60,7 +60,7 @@ const PatientLogin = () => {
       const { patient } = loginResponse;
       if (patient?.userName) {
         showSystemAlert("You have successfully logged in", "success");
-        dispatch(login({ userId: patient?._id }));
+        dispatch(login({ userId: patient?._id , userType:"patient"}));
         dispatch(setPatient({ ...patient }));
         navigate("/patient-portal/landing");
       } else {

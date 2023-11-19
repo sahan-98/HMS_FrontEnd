@@ -32,6 +32,7 @@ const Result = () => {
   const [appointmentPlaced, setAppointmentPlaced] = useState(true);
   const appointmentDetails = useSelector((state) => state.placeAppointment);
   const [loading, setLoading] = useState(true);
+  const userType = useSelector(state=>state.login.userType);
 
   const placeAppointment = useCallback(async () => {
     try {
@@ -109,7 +110,12 @@ const Result = () => {
           boxShadow: 0,
         }}
         onClick={() => {
-          navigate("/medical-officer-portal/view-appointments");
+          if(userType === "patient"){
+            navigate("/patient-portal/landing");
+          }else{
+            navigate("/medical-officer-portal/view-appointments");
+          }
+         
         }}
       >
         Back to Home

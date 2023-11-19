@@ -42,7 +42,7 @@ export const AddMedOfficer = () => {
         navigate("/all-med-officers");
       } else {
         response = await MedOfficerService.newMedOfficer({
-          medOfficer: {...formData, dateOfBirth:'1998-08-22'},
+          medOfficer: {...formData},
         });
         console.log(response);
         showSystemAlert("Medical Officer profile created", "success");
