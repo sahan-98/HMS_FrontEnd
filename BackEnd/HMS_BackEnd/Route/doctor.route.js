@@ -202,7 +202,7 @@ DoctorRoutes.post("/autoAllocateDoc", async (req, res) => {
           doctorid: docObj._id,
           patientid: req.body.patientid,
           bookingDate: req.body.bookingDate,
-          type: "urgent",
+          type: "Urgent",
           queueNumber: QueAppintments.length + 1,
           totalPrice: docObj.fee,
           visitStatus: "pending",
@@ -219,6 +219,20 @@ DoctorRoutes.post("/autoAllocateDoc", async (req, res) => {
   } catch (error) {
     console.error(error);
 
+    return res.status(500).json({ message: "Server Error" });
+  }
+});
+
+DoctorRoutes.post("/autoAllocateDoc-extappointment", async (req, res) => {
+  console.log(req.body);
+
+  try {
+    Doctor.findOne({ availability: true })
+      .then(async (docObj) => {
+        return res.status(200).json({ allocated_doc: docObj });
+      })
+      .catch((err) => res.status(400).json({ message: err }));
+  } catch (error) {
     return res.status(500).json({ message: "Server Error" });
   }
 });

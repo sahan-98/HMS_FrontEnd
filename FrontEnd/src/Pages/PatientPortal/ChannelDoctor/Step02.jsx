@@ -21,9 +21,16 @@ color: #fff;
 const Step02 = () => {
   const navigate = useNavigate();
   const patient = useSelector((state) => state.patient);
+  const {type} = useSelector((state) => state.placeAppointment);
+
 
   const handleNextClick = useCallback(() => {
-    navigate("/patient-portal/channel-doctor/payment");
+    if(type === "Urgent"){
+      navigate("/patient-portal/channel-doctor/completed");
+    }else{
+      navigate("/patient-portal/channel-doctor/payment");
+    }
+   
   }, [navigate]);
 
   const handleBackClick = useCallback(() => {

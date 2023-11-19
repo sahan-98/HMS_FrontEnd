@@ -39,6 +39,13 @@ class DoctorService {
     });
   }
 
+  static async autoAllocateDoctorForExistingAppointment({ bookingDate, patientid }) {
+    return await post({
+      path: `/doctor/autoAllocateDoc-extappointment`,
+      data: { bookingDate, patientid },
+    });
+  }
+
   static async getAvailableDoctors() {
     return await get({
       path: `/doctor/availableDoctors`,

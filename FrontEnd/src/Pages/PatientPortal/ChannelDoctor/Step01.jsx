@@ -33,6 +33,20 @@ padding: 3px 10px;
 }
 `);
 
+const StyledRedButton = styled(Button)(`
+border-radius: 7px;
+border: 1px solid #DEDEDE;
+background: #DC143C; 
+color: #fff;
+min-width: 30px;
+font-size: 10px;
+font-weight: 600;
+padding: 3px 10px;
+:hover {
+  background: #DC143C;
+}
+`);
+
 const TableRow = ({ doctor, dateName, timeKeyName, appointmentType }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -301,7 +315,7 @@ const Step01 = () => {
               </div>
             </>
           ) : (
-            <StyledButton
+            <StyledRedButton
               fullWidth
               sx={{
                 mt: 4,
@@ -322,7 +336,7 @@ const Step01 = () => {
             >
               {" "}
               Make Appointment
-            </StyledButton>
+            </StyledRedButton>
           )}
         </BlueAcentCard>
       </div>

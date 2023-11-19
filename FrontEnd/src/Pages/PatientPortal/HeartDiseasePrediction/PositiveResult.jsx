@@ -40,14 +40,29 @@ const PositiveResult = ({ urgentStatus }) => {
   const [doctor, setDoctor] = useState(null);
   const [bed, setBed] = useState(null);
   const patient = useSelector((state) => state.patient);
+  const appointmentId = useSelector(
+    (state) => state.heartDiseasePrediction.appointmentId
+  );
+  const detectionId = useSelector(
+    (state) => state.placeAppointment.detectionId
+  );
 
   const allocateDoctor = useCallback(async () => {
     setDoctor(null);
     try {
-      const responseBody = await DoctorService.autoAllocateDoctor({
-        patientid: patient._id,
-        bookingDate: new Date().toISOString().split("T")[0],
-      });
+      let responseBody = {};
+      if (appointmentId) {
+        responseBody = await DoctorService.autoAllocateDoctorForExistingAppointment({
+          patientid: patient._id,
+          bookingDate: new Date().toISOString().split("T")[0],
+        });
+      } else {
+        responseBody = await DoctorService.autoAllocateDoctor({
+          patientid: patient._id,
+          bookingDate: new Date().toISOString().split("T")[0],
+        });
+      }
+
       const { allocated_doc } = responseBody;
       setDoctor(allocated_doc);
       return allocated_doc;
@@ -117,16 +132,18 @@ const PositiveResult = ({ urgentStatus }) => {
 
     dispatch(
       placeAppointment({
+        detectionId: detectionId,
+        appointmentId: appointmentId,
         doctorid: doctor?.doctorid,
         patientid: patient._id,
         bookingDate: new Date().toISOString().split("T")[0],
-        type: "urgent",
+        type: "Urgent",
         fee: doctor?.fee,
         doctorAvailability: firstAvailableDay,
       })
     );
     navigate("/patient-portal/heart-disease-prediction/payment");
-  }, [navigate, dispatch, doctor, patient]);
+  }, [dispatch, appointmentId, doctor, patient._id, navigate]);
 
   if (urgentStatus) {
     return (

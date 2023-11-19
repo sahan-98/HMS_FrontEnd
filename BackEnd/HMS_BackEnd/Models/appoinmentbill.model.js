@@ -8,7 +8,8 @@ let appoinmentBill = new Schema(
   {
     patientid: {
       required: true,
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref:'detection'
     },
     visitStatus: {
       required: true,
@@ -42,7 +43,8 @@ let appoinmentBill = new Schema(
       type: Number,
     },
     detectionId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref:'detection'
     }
   },
   {

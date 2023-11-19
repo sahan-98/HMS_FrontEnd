@@ -13,6 +13,7 @@ const moment = require("moment");
 let Appointment = require("../Models/appoinmentbill.model");
 let Doctor = require("../Models/doctor.models");
 let Paitent = require("../Models/paitents.model");
+let Detection = require("../Models/detection.model");
 
 // add a appoiment
 AppointmentRoutes.post("/add", async (req, res) => {
@@ -65,6 +66,51 @@ AppointmentRoutes.post("/add", async (req, res) => {
   }
 });
 
+AppointmentRoutes.post("/update-appointment", async (req, res) => {
+  try {
+    const {
+      appointmentId,
+      doctorid,
+      doctorAvailability,
+      detectionId,
+    } = req.body;
+
+    const doc = await Doctor.findOne({ doctorid: doctorid });
+
+    let fee = doc.fee;
+
+    console.log(doc);
+    console.log(fee);
+
+    const QueAppintments = await Appointment.find({
+      doctorid: doctorid,
+      doctorAvailability: doctorAvailability,
+    });
+
+    const updateAppointment = await Appointment.findById(appointmentId);
+    if(updateAppointment){
+      updateAppointment.doctorid = doctorid;
+      updateAppointment.doctorAvailability = doctorAvailability;
+      updateAppointment.detectionId = detectionId;
+      updateAppointment.totalPrice= fee;
+      updateAppointment.queueNumber = QueAppintments.length + 1;
+    }
+
+    await updateAppointment
+      .save()
+      .then(async (respond) => {
+        return res.status(200).json({ message: "Successfull" ,updateAppointment});
+      })
+      .catch((err) => {
+        res.status(400).json({ message: "Error!" });
+        console.log("error mail:", err);
+      });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Server Error" });
+  }
+});
+
 AppointmentRoutes.post("/add-urgent", async (req, res) => {
   try {
     const { patientid, bookingDate, type } = req.body;
@@ -72,7 +118,7 @@ AppointmentRoutes.post("/add-urgent", async (req, res) => {
     const newAppointment = new Appointment({
       patientid,
       bookingDate,
-      type,
+      type:"Urgent",
       visitStatus: "pending",
     });
 
@@ -138,6 +184,17 @@ AppointmentRoutes.get("/get-urgent", async (req, res) => {
       },
     },
     {
+      $lookup: {
+        from: "Paitent",
+        localField: "patientid",
+        foreignField: "_id",
+        as: "patient",
+      },
+    },
+    {
+      $unwind: "$patient",
+    },
+    {
       $sort: {
         bookingDate: -1,
         queueNumber: -1,
@@ -146,16 +203,16 @@ AppointmentRoutes.get("/get-urgent", async (req, res) => {
   ])
     .then(async (data) => {
       //get patient details. the aggregation is not possible because it is stored as string.
-      const appoinmentList = [];
-      for (let i = 0; i < data.length; i++) {
-        const patient = await Paitent.findById(data[i].patientid);
-        console.log(patient);
-        appoinmentList.push({
-          ...data[i],
-          patient: patient,
-        }); 
-      }
-      res.status(200).send({ data: appoinmentList });  
+      // const appoinmentList = [];
+      // for (let i = 0; i < data.length; i++) {
+      //   const patient = await Paitent.findById(data[i].patientid);
+      //   console.log(patient);
+      //   appoinmentList.push({
+      //     ...data[i],
+      //     patient: patient,
+      //   }); 
+      // }
+      res.status(200).send({ data: data });  
       console.log("Response sent");
     })
     .catch((error) => {
@@ -221,8 +278,19 @@ AppointmentRoutes.get("/doctor/:doctorId", async (req, res, next) => {
       {
         $match: {
           doctorid: req.params.doctorId,
-          type: "urgent",
+          type: "Urgent",
         },
+      },
+      {
+        $lookup: {
+          from: "detection",
+          localField: "detectionId",
+          foreignField: "_id",
+          as: "detection",
+        },
+      },
+      {
+        $unwind: "$detection",
       },
       {
         $sort: {
@@ -236,10 +304,11 @@ AppointmentRoutes.get("/doctor/:doctorId", async (req, res, next) => {
         $match: {
           doctorid: req.params.doctorId,
           type: {
-            $ne: "urgent",
+            $ne: "Urgent",
           },
         },
       },
+      
       {
         $sort: {
           bookingDate: -1,
@@ -247,6 +316,14 @@ AppointmentRoutes.get("/doctor/:doctorId", async (req, res, next) => {
         },
       },
     ]);
+    // for(let i=0; i<appointmentsUrgent.length; i++){
+    //   const detection = await Detection.findById(appointmentsUrgent.detectionId)
+    //   appointmentsUrgent[i].detection = detection;
+    // }
+    // for(let i=0; i<appointmentsNormal.length; i++){
+    //   const detection = await Detection.findById(appointmentsNormal.detectionId)
+    //   appointmentsNormal[i].detection = detection;
+    // }
     const appointments = [...appointmentsUrgent, ...appointmentsNormal];
     res.status(200).json({ data: appointments });
   } catch (err) {

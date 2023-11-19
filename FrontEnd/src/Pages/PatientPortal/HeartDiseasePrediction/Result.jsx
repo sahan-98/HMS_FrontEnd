@@ -1,6 +1,6 @@
 import { Box, Button, styled } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import HeartDiseasePredictionService from "../../../app/services/heart-disease-prediction-service";
 import done from "../../../assets/images/done.png";
@@ -11,6 +11,7 @@ import Header from "../Header";
 import Layout from "../Layout";
 import PositiveResult from "./PositiveResult";
 import Actions from "../../../components/Actions/Actions";
+import { placeAppointment } from "../../../reducers/placeAppointmentSlice";
 
 const StyledText = styled("span")(
   `
@@ -36,6 +37,11 @@ const Result = () => {
   const heartDiseasePredictionState = useSelector(
     (state) => state.heartDiseasePrediction
   );
+  const placeAppointmentDetails = useSelector(
+    (state) => state.placeAppointment
+  );
+  const dispatch = useDispatch();
+  
 
   const getHeartDiseasePrediction = useCallback(async () => {
     try {
@@ -55,12 +61,20 @@ const Result = () => {
         st_slope: heartDiseasePredictionState.stSlope,
       });
       setResult(response);
+      console.log(response.data._id);
+      dispatch(
+        placeAppointment({
+          ...placeAppointmentDetails,
+          detectionId:response.data._id
+        })
+      );
     } catch (err) {
       console.log(err);
     } finally {
       setLoading(false);
     }
-  }, [heartDiseasePredictionState, setResult]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, heartDiseasePredictionState]);
 
   useEffect(() => {
     getHeartDiseasePrediction();

@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 export const placeAppointmentSlice = createSlice({
   name: "placeAppointment",
   initialState: {
+    appointmentId:undefined,
+    detectionId:"",
     doctorid: "",
     patientid: "",
     bookingDate: "",
@@ -13,6 +15,8 @@ export const placeAppointmentSlice = createSlice({
   },
   reducers: {
     placeAppointment: (state, action) => {
+      state.appointmentId = action.payload.appointmentId;
+      state.detectionId = action.payload.detectionId;
       state.doctorid = action.payload.doctorid;
       state.patientid = action.payload.patientid;
       state.bookingDate = action.payload.bookingDate;
@@ -22,6 +26,8 @@ export const placeAppointmentSlice = createSlice({
       state.doctorAvailability = action.payload.doctorAvailability;
     },
     clearDetails: (state) => {
+      state.appointmentId = "";
+      state.detectionId = "";
       state.doctorid = "";
       state.patientid = "";
       state.bookingDate = "";
