@@ -14,6 +14,7 @@ let Appointment = require("../Models/appoinmentbill.model");
 let Doctor = require("../Models/doctor.models");
 let Paitent = require("../Models/paitents.model");
 let Detection = require("../Models/detection.model");
+const { default: mongoose } = require("mongoose");
 
 // add a appoiment
 AppointmentRoutes.post("/add", async (req, res) => {
@@ -237,7 +238,7 @@ AppointmentRoutes.get("/patient/:patientId", async (req, res, next) => {
     const appointments = await Appointment.aggregate([
       {
         $match: {
-          patientid: req.params.patientId,
+          patientid: new mongoose.Types.ObjectId(req.params.patientId),
         },
       },
       {
@@ -280,6 +281,17 @@ AppointmentRoutes.get("/doctor/:doctorId", async (req, res, next) => {
           doctorid: req.params.doctorId,
           type: "Urgent",
         },
+      },
+      {
+        $lookup: {
+          from: "Paitent",
+          localField: "patientid",
+          foreignField: "_id",
+          as: "patient",
+        },
+      },
+      {
+        $unwind: "$patient",
       },
       {
         $lookup: {

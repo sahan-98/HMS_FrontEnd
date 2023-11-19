@@ -126,7 +126,7 @@ const ViewAppointments = () => {
 
   const columns = [
     { field: "id", headerName: "#", width: 50 },
-
+    { field: "patientName", headerName: "Name", width: 100 },
     { field: "date", headerName: "Date", width: 100 },
     { field: "time", headerName: "Time", width: 160 },
     {
@@ -217,6 +217,7 @@ const ViewAppointments = () => {
         id: index + 1,
         date: dayNames[appointment?.doctorAvailability],
         time: doctor[appointment?.doctorAvailability],
+        patientName:`${appointment?.patient?.firstname ?? ""} ${appointment?.patient?.lastname ?? ""}`,
         visitStatus: appointment?.visitStatus,
         queueNumber: appointment?.queueNumber,
         appointment,
@@ -292,7 +293,7 @@ const ViewAppointments = () => {
           alignItems: "start",
         }}
       >
-        <StyledDiv width="800px">
+        <StyledDiv width="900px">
           <Box
             sx={{
               display: "flex",
