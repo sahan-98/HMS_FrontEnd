@@ -320,6 +320,17 @@ AppointmentRoutes.get("/doctor/:doctorId", async (req, res, next) => {
           },
         },
       },
+      {
+        $lookup: {
+          from: "Paitent",
+          localField: "patientid",
+          foreignField: "_id",
+          as: "patient",
+        },
+      },
+      {
+        $unwind: "$patient",
+      },
       
       {
         $sort: {

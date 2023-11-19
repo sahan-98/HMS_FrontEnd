@@ -141,7 +141,10 @@ const Step01 = () => {
     setSpecializationList(Array.from(specializations));
     if (speciality) {
       setSpecialization(speciality);
-      onSelectSpecialization(speciality);
+      const filteredDoctors = availableDoctors.filter(
+        (doctor) => doctor.speciality === speciality
+      );
+      setFilteredDoctorList(filteredDoctors);
     }
   }, [speciality]);
 
