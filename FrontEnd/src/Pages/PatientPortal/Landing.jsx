@@ -13,11 +13,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../reducers/loginSlice";
 import { showSystemAlert } from "../../app/services/alertServices";
 import { GiPowerButton } from "react-icons/gi";
+import { placeAppointment } from "../../reducers/placeAppointmentSlice";
 
 const Landing = () => {
   const navigate = useNavigate();
 
   const patientId = useSelector((state) => state.patient._id);
+  const patient = useSelector((state) => state.patient);
   const dispatch = useDispatch();
 
   const handleCDClick = useCallback(() => {
@@ -25,8 +27,15 @@ const Landing = () => {
   }, [navigate]);
 
   const handleHDPCardClick = useCallback(() => {
-    navigate("/patient-portal/heart-disease-prediction/step-01");
-  }, [navigate]);
+    dispatch(
+      placeAppointment({
+        patientid: patient?._id,
+        bookingDate: new Date().toISOString().split("T")[0],
+        type: "Urgent",
+      })
+    );
+    navigate(`/patient-portal/channel-doctor/step-02`);
+  }, [dispatch, navigate, patient]);
 
   const handleAppointmentsClick = useCallback(() => {
     navigate("/patient-portal/view-appointments");
@@ -52,16 +61,19 @@ const Landing = () => {
     }
   }, [patientId, dispatch, navigate]);
 
-
   return (
     <Layout>
       <Header />
-      <IconButton sx={{
-        position: "absolute",
-        top: 20,
-        right: 20
-      }} title="Logout" onClick={handleLogoutClick}>
-            <GiPowerButton />
+      <IconButton
+        sx={{
+          position: "absolute",
+          top: 20,
+          right: 20,
+        }}
+        title="Logout"
+        onClick={handleLogoutClick}
+      >
+        <GiPowerButton />
       </IconButton>
       <div
         style={{
@@ -72,10 +84,10 @@ const Landing = () => {
           gap: "6rem",
         }}
       >
-        {/* <PatientChoiseCard onClick={handleHDPCardClick}>
+        <PatientChoiseCard onClick={handleHDPCardClick}>
           <img src={heart} alt="check heart disease" />
-          <h4>Check Heart Disease</h4>
-        </PatientChoiseCard> */}
+          <h4>Emergency Request</h4>
+        </PatientChoiseCard>
         <PatientChoiseCard onClick={handleCDClick}>
           <img src={doctor} alt="doctor" />
           <h4>Channel doctor</h4>

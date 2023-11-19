@@ -45,6 +45,19 @@ const ChartRow = ({ title, numericTitlePart, value, maxValue, minValue }) => {
               width: (value / minValue) * 300,
               backgroundColor: "#35729F",
               height: BAR_HEIGHT,
+            
+            }}
+            title={`(${parseFloat(value).toFixed(4)}) ${title}`}
+          ></Box>
+        )}
+         {value === 0 && (
+          <Box
+            sx={{
+              width: 300,
+              height: BAR_HEIGHT,
+              "&:hover":{
+                backgroundColor:"#D3E2EE"
+              }
             }}
             title={`(${parseFloat(value).toFixed(4)}) ${title}`}
           ></Box>
@@ -63,6 +76,18 @@ const ChartRow = ({ title, numericTitlePart, value, maxValue, minValue }) => {
               width: (value / maxValue) * 300,
               backgroundColor: "#F7946B",
               height: BAR_HEIGHT,
+            }}
+            title={`(${parseFloat(value).toFixed(4)}) ${title}`}
+          ></Box>
+        )}
+        {value === 0 && (
+          <Box
+            sx={{
+              width: 300,
+              height: BAR_HEIGHT,
+              "&:hover":{
+                backgroundColor:"#D3E2EE"
+              }
             }}
             title={`(${parseFloat(value).toFixed(4)}) ${title}`}
           ></Box>

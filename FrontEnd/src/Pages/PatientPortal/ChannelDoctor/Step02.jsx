@@ -51,7 +51,7 @@ const Step02 = () => {
         }}
       >
         <BlueAcentCard width="450px">
-          <HeadingText text="Channel Doctor" />
+          <HeadingText text={type === "Urgent" ? "Emergency Request" :"Channel Doctor"} />
           <TextField
             label="Your name"
             variant="outlined"

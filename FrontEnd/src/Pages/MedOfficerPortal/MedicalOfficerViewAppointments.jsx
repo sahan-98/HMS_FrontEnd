@@ -101,7 +101,7 @@ const MedicalOfficerViewAppointments = () => {
         appointment,
         appointmentType: appointment?.type,
       }));
-      setAppointments(appointments);
+      setAppointments(appointments.filter(appointment=>appointment?.appointment?.detectionId === undefined));
     } catch (error) {
       console.log(error);
     }

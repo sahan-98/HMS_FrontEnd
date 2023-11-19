@@ -46,16 +46,20 @@ const PositiveResult = ({ urgentStatus }) => {
   const detectionId = useSelector(
     (state) => state.placeAppointment.detectionId
   );
+  const userType = useSelector(
+    (state) => state.login.userType
+  );
 
   const allocateDoctor = useCallback(async () => {
     setDoctor(null);
     try {
       let responseBody = {};
       if (appointmentId) {
-        responseBody = await DoctorService.autoAllocateDoctorForExistingAppointment({
-          patientid: patient._id,
-          bookingDate: new Date().toISOString().split("T")[0],
-        });
+        responseBody =
+          await DoctorService.autoAllocateDoctorForExistingAppointment({
+            patientid: patient._id,
+            bookingDate: new Date().toISOString().split("T")[0],
+          });
       } else {
         responseBody = await DoctorService.autoAllocateDoctor({
           patientid: patient._id,
@@ -64,6 +68,9 @@ const PositiveResult = ({ urgentStatus }) => {
       }
 
       const { allocated_doc } = responseBody;
+      if (!allocated_doc) {
+        throw new Error("No doctors available");
+      }
       setDoctor(allocated_doc);
       return allocated_doc;
     } catch (error) {
@@ -75,7 +82,11 @@ const PositiveResult = ({ urgentStatus }) => {
         allowOutsideClick: false,
         allowEscapeKey: false,
       }).then(function () {
-        navigate("/patient-portal/landing");
+        if(userType === "patient"){
+          navigate("/patient-portal/landing");
+        }else{
+          navigate("/medical-officer-portal/view-appointments");
+        }
       });
       return;
     }
@@ -107,7 +118,7 @@ const PositiveResult = ({ urgentStatus }) => {
 
   const makeAllocation = useCallback(async () => {
     const allocatedDoctor = await allocateDoctor();
-    if (allocatedDoctor.doctorid) {
+    if (allocatedDoctor?.doctorid) {
       const allocatedBed = await allocateBed();
       if (allocatedBed) {
         return true;

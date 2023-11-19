@@ -90,10 +90,10 @@ const Result = () => {
 
   const Success = (
     <>
-      <HeadingText text="Channel Doctor" />
+      <HeadingText text={appointmentDetails.type === 'Urgent' ? "Emergency Request" : "Channel Doctor"} />
       <img src={done} alt="" width={"150px"} />
       <div>
-        <StyledText fontSize="24px">Appointment Placed</StyledText>
+        <StyledText fontSize="24px">{appointmentDetails.type === 'Urgent' ? "Request Completed!" :"Appointment Placed"} </StyledText>
       </div>
       <Box my={3}>
         <StyledText fontSize="16px">

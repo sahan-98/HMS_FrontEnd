@@ -102,7 +102,8 @@ const Step01 = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const patient = useSelector((state) => state.patient);
-
+  const {type} = useSelector((state) => state.placeAppointment);
+  
   const onSelectSpecialization = useCallback(
     (selectedSpecialization) => {
       const filteredDoctors = doctorList.filter(
@@ -162,8 +163,8 @@ const Step01 = () => {
         }}
       >
         <BlueAcentCard width="450px">
-          <HeadingText text="Channel Doctor" />
-          <FormControl fullWidth sx={{ mt: 2, textAlign: "start" }}>
+          <HeadingText text={type === "Urgent" ? "Emergency Request" :"Channel Doctor"} />
+          {/* <FormControl fullWidth sx={{ mt: 2, textAlign: "start" }}>
             <InputLabel id="demo-simple-select-label">Select Type</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -179,7 +180,7 @@ const Step01 = () => {
                 );
               })}
             </Select>
-          </FormControl>
+          </FormControl> */}
           {appointmentType === "Normal" ? (
             <>
               <FormControl fullWidth sx={{ mt: 2, textAlign: "start" }}>
@@ -335,7 +336,7 @@ const Step01 = () => {
               }}
             >
               {" "}
-              Make Appointment
+              Make Request
             </StyledRedButton>
           )}
         </BlueAcentCard>

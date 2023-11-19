@@ -260,6 +260,9 @@ const PatientRegistration = () => {
               sx={{ my: 4 }}
               variant="outlined"
               color="secondary"
+              onClick={()=>{
+                navigate('/patient-login')
+              }}
             >
               Go Back
             </StyledButton>
