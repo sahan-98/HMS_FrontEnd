@@ -139,7 +139,7 @@ const ViewAppointments = () => {
     {
       field: "queueNumber",
       headerName: "App. No",
-      width:90,
+      width: 90,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => {
@@ -160,7 +160,7 @@ const ViewAppointments = () => {
       field: "actions",
       headerName: "Actions",
       width: 245,
-      align: "right",
+      align: "center",
       headerAlign: "center",
       disableClickEventBubbling: true,
       renderCell: (params) => {
@@ -169,10 +169,10 @@ const ViewAppointments = () => {
           setLabReportToShow(appointment);
           setLabReportOpen(true);
         };
-        const onClickViewChart = ()=>{
+        const onClickViewChart = () => {
           setPredictionData(appointment?.detection);
           setShowPredictionGraph(true);
-        }
+        };
 
         const completeAppointment = async () => {
           await AppointmentService.updateVisitStatus({
@@ -191,9 +191,14 @@ const ViewAppointments = () => {
               </>
             ) : (
               <>
-                <StyledButton onClick={onClick}>Assign Lab task</StyledButton>
+                {appointment?.visitStatus !== "completed" && (
+                  <StyledButton onClick={onClick}>Assign Lab task</StyledButton>
+                )}
+
                 {appointment?.detection?._id && (
-                  <StyledButton onClick={onClickViewChart}>See Prediction</StyledButton>
+                  <StyledButton onClick={onClickViewChart}>
+                    See Prediction
+                  </StyledButton>
                 )}
               </>
             )}
@@ -217,7 +222,9 @@ const ViewAppointments = () => {
         id: index + 1,
         date: dayNames[appointment?.doctorAvailability],
         time: doctor[appointment?.doctorAvailability],
-        patientName:`${appointment?.patient?.firstname ?? ""} ${appointment?.patient?.lastname ?? ""}`,
+        patientName: `${appointment?.patient?.firstname ?? ""} ${
+          appointment?.patient?.lastname ?? ""
+        }`,
         visitStatus: appointment?.visitStatus,
         queueNumber: appointment?.queueNumber,
         appointment,
