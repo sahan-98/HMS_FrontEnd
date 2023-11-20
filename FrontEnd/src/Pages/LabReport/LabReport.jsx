@@ -23,6 +23,8 @@ const LabReport = ({ open, setOpen, data }) => {
   const { register, setValue } = useForm({
     defaultValues: {},
   });
+
+  console.log(data);
   const [doctorName, setDoctorName] = useState("");
 
   const [selectedLabAssistant, setSelectedLabAssistant] =
@@ -74,6 +76,17 @@ const LabReport = ({ open, setOpen, data }) => {
       );
       setSelectedLabAssistant(labReport?.labAssistantid);
       setLabReportType(labReport?.type);
+    } else {
+      setValue("LDL", "");
+      setValue("HDL", "");
+      setValue("TotalCholesterol", "");
+      setValue("Triglycerides", "");
+      setValue("VLDLlevels", "");
+      setValue("WBCcount", "");
+      setValue("RBCcount", "");
+      setValue("platelets", "");
+      setValue("hemoglobin", "");
+      setValue("hematocrit", "");
     }
     let doctor = await DoctorService.getDoctorById({
       doctorId: data.doctorid,
