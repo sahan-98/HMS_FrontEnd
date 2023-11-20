@@ -113,9 +113,9 @@ const ViewBills = () => {
             .toISOString()
             .split("T")[0],
           status: appointmentBill?.visitStatus,
-          amount: appointmentBill?.totalPrice,
+          amount: appointmentBill?.totalPrice ?? "Apt. Pending",
           billType: "appointmentBill",
-          paymentStatus: "paid",
+          paymentStatus: appointmentBill?.totalPrice ? "paid" : undefined,
           billObj: appointmentBill,
         })
       );
@@ -134,7 +134,7 @@ const ViewBills = () => {
         id: index + 1,
         date: new Date(bedBill?.allocationDate).toISOString().split("T")[0],
         status: bedBill?.payStatus,
-        amount: bedBill?.totalPrice,
+        amount: bedBill?.totalPrice ,
         billType: "bedBill",
         paymentStatus: bedBill?.payStatus === "completed" ? "paid" : "pending",
         billObj: bedBill,
@@ -228,7 +228,7 @@ const ViewBills = () => {
             `/patient-portal/pay-bill?billtype=${billType}&amount=${billObj?.totalPrice}&billid=${billObj?._id}`
           );
         };
-        return (
+        return paymentStatus ? (
           <>
             <StyledButton
               onClick={onClick}
@@ -247,6 +247,8 @@ const ViewBills = () => {
                 : "Pay bill"}
             </StyledButton>
           </>
+        ) : (
+          <> - </>
         );
       },
     },
@@ -324,7 +326,6 @@ const ViewBills = () => {
                   Bed Bills
                 </StyledToggleButton>
               </StyledToggleButtonGroup>
-            
             </Box>
           </Box>
 

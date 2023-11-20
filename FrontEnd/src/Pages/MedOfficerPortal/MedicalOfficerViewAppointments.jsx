@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useCallback, useEffect, useState } from "react";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import AppointmentService from "../../app/services/appointment-service";
 import Actions from "../../components/Actions/Actions";
 import LabReport from "../LabReport/LabReport";
@@ -20,6 +20,7 @@ import { store } from "../../app/store";
 import { setPatient } from "../../reducers/patientSlice";
 import { setAppointmentId } from "../../reducers/heartDiseasePredictionSlice";
 import { useNavigate } from "react-router-dom";
+import { placeAppointment } from "../../reducers/placeAppointmentSlice";
 
 const StyledDiv = styled("div")(
   `
@@ -59,9 +60,6 @@ padding: 3px 10px;
 `
 );
 
-
-
-
 const StyledTextField = styled(TextField)({
   "& .MuiOutlinedInput-root": {
     borderRadius: 30,
@@ -84,10 +82,13 @@ const MedicalOfficerViewAppointments = () => {
   const navigate = useNavigate();
 
   const patient = useSelector((state) => state.patient);
-  const [selectedType, ] = useState("pending");
+  const [selectedType] = useState("pending");
   const [searchText, setSearchText] = useState("");
   const [labReportOpen, setLabReportOpen] = useState(false);
-  const [labReportToShow, ] = useState({});
+  const [labReportToShow] = useState({});
+  const placeAppointmentDetails = useSelector(
+    (state) => state.placeAppointment
+  );
 
   const loadAppointments = useCallback(async () => {
     try {
@@ -101,7 +102,11 @@ const MedicalOfficerViewAppointments = () => {
         appointment,
         appointmentType: appointment?.type,
       }));
-      setAppointments(appointments.filter(appointment=>appointment?.appointment?.detectionId === undefined));
+      setAppointments(
+        appointments.filter(
+          (appointment) => appointment?.appointment?.detectionId === undefined
+        )
+      );
     } catch (error) {
       console.log(error);
     }
@@ -152,7 +157,15 @@ const MedicalOfficerViewAppointments = () => {
           console.log(patient);
           store.dispatch(setPatient({ ...patient.data }));
           store.dispatch(setAppointmentId({ appointmentId: appointment?._id }));
-          navigate('/patient-portal/heart-disease-prediction/step-01');
+          store.dispatch(
+            placeAppointment({
+              ...placeAppointmentDetails,
+              appointmentId: appointment?._id,
+              patientid: patient.data._id,
+              ...appointment
+            })
+          );
+          navigate("/patient-portal/heart-disease-prediction/step-01");
         };
         return (
           <>

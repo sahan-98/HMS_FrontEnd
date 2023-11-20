@@ -51,6 +51,7 @@ const TableRow = ({ doctor, dateName, timeKeyName, appointmentType }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const patient = useSelector((state) => state.patient);
+  const appointmentDetails = useSelector(state=>state.placeAppointment);
 
   return (
     <tr>
@@ -63,6 +64,7 @@ const TableRow = ({ doctor, dateName, timeKeyName, appointmentType }) => {
           onClick={() => {
             dispatch(
               placeAppointment({
+                ...appointmentDetails,
                 doctorid: doctor?.doctorid,
                 patientid: patient?._id,
                 bookingDate: new Date().toISOString().split("T")[0],
