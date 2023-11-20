@@ -22,6 +22,7 @@ color: #fff;
 const Payment = () => {
   const navigate = useNavigate();
   const appointmentDetails = useSelector((state) => state.placeAppointment);
+  const medicalOfficer = useSelector(state=>state.login.userType);
 
   const handleNextClick = useCallback(() => {
     navigate("/patient-portal/channel-doctor/completed");
@@ -56,7 +57,7 @@ const Payment = () => {
             Channeling Fee : € {appointmentDetails.fee}
           </Typography>
 
-          {appointmentDetails.type !== "Urgent" && (
+          {medicalOfficer === "patient" && (
             <>
               <TextField
                 label="Card number"
