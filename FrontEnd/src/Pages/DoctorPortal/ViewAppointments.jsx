@@ -194,14 +194,13 @@ const ViewAppointments = () => {
                 {appointment?.visitStatus !== "completed" && (
                   <StyledButton onClick={onClick}>Assign Lab task</StyledButton>
                 )}
-
-                {appointment?.detection?._id && (
+              </>
+            )}
+             {appointment?.detection?._id && (
                   <StyledButton onClick={onClickViewChart}>
                     See Prediction
                   </StyledButton>
                 )}
-              </>
-            )}
             {appointment?.visitStatus === "pending" && (
               <IconButton onClick={completeAppointment}>
                 <CheckCircleOutline />
