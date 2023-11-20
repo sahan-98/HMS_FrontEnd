@@ -45,19 +45,18 @@ const ChartRow = ({ title, numericTitlePart, value, maxValue, minValue }) => {
               width: (value / minValue) * 300,
               backgroundColor: "#35729F",
               height: BAR_HEIGHT,
-            
             }}
             title={`(${parseFloat(value).toFixed(4)}) ${title}`}
           ></Box>
         )}
-         {value === 0 && (
+        {value === 0 && (
           <Box
             sx={{
               width: 300,
               height: BAR_HEIGHT,
-              "&:hover":{
-                backgroundColor:"#D3E2EE"
-              }
+              "&:hover": {
+                backgroundColor: "#D3E2EE",
+              },
             }}
             title={`(${parseFloat(value).toFixed(4)}) ${title}`}
           ></Box>
@@ -85,9 +84,9 @@ const ChartRow = ({ title, numericTitlePart, value, maxValue, minValue }) => {
             sx={{
               width: 300,
               height: BAR_HEIGHT,
-              "&:hover":{
-                backgroundColor:"#D3E2EE"
-              }
+              "&:hover": {
+                backgroundColor: "#D3E2EE",
+              },
             }}
             title={`(${parseFloat(value).toFixed(4)}) ${title}`}
           ></Box>
@@ -100,30 +99,47 @@ ChartRow.proptypes = {
   title: proptypes.string,
 };
 
-const ViewStatGraph = ({ isOpen,setIsOpen, predictionData }) => {
-  
+const ViewStatGraph = ({ isOpen, setIsOpen, predictionData }) => {
   return (
     <CustomModal open={isOpen} sx={{ width: { xs: "90%", sm: 450, md: 800 } }}>
       <Box
         sx={{
-          height: 420,
+          height: 450,
           display: "flex",
           flexDirection: "column",
           alignItems: "start",
           justifyContent: "start",
         }}
       >
-        <Box display={"flex"} justifyContent={"space-between"} width={"100%"} alignItems={"center"}>
-        <h1>Descriptive Explanation</h1>
-        <Box onClick={()=>{setIsOpen(false)}} p={2} sx={{
-            "&:hover":{
-                cursor:"pointer"
-            }
-        }}>
+        <Box
+          display={"flex"}
+          justifyContent={"space-between"}
+          width={"100%"}
+          alignItems={"center"}
+        >
+          <Box>
+            <h3>Descriptive Explanation </h3>
+            <p>
+              {" "}
+              Prediction Result :{" "}
+              <span style={{color:predictionData.label === "true" ? "#E93232" : "#59C169"}}>{predictionData.label === "true" ? "Positive" : "Negative"}</span>
+            </p>
+          </Box>
+
+          <Box
+            onClick={() => {
+              setIsOpen(false);
+            }}
+            p={2}
+            sx={{
+              "&:hover": {
+                cursor: "pointer",
+              },
+            }}
+          >
             <Close />
+          </Box>
         </Box>
-        </Box>
-       
 
         <Box>
           <ChartRow
