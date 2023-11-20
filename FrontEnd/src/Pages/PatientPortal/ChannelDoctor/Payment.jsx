@@ -56,24 +56,33 @@ const Payment = () => {
             Channeling Fee : € {appointmentDetails.fee}
           </Typography>
 
-          <TextField
-            label="Card number"
-            variant="outlined"
-            fullWidth
-            sx={{ mt: 2 }}
-            InputProps={{
-              endAdornment: (
-                <img src={paymentOptions} alt="visa" width="120px" />
-              ),
-            }}
-          />
-          <TextField
-            label="Expiry date"
-            variant="outlined"
-            fullWidth
-            sx={{ mt: 2 }}
-          />
-          <TextField label="CVV" variant="outlined" fullWidth sx={{ mt: 2 }} />
+          {appointmentDetails.type !== "Urgent" && (
+            <>
+              <TextField
+                label="Card number"
+                variant="outlined"
+                fullWidth
+                sx={{ mt: 2 }}
+                InputProps={{
+                  endAdornment: (
+                    <img src={paymentOptions} alt="visa" width="120px" />
+                  ),
+                }}
+              />
+              <TextField
+                label="Expiry date"
+                variant="outlined"
+                fullWidth
+                sx={{ mt: 2 }}
+              />
+              <TextField
+                label="CVV"
+                variant="outlined"
+                fullWidth
+                sx={{ mt: 2 }}
+              />
+            </>
+          )}
 
           <Box
             sx={{
