@@ -23,6 +23,19 @@ const Landing = () => {
   const dispatch = useDispatch();
 
   const handleCDClick = useCallback(() => {
+    dispatch(
+      placeAppointment({
+        type: "Normal",
+        appointmentId: undefined,
+        detectionId: "",
+        doctorid: "",
+        patientid: "",
+        bookingDate: "",
+        appointmentType: "",
+        fee: "",
+        doctorAvailability: "",
+      })
+    );
     navigate("/patient-portal/channel-doctor/step-01");
   }, [navigate]);
 

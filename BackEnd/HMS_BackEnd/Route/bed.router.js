@@ -221,7 +221,7 @@ bedRoutes.route("/release-all-beds").post(async function (req, res) {
 //estimate bed stay days
 bedRoutes.post("/stayDays", async (req, res) => {
   await axios
-    .post(`http://127.0.0.1:5001/predict`, {
+    .post(`http://192.168.196.151:5001/predict`, {
       Available_Extra_Rooms_in_Hospital:
         req.body.Available_Extra_Rooms_in_Hospital,
       staff_available: req.body.staff_available,

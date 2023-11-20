@@ -315,9 +315,7 @@ AppointmentRoutes.get("/doctor/:doctorId", async (req, res, next) => {
       {
         $match: {
           doctorid: req.params.doctorId,
-          type: {
-            $ne: "Urgent",
-          },
+          type: "Normal"
         },
       },
       {

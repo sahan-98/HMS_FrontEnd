@@ -6,11 +6,15 @@ import done from "../../../assets/images/done.png";
 import warning from "../../../assets/images/warning.png";
 import { Box, Button, styled } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AppointmentService from "../../../app/services/appointment-service";
 import processingData from "../../../assets/images/processing-data.png";
 import { useNavigate } from "react-router";
 import Actions from "../../../components/Actions/Actions";
+import {
+  clearDetails,
+  placeAppointment,
+} from "../../../reducers/placeAppointmentSlice";
 
 const StyledText = styled("span")(
   `
@@ -29,71 +33,107 @@ padding-bottom: 3rem;
 
 const Result = () => {
   const navigate = useNavigate();
-  const [appointmentPlaced, setAppointmentPlaced] = useState(true);
+  const [appointmentPlaced, setAppointmentPlaced] = useState(false);
   const appointmentDetails = useSelector((state) => state.placeAppointment);
   const [loading, setLoading] = useState(true);
-  const userType = useSelector(state=>state.login.userType);
+  const userType = useSelector((state) => state.login.userType);
+  const dispatch = useDispatch();
 
-  const placeAppointment = useCallback(async () => {
-    try {
-      if (appointmentDetails.appointmentId) {
-        const updatedAppointment = await AppointmentService.updateAppointment({
-          data: {
-            ...appointmentDetails,
-          },
-        });
-        if (updatedAppointment?.message === "Successfull") {
-          setAppointmentPlaced(true);
-        } else {
-          setAppointmentPlaced(false);
-        }
-      } else {
-        if (appointmentDetails.type === "Urgent") {
-          const newAppointment =
-            await AppointmentService.placeNewUrgentAppointment({
+  const makeAppointment = useCallback(async () => {
+    if (appointmentDetails.patientid !== "") {
+      try {
+        if (appointmentDetails.appointmentId) {
+          const updatedAppointment = await AppointmentService.updateAppointment(
+            {
               data: {
                 ...appointmentDetails,
               },
-            });
-          console.log(newAppointment);
-          const { message } = newAppointment;
-          if (message === "Successfull") {
+            }
+          );
+          if (updatedAppointment?.message === "Successfull") {
             setAppointmentPlaced(true);
           } else {
             setAppointmentPlaced(false);
           }
         } else {
-          const newAppointment = await AppointmentService.placeNewAppointment({
-            data: {
-              ...appointmentDetails,
-            },
-          });
-          console.log(newAppointment);
-          const { message } = newAppointment;
-          if (message === "Successfull") {
-            setAppointmentPlaced(true);
+          if (appointmentDetails.type === "Urgent") {
+            const newAppointment =
+              await AppointmentService.placeNewUrgentAppointment({
+                data: {
+                  ...appointmentDetails,
+                },
+              });
+            console.log(newAppointment);
+            const { message } = newAppointment;
+            if (message === "Successfull") {
+              setAppointmentPlaced(true);
+            } else {
+              setAppointmentPlaced(false);
+            }
           } else {
-            setAppointmentPlaced(false);
+            const newAppointment = await AppointmentService.placeNewAppointment(
+              {
+                data: {
+                  ...appointmentDetails,
+                  type: "Normal",
+                },
+              }
+            );
+            console.log(newAppointment);
+            const { message } = newAppointment;
+            if (message === "Successfull") {
+              setAppointmentPlaced(true);
+            } else {
+              setAppointmentPlaced(false);
+            }
           }
         }
+      } catch (error) {
+        setAppointmentPlaced(false);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      setAppointmentPlaced(false);
-    } finally {
-      setLoading(false);
     }
   }, [appointmentDetails]);
 
   useEffect(() => {
-    placeAppointment();
-  }, [placeAppointment]);
+    makeAppointment();
+  }, [makeAppointment]);
+
+  useEffect(() => {
+    if (appointmentPlaced) {
+      dispatch(
+        placeAppointment({
+          type: appointmentDetails.type,
+          appointmentId: undefined,
+          detectionId: "",
+          doctorid: "",
+          patientid: "",
+          bookingDate: "",
+          appointmentType: "",
+          fee: "",
+          doctorAvailability: "",
+        })
+      );
+    }
+  }, [appointmentPlaced, dispatch, makeAppointment,appointmentDetails]);
 
   const Success = (
     <>
-      <HeadingText text={appointmentDetails.type === 'Urgent' ? "Emergency Request" : "Channel Doctor"} />
+      <HeadingText
+        text={
+          appointmentDetails.type === "Urgent"
+            ? "Emergency Request"
+            : "Channel Doctor"
+        }
+      />
       <img src={done} alt="" width={"150px"} />
       <div>
-        <StyledText fontSize="24px">{appointmentDetails.type === 'Urgent' ? "Request Completed!" :"Appointment Placed"} </StyledText>
+        <StyledText fontSize="24px">
+          {appointmentDetails.type === "Urgent"
+            ? "Request Completed!"
+            : "Appointment Placed"}{" "}
+        </StyledText>
       </div>
       <Box my={3}>
         <StyledText fontSize="16px">
@@ -110,12 +150,11 @@ const Result = () => {
           boxShadow: 0,
         }}
         onClick={() => {
-          if(userType === "patient"){
+          if (userType === "patient") {
             navigate("/patient-portal/landing");
-          }else{
+          } else {
             navigate("/medical-officer-portal/view-appointments");
           }
-         
         }}
       >
         Back to Home
@@ -125,7 +164,7 @@ const Result = () => {
 
   const Loading = (
     <>
-      <HeadingText text="Heart disease prediction" />
+      <HeadingText text="Please wait..." />
       <img src={processingData} alt="" width={"185px"} />
       <div>
         <StyledText fontSize="24px">Loading results</StyledText>
