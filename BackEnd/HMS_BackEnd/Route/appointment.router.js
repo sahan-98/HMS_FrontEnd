@@ -53,7 +53,7 @@ AppointmentRoutes.post("/add", async (req, res) => {
     await newAppointment
       .save()
       .then(async (respond) => {
-        return res.status(200).json({ message: "Successfull" });
+        return res.status(200).json({ message: "Successfull",newAppointment });
       })
       .catch((err) => {
         res.status(400).json({ message: "Error!" });
@@ -72,6 +72,7 @@ AppointmentRoutes.post("/update-appointment", async (req, res) => {
       doctorid,
       doctorAvailability,
       detectionId,
+      type,
     } = req.body;
 
     const doc = await Doctor.findOne({ doctorid: doctorid });
@@ -92,6 +93,7 @@ AppointmentRoutes.post("/update-appointment", async (req, res) => {
       updateAppointment.doctorAvailability = doctorAvailability;
       updateAppointment.detectionId = detectionId;
       updateAppointment.totalPrice= fee;
+      updateAppointment.type= type;
       updateAppointment.queueNumber = QueAppintments.length + 1;
     }
 
@@ -277,7 +279,7 @@ AppointmentRoutes.get("/doctor/:doctorId", async (req, res, next) => {
       {
         $match: {
           doctorid: req.params.doctorId,
-          type: "Urgent",
+          type:{ $in: ['Urgent', 'Not-Urgent']},
         },
       },
       {
@@ -329,6 +331,7 @@ AppointmentRoutes.get("/doctor/:doctorId", async (req, res, next) => {
       {
         $unwind: "$patient",
       },
+      
       
       {
         $sort: {

@@ -9,7 +9,7 @@ export const placeAppointmentSlice = createSlice({
     patientid: "",
     bookingDate: "",
     appointmentType:"",
-    type: "",
+    type: "Normal",
     fee: "",
     doctorAvailability: "",
   },

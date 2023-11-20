@@ -51,7 +51,7 @@ const TableRow = ({ doctor, dateName, timeKeyName, appointmentType }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const patient = useSelector((state) => state.patient);
-  const appointmentDetails = useSelector(state=>state.placeAppointment);
+  const appointmentDetails = useSelector((state) => state.placeAppointment);
 
   return (
     <tr>
@@ -69,7 +69,6 @@ const TableRow = ({ doctor, dateName, timeKeyName, appointmentType }) => {
                 patientid: patient?._id,
                 bookingDate: new Date().toISOString().split("T")[0],
                 appointmentType: appointmentType,
-                type: "Normal",
                 fee: doctor?.fee,
                 doctorAvailability: timeKeyName,
               })
@@ -104,8 +103,11 @@ const Step01 = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const patient = useSelector((state) => state.patient);
-  const {type} = useSelector((state) => state.placeAppointment);
-  
+  const { type } = useSelector((state) => state.placeAppointment);
+  const appointmentDetails = useSelector(
+    (state) => state.heartDiseasePrediction.placeAppointment
+  );
+
   const onSelectSpecialization = useCallback(
     (selectedSpecialization) => {
       const filteredDoctors = doctorList.filter(
@@ -168,7 +170,9 @@ const Step01 = () => {
         }}
       >
         <BlueAcentCard width="450px">
-          <HeadingText text={type === "Urgent" ? "Emergency Request" :"Channel Doctor"} />
+          <HeadingText
+            text={type === "Urgent" ? "Emergency Request" : "Channel Doctor"}
+          />
           {/* <FormControl fullWidth sx={{ mt: 2, textAlign: "start" }}>
             <InputLabel id="demo-simple-select-label">Select Type</InputLabel>
             <Select

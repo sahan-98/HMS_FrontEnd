@@ -147,8 +147,8 @@ const ViewAppointments = () => {
 
         return (
           <>
-            {appointment.type === "Urgent" ? (
-              <StyledButton btnColor={"#E93232"}>Urgent</StyledButton>
+            {appointment.type === "Urgent" || appointment.type === "Not-Urgent" ? (
+              <StyledButton btnColor={"#E93232"}>{appointment.type}</StyledButton>
             ) : (
               appointment?.queueNumber
             )}

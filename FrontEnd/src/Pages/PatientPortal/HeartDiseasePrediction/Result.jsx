@@ -45,6 +45,7 @@ const Result = () => {
   const patientId = useSelector(
     (state) => state.patient._id
   );
+
   
 
   const getHeartDiseasePrediction = useCallback(async () => {
@@ -102,7 +103,9 @@ const Result = () => {
           mb: 2,
           fontWeight: "bold",
         }}
-        onClick={() => navigate("/patient-portal/channel-doctor/step-01")}
+        onClick={() => {
+          dispatch(placeAppointment({...placeAppointmentDetails, type:"Not-Urgent"}))
+          navigate("/patient-portal/channel-doctor/step-01")}}
       >
         Channel Doctor
       </Button>

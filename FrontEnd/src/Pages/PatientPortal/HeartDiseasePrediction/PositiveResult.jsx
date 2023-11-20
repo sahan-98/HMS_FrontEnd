@@ -43,6 +43,9 @@ const PositiveResult = ({ urgentStatus }) => {
   const appointmentId = useSelector(
     (state) => state.heartDiseasePrediction.appointmentId
   );
+  const appointmentDetails = useSelector(
+    (state) => state.placeAppointment
+  );
   const detectionId = useSelector(
     (state) => state.placeAppointment.detectionId
   );
@@ -244,9 +247,11 @@ const PositiveResult = ({ urgentStatus }) => {
             fontWeight: "bold",
           }}
           onClick={() =>
+           {
+            dispatch(placeAppointment({...appointmentDetails, type:"Not-Urgent"}))
             navigate(
               "/patient-portal/channel-doctor/step-01?speciality=Cardiologist"
-            )
+            )}
           }
         >
           Channel Doctor
