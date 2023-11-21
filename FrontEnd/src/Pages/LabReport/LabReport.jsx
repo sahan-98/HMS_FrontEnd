@@ -220,7 +220,7 @@ const LabReport = ({ open, setOpen, data }) => {
             variant="outlined"
             fullWidth
             size="small"
-            value={patient ? patient?.firstname + " " + patient?.lastname : ""}
+            value={`${patient?.firstname ?? ""} ${patient?.lastname ?? ""}`}
             disabled
           />
         </Grid>

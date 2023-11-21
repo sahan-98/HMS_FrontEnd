@@ -279,7 +279,7 @@ const ViewAppointments = () => {
   return (
     <Layout>
       <Header />
-      {labReportToShow?._id && (
+      {labReportOpen && (
         <LabReport
           open={labReportOpen}
           setOpen={setLabReportOpen}
