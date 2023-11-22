@@ -39,6 +39,8 @@ const Result = () => {
   const userType = useSelector((state) => state.login.userType);
   const dispatch = useDispatch();
 
+
+
   const makeAppointment = useCallback(async () => {
     if (appointmentDetails.patientid !== "") {
       try {
@@ -122,7 +124,7 @@ const Result = () => {
     <>
       <HeadingText
         text={
-          appointmentDetails.type === "Urgent"
+          appointmentDetails.type === "Urgent" && userType === "patient"
             ? "Emergency Request"
             : "Channel Doctor"
         }
@@ -130,7 +132,7 @@ const Result = () => {
       <img src={done} alt="" width={"150px"} />
       <div>
         <StyledText fontSize="24px">
-          {appointmentDetails.type === "Urgent"
+          {appointmentDetails.type === "Urgent" && userType === "patient"
             ? "Request Completed!"
             : "Appointment Placed"}{" "}
         </StyledText>

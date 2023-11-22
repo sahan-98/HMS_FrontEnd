@@ -22,6 +22,7 @@ color: #fff;
 const Payment = () => {
   const navigate = useNavigate();
   const appointmentDetails = useSelector((state) => state.placeAppointment);
+  const medicalOfficer = useSelector((state) => state.login.userType);
 
   const handleNextClick = useCallback(() => {
     navigate("/patient-portal/channel-doctor/completed");
@@ -50,25 +51,33 @@ const Payment = () => {
           >
             Channeling Fee : € {appointmentDetails.fee}
           </Typography>
-
-          <TextField
-            label="Card number"
-            variant="outlined"
-            fullWidth
-            sx={{ mt: 2 }}
-            InputProps={{
-              endAdornment: (
-                <img src={paymentOptions} alt="visa" width="120px" />
-              ),
-            }}
-          />
-          <TextField
-            label="Expiry date"
-            variant="outlined"
-            fullWidth
-            sx={{ mt: 2 }}
-          />
-          <TextField label="CVV" variant="outlined" fullWidth sx={{ mt: 2 }} />
+          {medicalOfficer === "patient" && (
+            <>
+              <TextField
+                label="Card number"
+                variant="outlined"
+                fullWidth
+                sx={{ mt: 2 }}
+                InputProps={{
+                  endAdornment: (
+                    <img src={paymentOptions} alt="visa" width="120px" />
+                  ),
+                }}
+              />
+              <TextField
+                label="Expiry date"
+                variant="outlined"
+                fullWidth
+                sx={{ mt: 2 }}
+              />
+              <TextField
+                label="CVV"
+                variant="outlined"
+                fullWidth
+                sx={{ mt: 2 }}
+              />
+            </>
+          )}
 
           <Box
             sx={{

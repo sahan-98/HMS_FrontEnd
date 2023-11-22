@@ -318,7 +318,7 @@ AppointmentRoutes.get("/doctor/:doctorId", async (req, res, next) => {
           type: "Normal"
         },
       },
-      {
+      { 
         $lookup: {
           from: "Paitent",
           localField: "patientid",
