@@ -49,10 +49,11 @@ def predict():
         prediction_expblAI = model2.predict_and_contrib([[age, sex, chest_pain_type, resting_bp, cholesterol, fasting_bs,
                                      resting_ecg, max_hr, exercise_angina, oldpeak, st_slope]], output='probabilities', init_score=None)
 
+        accuracy = prediction_expblAI[0][0][1]
         prediction_expblAI_index = prediction_expblAI[1][0]
         prediction_expblAI_index_list = prediction_expblAI_index.tolist()
 
-        result = {'prediction': bool(prediction[0]),'prediction_expblAI_index': prediction_expblAI_index_list}
+        result = {'prediction': bool(prediction[0]),'prediction_expblAI_index': prediction_expblAI_index_list, 'accuracy': accuracy}
         return jsonify(result)
 
     except Exception as e:

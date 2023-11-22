@@ -122,7 +122,20 @@ const ViewStatGraph = ({ isOpen, setIsOpen, predictionData }) => {
             <p>
               {" "}
               Prediction Result :{" "}
-              <span style={{color:predictionData.label === "true" ? "#E93232" : "#59C169"}}>{predictionData.label === "true" ? "Positive" : "Negative"}</span>
+              <span
+                style={{
+                  color:
+                    predictionData.label === "true" ? "#E93232" : "#59C169",
+                }}
+              >
+                {predictionData.label === "true"
+                  ? `Positive ( accuracy: ${
+                      parseFloat(predictionData?.accuracy ?? 0).toFixed(4) * 100
+                    } %)`
+                  : `Negative( accuracy: ${
+                      parseFloat(predictionData?.accuracy ?? 0).toFixed(4) * 100
+                    } %)`}
+              </span>
             </p>
           </Box>
 
