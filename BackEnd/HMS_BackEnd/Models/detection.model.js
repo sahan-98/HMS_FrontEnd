@@ -15,6 +15,10 @@ let detection = new Schema(
       type: String,
     },
 
+    accuracy: {
+      type: Number,
+    },
+
     sT_Slope: {
       type: Number,
     },

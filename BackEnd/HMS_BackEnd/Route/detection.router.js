@@ -20,7 +20,7 @@ detectionRoutes.post("/add", async (req, res) => {
   //  oldpeak = data["oldpeak"];
   //  st_slope = data["st_slope"];
   await axios
-    .post(`http://192.168.92.151:5000/predict`, {
+    .post(`http://localhost:5000/predict`, {
       age: req.body.age,
       sex: req.body.sex,
       chest_pain_type: req.body.chest_pain_type,
@@ -41,6 +41,7 @@ detectionRoutes.post("/add", async (req, res) => {
       const newdetection = new detection({
         patientId: req.body.patientId,
         label: flaskRes.data.prediction,
+        accuracy: flaskRes.data.accuracy,
         sT_Slope: flaskRes.data.prediction_expblAI_index[10],
         ChestPainType: flaskRes.data.prediction_expblAI_index[2],
         sex: flaskRes.data.prediction_expblAI_index[1],
