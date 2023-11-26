@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 
 # Load the trained CatBoost model from the pickle file
-model = pickle.load(open("modelV3.pkl", "rb"))
+model = pickle.load(open("modelV4.pkl", "rb"))
 model2 = pickle.load(open("model.pkl", "rb"))
 
 @app.route('/predict', methods=['POST'])
@@ -14,19 +14,31 @@ def predict():
     try:
 
         data = request.get_json(force=True)
-        age = data['age']
-        sex = data['sex']
-        chest_pain_type = data['chest_pain_type']
-        resting_bp = data['resting_bp']
-        cholesterol = data['cholesterol']
-        fasting_bs = data['fasting_bs']
-        resting_ecg = data['resting_ecg']
-        max_hr = data['max_hr']
-        exercise_angina = data['exercise_angina']
-        oldpeak = data['oldpeak']
-        st_slope = data['st_slope']
+        # age = data['age']
+        # sex = data['sex']
+        # chest_pain_type = data['chest_pain_type']
+        # resting_bp = data['resting_bp']
+        # cholesterol = data['cholesterol']
+        # fasting_bs = data['fasting_bs']
+        # resting_ecg = data['resting_ecg']
+        # max_hr = data['max_hr']
+        # exercise_angina = data['exercise_angina']
+        # oldpeak = data['oldpeak']
+        # st_slope = data['st_slope']
 
-        print(age)
+        age = 56
+        sex = 1
+        chest_pain_type = 0
+        resting_bp = 130
+        cholesterol = 0
+        fasting_bs = 0
+        resting_ecg = 0
+        max_hr = 122
+        exercise_angina = 1
+        oldpeak = 1.0
+        st_slope = 1
+
+        print(age,sex,chest_pain_type,resting_bp,cholesterol,fasting_bs,resting_ecg,max_hr,exercise_angina,oldpeak,st_slope)
 
         # Convert categorical features to numerical codes
 #         sex_mapping = {'male': 1, 'female': 0}
@@ -53,6 +65,9 @@ def predict():
         prediction_expblAI_index = prediction_expblAI[1][0]
         prediction_expblAI_index_list = prediction_expblAI_index.tolist()
 
+        print(prediction)
+        print(prediction[0])
+        print( bool(prediction[0]))
         result = {'prediction': bool(prediction[0]),'prediction_expblAI_index': prediction_expblAI_index_list, 'accuracy': accuracy}
         return jsonify(result)
 
