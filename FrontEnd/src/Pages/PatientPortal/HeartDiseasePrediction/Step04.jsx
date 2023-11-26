@@ -97,9 +97,9 @@ const Step04 = () => {
               label="ST Slope"
               onChange={handleStSlopeChange}
             >
-              <MenuItem value={"Up"}>Upsloping</MenuItem>
-              <MenuItem value={"Flat"}>Flat</MenuItem>
-              <MenuItem value={"Down"}>Downsloping</MenuItem>
+              <MenuItem value={"2"}>Upsloping</MenuItem>
+              <MenuItem value={"1"}>Flat</MenuItem>
+              <MenuItem value={"0"}>Downsloping</MenuItem>
             </Select>
           </FormControl>
 

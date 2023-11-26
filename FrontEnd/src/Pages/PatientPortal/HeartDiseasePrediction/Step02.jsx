@@ -106,10 +106,10 @@ const Step02 = () => {
               onChange={handleChestPainTypeChange}
             >
               <MenuItem value={"NO_SELECTION"}>Please select</MenuItem>
-              <MenuItem value={"TA"}>Typical Angina</MenuItem>
-              <MenuItem value={"ATA"}>Atypical Angina</MenuItem>
-              <MenuItem value={"NAP"}>Non-Anginal Pain</MenuItem>
-              <MenuItem value={"ASY"}>Asymptomatic</MenuItem>
+              <MenuItem value={"3"}>Typical Angina</MenuItem>
+              <MenuItem value={"1"}>Atypical Angina</MenuItem>
+              <MenuItem value={"2"}>Non-Anginal Pain</MenuItem>
+              <MenuItem value={"0"}>Asymptomatic</MenuItem>
             </Select>
           </FormControl>
           <TextField

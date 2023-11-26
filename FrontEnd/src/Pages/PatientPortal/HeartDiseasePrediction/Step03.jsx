@@ -109,11 +109,14 @@ const Step03 = () => {
               onChange={onChangeRestingEcg}
             >
               <MenuItem value={"NO_SELECTION"}>Please select</MenuItem>
-              <MenuItem value={"Normal"}>
+              <MenuItem value={"1"}>
+               Normal
+              </MenuItem>
+              <MenuItem value={"2"}>
                 Having ST-T wave abnormality (T wave inversions and/or ST
                 elevation or depression of &gt; 0.05 mV)
               </MenuItem>
-              <MenuItem value={"LVH"}>
+              <MenuItem value={"0"}>
                 showing probable or definite left ventricular hypertrophy by
                 Estes&apos; criteria
               </MenuItem>

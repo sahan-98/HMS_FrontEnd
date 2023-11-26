@@ -100,6 +100,13 @@ ChartRow.proptypes = {
 };
 
 const ViewStatGraph = ({ isOpen, setIsOpen, predictionData }) => {
+  let predictionAccuracy = parseFloat(predictionData?.accuracy ?? 0)
+    .toFixed(4)
+    .toString();
+  if (predictionAccuracy.length > 4) {
+    predictionAccuracy = predictionAccuracy.substring(0, 4);
+  }
+
   return (
     <CustomModal open={isOpen} sx={{ width: { xs: "90%", sm: 450, md: 800 } }}>
       <Box
@@ -129,12 +136,12 @@ const ViewStatGraph = ({ isOpen, setIsOpen, predictionData }) => {
                 }}
               >
                 {predictionData.label === "true"
-                  ? `Positive ( accuracy: ${
-                      parseFloat(predictionData?.accuracy ?? 0).toFixed(4) * 100
-                    } %)`
-                  : `Negative( accuracy: ${
-                      parseFloat(predictionData?.accuracy ?? 0).toFixed(4) * 100
-                    } %)`}
+                  ? `Positive ( accuracy: ${(
+                      parseFloat(predictionData?.accuracy ?? 0) * 100
+                    ).toFixed(2)} %)`
+                  : `Negative( accuracy: ${(
+                      parseFloat(predictionData?.accuracy ?? 0) * 100
+                    ).toFixed(2)} %)`}
               </span>
             </p>
           </Box>

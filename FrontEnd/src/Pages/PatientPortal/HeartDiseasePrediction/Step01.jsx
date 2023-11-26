@@ -5,7 +5,7 @@ import {
   MenuItem,
   Select,
   TextField,
-  styled
+  styled,
 } from "@mui/material";
 import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,7 +36,9 @@ const Step01 = () => {
   );
   const navigate = useNavigate();
   const patient = useSelector((state) => state.patient);
-  const [gender, setGender] = useState(patient.gender.substring(0, 1));
+  const [gender, setGender] = useState(
+    patient.gender.substring(0, 1) === "M" ? "1" : "0"
+  );
   const [name, setName] = useState(patient.firstname);
   const [age, setAge] = useState(calculateAge(new Date(patient.dateOfBirth)));
 
@@ -69,9 +71,6 @@ const Step01 = () => {
     },
     [setAge]
   );
-
-
-
 
   return (
     <Layout>
@@ -112,8 +111,8 @@ const Step01 = () => {
               onChange={handleGenderChange}
             >
               <MenuItem value={"NO_SELECTION"}>Please select</MenuItem>
-              <MenuItem value={"M"}>Male</MenuItem>
-              <MenuItem value={"F"}>Female</MenuItem>
+              <MenuItem value={"1"}>Male</MenuItem>
+              <MenuItem value={"0"}>Female</MenuItem>
             </Select>
           </FormControl>
           <Progress currentStep={0} />
