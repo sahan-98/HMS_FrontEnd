@@ -19,6 +19,7 @@ detectionRoutes.post("/add", async (req, res) => {
   //  exercise_angina = data["exercise_angina"];
   //  oldpeak = data["oldpeak"];
   //  st_slope = data["st_slope"];
+  console.log(req.body.chest_pain_type);
   await axios
     .post(`http://localhost:5000/predict`, {
       age: req.body.age,
@@ -28,7 +29,7 @@ detectionRoutes.post("/add", async (req, res) => {
       cholesterol: req.body.cholesterol,
       resting_ecg: req.body.resting_ecg,
       fasting_bs: req.body.fasting_bs,
-      max_hr: req.body.max_hr,
+      max_hr: req.body.max_hr, 
       exercise_angina: req.body.exercise_angina,
       oldpeak: req.body.oldpeak,
       st_slope: req.body.st_slope,
@@ -65,7 +66,7 @@ detectionRoutes.post("/add", async (req, res) => {
           let urgency = false;
 
           if (flaskRes.data.prediction) {
-            if (req.body.chest_pain_type !== "TA" && req.body.exercise_angina === "Y") {
+            if (req.body.chest_pain_type !== "3" && req.body.exercise_angina === "1") {
               urgency = true;
             }
           }

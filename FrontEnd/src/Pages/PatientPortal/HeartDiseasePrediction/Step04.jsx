@@ -120,8 +120,8 @@ const Step04 = () => {
               label="Exercise angina"
               onChange={handleExerciseAnginaChange}
             >
-              <MenuItem value={"Y"}>Yes</MenuItem>
-              <MenuItem value={"N"}>No</MenuItem>
+              <MenuItem value={"1"}>Yes</MenuItem>
+              <MenuItem value={"0"}>No</MenuItem>
             </Select>
           </FormControl>
 
