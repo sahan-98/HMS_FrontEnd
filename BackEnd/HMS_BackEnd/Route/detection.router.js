@@ -18,14 +18,14 @@ const CHEST_PAIN_TYPE = {
 };
 
 const FASTING_BLOOD_SUGAR = {
-  0: "FastingBS > 120 mg/dl",
-  1: "FastingBS &gt; 120 mg/dl",
+  0: "FastingBS less than 120 mg/dl",
+  1: "FastingBS greather than 120 mg/dl",
 };
 
 const RESTING_ECG = {
   0: "showing probable or definite left ventricular hypertrophy by Estes's criteria",
   1: " Normal",
-  2: "Having ST-T wave abnormality (T wave inversions and/or ST elevation or depression of > 0.05 mV)",
+  2: "Having ST-T wave abnormality (T wave inversions and/or ST elevation or depression greater than 0.05 mV)",
 };
 
 const ST_SLOPE = {
