@@ -5,6 +5,39 @@ const detectionRoutes = express.Router();
 
 let detection = require("../Models/detection.model");
 
+const GENDER = {
+  1: "Male",
+  0: "Female",
+};
+
+const CHEST_PAIN_TYPE = {
+  0: "Asymptomatic",
+  1: "Atypical Angina",
+  2: "Non-Anginal Pain",
+  3: "Typical Angina",
+};
+
+const FASTING_BLOOD_SUGAR = {
+  0: "FastingBS > 120 mg/dl",
+  1: "FastingBS &gt; 120 mg/dl",
+};
+
+const RESTING_ECG = {
+  0: "showing probable or definite left ventricular hypertrophy by Estes's criteria",
+  1: " Normal",
+  2: "Having ST-T wave abnormality (T wave inversions and/or ST elevation or depression of > 0.05 mV)",
+};
+
+const ST_SLOPE = {
+  0: "Downsloping",
+  1: "Flat",
+  2: "Upsloping",
+};
+
+const EXCERCISE_ANGINA = {
+  0: "No",
+  1: "Yes",
+};
 //add event
 detectionRoutes.post("/add", async (req, res) => {
   //  data = request.get_json((force = True));
@@ -29,7 +62,7 @@ detectionRoutes.post("/add", async (req, res) => {
       cholesterol: req.body.cholesterol,
       resting_ecg: req.body.resting_ecg,
       fasting_bs: req.body.fasting_bs,
-      max_hr: req.body.max_hr, 
+      max_hr: req.body.max_hr,
       exercise_angina: req.body.exercise_angina,
       oldpeak: req.body.oldpeak,
       st_slope: req.body.st_slope,
@@ -58,6 +91,17 @@ detectionRoutes.post("/add", async (req, res) => {
         ageAndOldPeak: flaskRes.data.prediction_expblAI_index[13],
         ageAndSt_Slope: flaskRes.data.prediction_expblAI_index[14],
         cholesterolAndOldPeak: flaskRes.data.prediction_expblAI_index[16],
+        detect_sT_Slope: ST_SLOPE[req.body.st_slope],
+        detect_ChestPainType: CHEST_PAIN_TYPE[req.body.chest_pain_type],
+        detect_sex: GENDER[req.body.sex],
+        detect_maxHR: req.body.max_hr,
+        detect_exerciseAngina: EXCERCISE_ANGINA[req.body.exercise_angina],
+        detect_oldPeak: req.body.oldpeak,
+        detect_cholesterol: req.body.cholesterol,
+        detect_age: req.body.age,
+        detect_fastingBS: FASTING_BLOOD_SUGAR[req.body.fasting_bs],
+        detect_resting_ecg: RESTING_ECG[req.body.resting_ecg],
+        detect_resting_bp: req.body.resting_bp,
       });
 
       await newdetection
@@ -66,14 +110,17 @@ detectionRoutes.post("/add", async (req, res) => {
           let urgency = false;
 
           if (flaskRes.data.prediction) {
-            if (req.body.chest_pain_type !== "3" && req.body.exercise_angina === "1") {
+            if (
+              req.body.chest_pain_type !== "3" &&
+              req.body.exercise_angina === "1"
+            ) {
               urgency = true;
             }
           }
           return res.json({
             prediction: flaskRes.data.prediction,
             urgentStatus: urgency,
-            data
+            data,
           });
         })
         .catch((error) => {
@@ -86,7 +133,6 @@ detectionRoutes.post("/add", async (req, res) => {
       return res.status(400).json("Error " + err);
     });
 });
-
 
 // get events list by a host
 detectionRoutes.get("/patient/:key", async (req, res) => {

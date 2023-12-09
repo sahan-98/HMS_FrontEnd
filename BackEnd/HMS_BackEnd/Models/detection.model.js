@@ -64,6 +64,39 @@ let detection = new Schema(
     cholesterolAndOldPeak: {
       type: Number,
     },
+    detect_sT_Slope:{
+      type:String
+    },
+    detect_ChestPainType:{
+      type:String
+    },
+    detect_sex:{
+      type:String
+    },
+    detect_maxHR:{
+      type:String
+    },
+    detect_exerciseAngina:{
+      type:String
+    },
+    detect_oldPeak:{
+      type:String
+    },
+    detect_cholesterol:{
+      type:String
+    },
+    detect_age:{
+      type:String
+    },
+    detect_fastingBS:{
+      type:String
+    },
+    detect_resting_ecg:{
+      type:String
+    },
+    detect_resting_bp:{
+      type:String
+    }
 
   },
   {

@@ -1,4 +1,13 @@
-import { CheckCircleOutline, Done, Search } from "@mui/icons-material";
+import {
+  Assignment,
+  BarChart,
+  ChatRounded,
+  CheckCircleOutline,
+  Done,
+  List,
+  Science,
+  Search,
+} from "@mui/icons-material";
 import {
   Box,
   IconButton,
@@ -23,6 +32,7 @@ import AppointmentService from "../../app/services/appointment-service";
 import { Button } from "@mui/base";
 import LabReport from "../LabReport/LabReport";
 import ViewStatGraph from "./ViewStatGraph";
+import DetailsModal from "./DetailsModal";
 
 const StyledDiv = styled("div")(
   `
@@ -122,6 +132,7 @@ const ViewAppointments = () => {
   const [labReportToShow, setLabReportToShow] = useState({});
   const doctor = useSelector((state) => state.doctor);
   const [showPredictionGraph, setShowPredictionGraph] = useState(false);
+  const [showDetaialsModal, setShowDetailsModal] = useState(false);
   const [predictionData, setPredictionData] = useState({});
 
   const columns = [
@@ -147,8 +158,13 @@ const ViewAppointments = () => {
 
         return (
           <>
-            {appointment.type === "Urgent" || appointment.type === "Not-Urgent" ? (
-              <StyledButton btnColor={appointment.type === "Urgent"?"#E93232":"#1c77f2"}>{appointment.type}</StyledButton>
+            {appointment.type === "Urgent" ||
+            appointment.type === "Not-Urgent" ? (
+              <StyledButton
+                btnColor={appointment.type === "Urgent" ? "#E93232" : "#1c77f2"}
+              >
+                {appointment.type}
+              </StyledButton>
             ) : (
               appointment?.queueNumber
             )}
@@ -173,6 +189,10 @@ const ViewAppointments = () => {
           setPredictionData(appointment?.detection);
           setShowPredictionGraph(true);
         };
+        const onClickViewStats = () => {
+          setPredictionData(appointment?.detection);
+          setShowDetailsModal(true);
+        };
 
         const completeAppointment = async () => {
           await AppointmentService.updateVisitStatus({
@@ -185,24 +205,34 @@ const ViewAppointments = () => {
           <>
             {appointment.labReportid ? (
               <>
-                <StyledButton onClick={onClick} btnColor={"#3E84E3"}>
-                  View Lab Report
-                </StyledButton>
+                <IconButton onClick={onClick} title="View Lab Report">
+                  <Science />
+                </IconButton>
               </>
             ) : (
               <>
                 {appointment?.visitStatus !== "completed" && (
-                  <StyledButton onClick={onClick}>Assign Lab task</StyledButton>
+                  <IconButton onClick={onClick} title="Assign Lab Task">
+                    <Science />
+                  </IconButton>
                 )}
               </>
             )}
-             {appointment?.detection?._id && (
-                  <StyledButton onClick={onClickViewChart}>
-                    See Prediction
-                  </StyledButton>
-                )}
+            {appointment?.detection?._id && (
+              <>
+                <IconButton onClick={onClickViewStats} title="See Results">
+                  <List />
+                </IconButton>
+                <IconButton onClick={onClickViewChart} title="See Prediction">
+                  <BarChart />
+                </IconButton>
+              </>
+            )}
             {appointment?.visitStatus === "pending" && (
-              <IconButton onClick={completeAppointment}>
+              <IconButton
+                onClick={completeAppointment}
+                title="Mark as completed"
+              >
                 <CheckCircleOutline />
               </IconButton>
             )}
@@ -289,6 +319,11 @@ const ViewAppointments = () => {
       <ViewStatGraph
         isOpen={showPredictionGraph}
         setIsOpen={setShowPredictionGraph}
+        predictionData={predictionData}
+      />
+      <DetailsModal
+        isOpen={showDetaialsModal}
+        setIsOpen={setShowDetailsModal}
         predictionData={predictionData}
       />
       <div
