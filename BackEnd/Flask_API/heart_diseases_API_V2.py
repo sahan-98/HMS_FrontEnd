@@ -14,29 +14,29 @@ def predict():
     try:
 
         data = request.get_json(force=True)
-        # age = data['age']
-        # sex = data['sex']
-        # chest_pain_type = data['chest_pain_type']
-        # resting_bp = data['resting_bp']
-        # cholesterol = data['cholesterol']
-        # fasting_bs = data['fasting_bs']
-        # resting_ecg = data['resting_ecg']
-        # max_hr = data['max_hr']
-        # exercise_angina = data['exercise_angina']
-        # oldpeak = data['oldpeak']
-        # st_slope = data['st_slope']
+        age = data['age']
+        sex = data['sex']
+        chest_pain_type = data['chest_pain_type']
+        resting_bp = data['resting_bp']
+        cholesterol = data['cholesterol']
+        fasting_bs = data['fasting_bs']
+        resting_ecg = data['resting_ecg']
+        max_hr = data['max_hr']
+        exercise_angina = data['exercise_angina']
+        oldpeak = data['oldpeak']
+        st_slope = data['st_slope']
 
-        age = 56
-        sex = 1
-        chest_pain_type = 0
-        resting_bp = 130
-        cholesterol = 0
-        fasting_bs = 0
-        resting_ecg = 0
-        max_hr = 122
-        exercise_angina = 1
-        oldpeak = 1.0
-        st_slope = 1
+        # age = 56
+        # sex = 1
+        # chest_pain_type = 0
+        # resting_bp = 130
+        # cholesterol = 0
+        # fasting_bs = 0
+        # resting_ecg = 0
+        # max_hr = 122
+        # exercise_angina = 1
+        # oldpeak = 1.0
+        # st_slope = 1
 
         print(age,sex,chest_pain_type,resting_bp,cholesterol,fasting_bs,resting_ecg,max_hr,exercise_angina,oldpeak,st_slope)
 
