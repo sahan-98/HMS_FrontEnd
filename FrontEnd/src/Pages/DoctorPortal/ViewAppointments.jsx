@@ -296,7 +296,10 @@ const ViewAppointments = () => {
         appointment?.visitStatus
           .toLowerCase()
           .includes(searchText.toLowerCase()) ||
-        appointment?.date.toLowerCase().includes(searchText.toLowerCase())
+        appointment?.date.toLowerCase().includes(searchText.toLowerCase()) ||
+        appointment?.patientName
+          .toLowerCase()
+          .includes(searchText.toLowerCase())
     );
   }
 
